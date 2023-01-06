@@ -37,18 +37,18 @@ public class SphericalJoint extends Joint {
 		M.vec3_sub(error, _anchor2, _anchor1);
 
 		// compute CFM and ERP
-		float cfm;
-		float erp;
+		double cfm;
+		double erp;
 		if (_sd.frequency > 0) {
 			//JointMacro.computeSoftConstraintParameters(_sd.frequency, _sd.dampingRatio, timeStep.dt, _sd.useSymplecticEuler, cfm, erp);
-			float omega = MathUtil.TWO_PI * this._sd.frequency;
-			float zeta = this._sd.dampingRatio;
+			double omega = MathUtil.TWO_PI * this._sd.frequency;
+			double zeta = this._sd.dampingRatio;
 			if(zeta < Setting.minSpringDamperDampingRatio) {
 				zeta = Setting.minSpringDamperDampingRatio;
 			}
-			float h = timeStep.dt;
-			float c = 2 * zeta * omega;
-			float k = omega * omega;
+			double h = timeStep.dt;
+			double c = 2 * zeta * omega;
+			double k = omega * omega;
 			if(this._sd.useSymplecticEuler) {
 				cfm = 1 / (h * c);
 				erp = k / c;
@@ -63,9 +63,9 @@ public class SphericalJoint extends Joint {
 		}
 
 		// compute rhs
-		float linRhsX =error.x*erp;
-		float linRhsY = error.y*erp;
-		float linRhsZ = error.z*erp;
+		double linRhsX =error.x*erp;
+		double linRhsY = error.y*erp;
+		double linRhsZ = error.z*erp;
 
 		Mat3 crossR1=new Mat3();
 		Mat3 crossR2=new Mat3();

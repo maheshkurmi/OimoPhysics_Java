@@ -29,8 +29,8 @@ public class Proxy {
 		_id = id;
 		_prev = null;
 		_next = null;
-		_aabbMin.zero();
-		_aabbMax.zero();
+		_aabbMin=new Vec3();
+		_aabbMax=new Vec3();
 	}
 
 	// --- internal ---

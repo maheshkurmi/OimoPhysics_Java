@@ -17,14 +17,14 @@ public class BoxGeometry extends ConvexGeometry {
 	public BoxGeometry(Vec3 halfExtents) {
 		super(GeometryType.BOX);
 		_halfExtents=halfExtents.clone();
-		_halfAxisX.set(halfExtents.x, 0, 0);
-		_halfAxisY.set(0,halfExtents.y,0);
-		_halfAxisZ.set(0,0,halfExtents.z);
+		_halfAxisX=new Vec3(halfExtents.x, 0, 0);
+		_halfAxisY=new Vec3(0,halfExtents.y,0);
+		_halfAxisZ=new Vec3(0,0,halfExtents.z);
 		
 		_updateMass();
 
-		//float minHalfExtents = ( (( halfExtents.x < halfExtents.y )) ? (( (( halfExtents.z < halfExtents.x )) ? (halfExtents.z) : (halfExtents.x) )) : (( (( halfExtents.z < halfExtents.y )) ? (halfExtents.z) : (halfExtents.y) )) );
-		float minHalfExtents=0;
+		//double minHalfExtents = ( (( halfExtents.x < halfExtents.y )) ? (( (( halfExtents.z < halfExtents.x )) ? (halfExtents.z) : (halfExtents.x) )) : (( (( halfExtents.z < halfExtents.y )) ? (halfExtents.z) : (halfExtents.y) )) );
+		double minHalfExtents=0;
 			if (halfExtents.x < halfExtents.y) {
 				if (halfExtents.z < halfExtents.x) {
 					minHalfExtents=halfExtents.z;
@@ -61,21 +61,22 @@ public class BoxGeometry extends ConvexGeometry {
 	@Override 
 	public void _updateMass() {
 		_volume = 8 * M.vec3_mulHorizontal(_halfExtents);
-		Vec3 sq=_TMP_V1;
+		Vec3 sq=new Vec3();
 		M.vec3_compWiseMul(sq, _halfExtents, _halfExtents);
 		
 		M.mat3_diagonal(_inertiaCoeff,
-			1 / 3 * (sq.y + sq.z),
-			1 / 3 * (sq.z + sq.x),
-			1 / 3 * (sq.x + sq.y)
+			1 / 3.0 * (sq.y + sq.z),
+			1 / 3.0 * (sq.z + sq.x),
+			1 / 3.0 * (sq.x + sq.y)
 		);
+		//System.out.println(_inertiaCoeff);
 	}
 
 	@Override 
 	public void _computeAabb(Aabb aabb, Transform tf) {
 		
-		Vec3  tfx=_TMP_V1;
-		Vec3  tfy=_TMP_V2;
+		Vec3  tfx=new Vec3();
+		Vec3  tfy=new Vec3();
 		Vec3  tfz=new Vec3();
 		
 		M.vec3_mulMat3(tfx, _halfAxisX, tf._rotation);
@@ -96,50 +97,48 @@ public class BoxGeometry extends ConvexGeometry {
 
 	@Override 
 	public void computeLocalSupportingVertex(Vec3 dir,Vec3 out) {
-		Vec3 gjkMargins=_TMP_V1;;
-		Vec3 coreExtents=_TMP_V2;
-		gjkMargins.set(_gjkMargin, _gjkMargin, _gjkMargin);
+		Vec3 gjkMargins=new Vec3();
+		Vec3 coreExtents=new Vec3();
+		M.vec3_set(gjkMargins, _gjkMargin, _gjkMargin, _gjkMargin);
 		M.vec3_min(gjkMargins, gjkMargins, _halfExtents); // avoid making core extents negative
 		M.vec3_sub(coreExtents, _halfExtents, gjkMargins);
 		out.x = dir.x > 0 ? coreExtents.x : -coreExtents.x;
 		out.y = dir.y > 0 ? coreExtents.y : -coreExtents.y;
 		out.z = dir.z > 0 ? coreExtents.z : -coreExtents.z;
 		
-		//out.y = dir.y > 0 ? M.vec3_get(coreExtents, 1) : -M.vec3_get(coreExtents, 1);
-		//out.z = dir.z > 0 ? M.vec3_get(coreExtents, 2) : -M.vec3_get(coreExtents, 2);
 	}
 
 	@Override 
 	public  boolean _rayCastLocal(Vec3 begin,Vec3 end,RayCastHit result) {
 		
-		float p1x = begin.x;
-		float p1y = begin.y;
-		float p1z = begin.z;
-		float p2x = end.x;
-		float p2y = end.y;
-		float p2z = end.z;
-		float halfW = _halfExtents.x;
-		float halfH = _halfExtents.y;
-		float halfD = _halfExtents.z;
-		float dx = p2x - p1x;
-		float dy = p2y - p1y;
-		float dz = p2z - p1z;
-		float tminx = 0;
-		float tminy = 0;
-		float tminz = 0;
-		float tmaxx = 1;
-		float tmaxy = 1;
-		float tmaxz = 1;
+		double p1x = begin.x;
+		double p1y = begin.y;
+		double p1z = begin.z;
+		double p2x = end.x;
+		double p2y = end.y;
+		double p2z = end.z;
+		double halfW = _halfExtents.x;
+		double halfH = _halfExtents.y;
+		double halfD = _halfExtents.z;
+		double dx = p2x - p1x;
+		double dy = p2y - p1y;
+		double dz = p2z - p1z;
+		double tminx = 0;
+		double tminy = 0;
+		double tminz = 0;
+		double tmaxx = 1;
+		double tmaxy = 1;
+		double tmaxz = 1;
 		if (dx > -1e-6 && dx < 1e-6) {
 			if (p1x <= -halfW || p1x >= halfW) {
 				return false;
 			}
 		} else {
-			float invDx = 1 / dx;
-			float t1 = (-halfW - p1x) * invDx;
-			float t2 = (halfW - p1x) * invDx;
+			double invDx = 1 / dx;
+			double t1 = (-halfW - p1x) * invDx;
+			double t2 = (halfW - p1x) * invDx;
 			if (t1 > t2) {
-				float tmp = t1;
+				double tmp = t1;
 				t1 = t2;
 				t2 = tmp;
 			}
@@ -152,11 +151,11 @@ public class BoxGeometry extends ConvexGeometry {
 				return false;
 			}
 		} else {
-			float invDy = 1 / dy;
-			float t1 = (-halfH - p1y) * invDy;
-			float t2 = (halfH - p1y) * invDy;
+			double invDy = 1 / dy;
+			double t1 = (-halfH - p1y) * invDy;
+			double t2 = (halfH - p1y) * invDy;
 			if (t1 > t2) {
-				float tmp = t1;
+				double tmp = t1;
 				t1 = t2;
 				t2 = tmp;
 			}
@@ -169,11 +168,11 @@ public class BoxGeometry extends ConvexGeometry {
 				return false;
 			}
 		} else {
-			float invDz = 1 / dz;
-			float t1 = (-halfD - p1z) * invDz;
-			float t2 = (halfD - p1z) * invDz;
+			double invDz = 1 / dz;
+			double t1 = (-halfD - p1z) * invDz;
+			double t2 = (halfD - p1z) * invDz;
 			if (t1 > t2) {
-				float tmp = t1;
+				double tmp = t1;
 				t1 = t2;
 				t2 = tmp;
 			}
@@ -182,8 +181,8 @@ public class BoxGeometry extends ConvexGeometry {
 		}
 
 		if (tminx >= 1 || tminy >= 1 || tminz >= 1 || tmaxx <= 0 || tmaxy <= 0 || tmaxz <= 0) return false;
-		float min = tminx;
-		float max = tmaxx;
+		double min = tminx;
+		double max = tmaxx;
 		int hitDirection = 0;
 		if (tminy > min) {
 			min = tminy;
@@ -204,10 +203,13 @@ public class BoxGeometry extends ConvexGeometry {
 		switch (hitDirection) {
 		case 0:
 			result.normal.set(dx > 0 ? -1 : 1, 0, 0);
+			break;
 		case 1:
 			result.normal.set(0, dy > 0 ? -1 : 1, 0);
+			break;
 		case 2:
 			result.normal.set(0, 0, dz > 0 ? -1 : 1);
+			break;
 		}
 		result.position.set(p1x + min * dx, p1y + min * dy, p1z + min * dz);
 		result.fraction = min;

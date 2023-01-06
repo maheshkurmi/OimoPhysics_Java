@@ -40,8 +40,8 @@ public class Island {
 
 	// --- private ---
 
-	private float fastInvExp(float x) {
-		float x2 = x * x;
+	private double fastInvExp(double x) {
+		double x2 = x * x;
 		return 1 / (1 + x + x2 * (1 / 2 + x * (1 / 6) + x2 * (1 / 24)));
 	}
 
@@ -88,7 +88,7 @@ public class Island {
 	}
 
     public void _setGravity(Vec3 gravity) {
-		M.vec3_fromVec3(this.gravity, gravity);
+		this.gravity=gravity;
 	}
 
 	public void _addRigidBody(RigidBody rigidBody) {
@@ -130,7 +130,7 @@ public class Island {
 
 	// steps the single rigid body
 	public void _stepSingleRigidBody(TimeStep timeStep, RigidBody rb) {
-		float dt = timeStep.dt;
+		double dt = timeStep.dt;
 
 		// store previous transform
 		M.transform_assign(rb._ptransform, rb._transform);
@@ -153,8 +153,8 @@ public class Island {
 			// the rigid body is awake
 			if (rb._type == RigidBodyType._DYNAMIC) {
 				// damping
-				float linScale = fastInvExp(dt * rb._linearDamping);
-				float angScale = fastInvExp(dt * rb._angularDamping);
+				double linScale = fastInvExp(dt * rb._linearDamping);
+				double angScale = fastInvExp(dt * rb._angularDamping);
 
 				// compute accelerations
 				Vec3 linAcc=new Vec3();
@@ -176,7 +176,7 @@ public class Island {
 
 	// steps the island with multiple bodies and constraints
 	public void _step(TimeStep timeStep, int numVelocityIterations, int numPositionIterations) {
-		float dt = timeStep.dt;
+		double dt = timeStep.dt;
 
 		boolean sleepIsland = true;
 
@@ -210,8 +210,8 @@ public class Island {
 			// apply forces
 			if (rb._type == RigidBodyType._DYNAMIC) {
 				// damping
-				float linScale = fastInvExp(dt * rb._linearDamping);
-				float angScale = fastInvExp(dt * rb._angularDamping);
+				double linScale = fastInvExp(dt * rb._linearDamping);
+				double angScale = fastInvExp(dt * rb._angularDamping);
 
 				// compute accelerations
 				Vec3 linAcc=new Vec3();

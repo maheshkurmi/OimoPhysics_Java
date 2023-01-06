@@ -27,15 +27,15 @@ public class DebugDrawStyle {
 	public Vec3 contactNormalColor = new Vec3(1.0f, 0.1f, 0.1f);
 	public Vec3 contactTangentColor = new Vec3(0.1f, 0.8f, 0.1f);
 	public Vec3 contactBinormalColor = new Vec3(0.2f, 0.2f, 1.0f);
-	public float contactNormalLength = 0.5f;
-	public float contactTangentLength = 0.5f;
-	public float contactBinormalLength = 0.5f;
+	public double contactNormalLength = 0.5f;
+	public double contactTangentLength = 0.5f;
+	public double contactBinormalLength = 0.5f;
 
 	public Vec3 jointLineColor = new Vec3(0.8f, 0.8f, 0.8f);
 	public Vec3 jointErrorColor = new Vec3(1.0f, 0.1f, 0.1f);
-	public float jointRotationalConstraintRadius = 0.3f;
+	public double jointRotationalConstraintRadius = 0.3f;
 
-	public float basisLength = 0.5f;
+	public double basisLength = 0.5f;
 	public Vec3 basisColorX = new Vec3(1.0f, 0.0f, 0.0f);
 	public Vec3 basisColorY = new Vec3(0.0f, 1.0f, 0.0f);
 	public Vec3 basisColorZ = new Vec3(0.0f, 0.0f, 1.0f);

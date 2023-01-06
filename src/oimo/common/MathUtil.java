@@ -3,16 +3,16 @@ package oimo.common;
 
 public class MathUtil
 {
-	public static float POSITIVE_INFINITY = Float.POSITIVE_INFINITY;
-	public static float NEGATIVE_INFINITY = Float.NEGATIVE_INFINITY;
-	public static float PI = 3.14159265358979f;
-	public static float TWO_PI = 6.28318530717958f;
-	public static float HALF_PI = 1.570796326794895f;
-	public static float TO_RADIANS = 0.0174532925199432781f;
-	public static float TO_DEGREES = 57.2957795130823797f;
+	public static double POSITIVE_INFINITY = Float.POSITIVE_INFINITY;
+	public static double NEGATIVE_INFINITY = Float.NEGATIVE_INFINITY;
+	public static double PI = 3.14159265358979f;
+	public static double TWO_PI = 6.28318530717958f;
+	public static double HALF_PI = 1.570796326794895f;
+	public static double TO_RADIANS = 0.0174532925199432781f;
+	public static double TO_DEGREES = 57.2957795130823797f;
 
 	
-	public static float abs(float x)
+	public static double abs(double x)
 	{
 		if (( x > 0 )) 
 		{
@@ -26,43 +26,43 @@ public class MathUtil
 	}
 	
 	
-	public static float sin(float x)
+	public static double sin(double x)
 	{
 		return (float) Math.sin(x);
 	}
 	
 	
-	public static float cos(float x)
+	public static double cos(double x)
 	{
 		return (float) Math.cos(x);
 	}
 	
 	
-	public static float tan(float x)
+	public static double tan(double x)
 	{
 		return (float) Math.tan(x);
 	}
 	
 	
-	public static float asin(float x)
+	public static double asin(double x)
 	{
 		return (float)Math.asin(x);
 	}
 	
 	
-	public static float acos(float x)
+	public static double acos(double x)
 	{
 		return (float)Math.acos(x);
 	}
 	
 	
-	public static float atan(float x)
+	public static double atan(double x)
 	{
 		return (float)Math.atan(x);
 	}
 	
 	
-	public static float safeAsin(float x)
+	public static double safeAsin(double x)
 	{
 		if (( x <= -1 )) 
 		{
@@ -78,7 +78,7 @@ public class MathUtil
 	}
 	
 	
-	public static float safeAcos(float x)
+	public static double safeAcos(double x)
 	{
 		if (( x <= -1 )) 
 		{
@@ -94,13 +94,13 @@ public class MathUtil
 	}
 	
 	
-	public static float atan2(float y, float x)
+	public static double atan2(double y, double x)
 	{
 		return (float) Math.atan2(y, x);
 	}
 	
 	
-	public static float sqrt(float x)
+	public static double sqrt(double x)
 	{
 		return (float) Math.sqrt(x);
 	}
@@ -113,7 +113,7 @@ public class MathUtil
 	 * @param max
 	 * @return
 	 */
-	public static float clamp(float x, float min, float max)
+	public static double clamp(double x, double min, double max)
 	{
 		if (( x < min )) 
 		{
@@ -138,7 +138,7 @@ public class MathUtil
 	 * 
 	 * @return
 	 */
-	public static float rand()
+	public static double rand()
 	{
 		return (float) Math.random();
 	}
@@ -147,7 +147,7 @@ public class MathUtil
 	 * Returns random number in [-1,1]
 	 * @return
 	 */
-	public static float randIn(float min, float max)
+	public static double randIn(double min, double max)
 	{
 		return (float) ( min + ( rand() * (( max - min )) ) );
 	}
@@ -156,7 +156,7 @@ public class MathUtil
 	 * Returns new random Vec3 with each component in [min,max]
 	 * @return
 	 */
-	public static Vec3 randVec3In(float min, float max)
+	public static Vec3 randVec3In(double min, double max)
 	{
 		return new Vec3(randIn( min, max ),randIn( min, max ),randIn( min, max ));
 	}
@@ -171,12 +171,12 @@ public class MathUtil
 	}
 
 
-	public static float min(float a, float b) {
+	public static double min(double a, double b) {
 		return a<b?a:b;
 	
 	}
 	
-	public static float max(float a, float b) {
+	public static double max(double a, double b) {
 		return a>b?a:b;
 	}
 	

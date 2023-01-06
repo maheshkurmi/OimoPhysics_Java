@@ -6,7 +6,7 @@ import oimo.common.Vec3;
 /**
  * Internal class.
  */
-class EpaTriangle {
+public class EpaTriangle {
 	public EpaTriangle _next;
 	public EpaTriangle _prev;
 
@@ -14,7 +14,7 @@ class EpaTriangle {
 	public EpaTriangle[] _adjacentTriangles;
 	public int[] _adjacentPairIndex;
 	public Vec3 _normal;
-	public float _distanceSq;
+	public double _distanceSq;
 
 	public int[] _nextIndex; // (0, 1, 2) -> (1, 2, 0)
 
@@ -75,7 +75,7 @@ class EpaTriangle {
 		Vec3 inor=new Vec3();
 		M.vec3_cross(inor, v12, v13);
 		boolean inverted = false;
-		float d = M.vec3_dot(vc1, inor);
+		double d = M.vec3_dot(vc1, inor);
 		if (d < 0) {
 			if (autoCheck) {
 				GjkEpaLog.log("found the triangle inverted, but it does not matter.");

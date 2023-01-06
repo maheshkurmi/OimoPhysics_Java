@@ -3,7 +3,7 @@ package oimo.collision.narrowphase.detector.gjkepa;
  * The list of the state of a result of `GjkEpa.computeClosestPoints`.
  */
 public class GjkEpaResultState {
-	public static final int _SUCCEEDED                          = 0x000;
+	public static final int _SUCCEEDED                           = 0x000;
 	public static final int  _GJK_FAILED_TO_MAKE_TETRAHEDRON     = 0x001;
 	public static final int  _GJK_DID_NOT_CONVERGE               = 0x002;
 	public static final int  _EPA_FAILED_TO_INIT                 = 0x101;

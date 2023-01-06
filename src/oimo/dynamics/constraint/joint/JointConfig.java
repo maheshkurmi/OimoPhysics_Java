@@ -54,7 +54,7 @@ public class JointConfig {
 	 *
 	 * Set `0` for unbreakable joints.
 	 */
-	public float breakForce;
+	public double breakForce;
 
 	/**
 	 * The joint will be destroyed when magnitude of the constraint torque exceeds
@@ -62,7 +62,7 @@ public class JointConfig {
 	 *
 	 * Set `0` for unbreakable joints.
 	 */
-	public float breakTorque;
+	public double breakTorque;
 
 	public JointConfig() {
 		rigidBody1 = null;

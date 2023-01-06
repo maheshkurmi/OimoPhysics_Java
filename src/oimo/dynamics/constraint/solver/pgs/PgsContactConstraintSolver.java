@@ -45,11 +45,11 @@ public class PgsContactConstraintSolver extends ConstraintSolver {
 		_b1 = info.b1;
 		_b2 = info.b2;
 
-		float invM1 = _b1._invMass;
-		float invM2 = _b2._invMass;
+		double invM1 = _b1._invMass;
+		double invM2 = _b2._invMass;
 
 		var invI1= _b1._invInertia;
-		var invI2=_b2._invInertia;
+		var invI2= _b2._invInertia;
 		//M.mat3_assign(invI1, _b1._invInertia);
 		//M.mat3_assign(invI2, _b2._invInertia);
 
@@ -82,12 +82,12 @@ public class PgsContactConstraintSolver extends ConstraintSolver {
 			M.vec3_mulMat3(md.invMAngB2, jb.ang2, invI2);
 
 			// compute effective mass matrix for friction
-			float invMassTB00 = invM1 + invM2 + M.vec3_dot(md.invMAngT1, jt.ang1) + M.vec3_dot(md.invMAngT2, jt.ang2);
-			float invMassTB01 = M.vec3_dot(md.invMAngT1, jb.ang1) + M.vec3_dot(md.invMAngT2, jb.ang2);
-			float invMassTB10 = invMassTB01;
-			float invMassTB11 = invM1 + invM2 + M.vec3_dot(md.invMAngB1, jb.ang1) + M.vec3_dot(md.invMAngB2, jb.ang2);
+			double invMassTB00 = invM1 + invM2 + M.vec3_dot(md.invMAngT1, jt.ang1) + M.vec3_dot(md.invMAngT2, jt.ang2);
+			double invMassTB01 = M.vec3_dot(md.invMAngT1, jb.ang1) + M.vec3_dot(md.invMAngT2, jb.ang2);
+			double invMassTB10 = invMassTB01;
+			double invMassTB11 = invM1 + invM2 + M.vec3_dot(md.invMAngB1, jb.ang1) + M.vec3_dot(md.invMAngB2, jb.ang2);
 
-			float invDet = invMassTB00 * invMassTB11 - invMassTB01 * invMassTB10;
+			double invDet = invMassTB00 * invMassTB11 - invMassTB01 * invMassTB10;
 			if (invDet != 0) invDet = 1 / invDet;
 
 			md.massTB00 = invMassTB11 * invDet;
@@ -115,9 +115,9 @@ public class PgsContactConstraintSolver extends ConstraintSolver {
 			JacobianRow jt = row.jacobianT;
 			JacobianRow jb = row.jacobianB;
 
-			float impulseN = imp.impulseN;
-			float impulseT = M.vec3_dot(imp.impulseL, jt.lin1);
-			float impulseB = M.vec3_dot(imp.impulseL, jb.lin1);
+			double impulseN = imp.impulseN;
+			double impulseT = M.vec3_dot(imp.impulseL, jt.lin1);
+			double impulseB = M.vec3_dot(imp.impulseL, jb.lin1);
 			imp.impulseT = impulseT;
 			imp.impulseB = impulseB;
 
@@ -165,37 +165,37 @@ public class PgsContactConstraintSolver extends ConstraintSolver {
 			JacobianRow j;
 
 			// measure relative velocity
-			float rvt = 0;
+			double rvt = 0;
 			j = row.jacobianT;
 			rvt += M.vec3_dot(lv1, j.lin1);
 			rvt -= M.vec3_dot(lv2, j.lin2);
 			rvt += M.vec3_dot(av1, j.ang1);
 			rvt -= M.vec3_dot(av2, j.ang2);
 
-			float rvb = 0;
+			double rvb = 0;
 			j = row.jacobianB;
 			rvb += M.vec3_dot(lv1, j.lin1);
 			rvb -= M.vec3_dot(lv2, j.lin2);
 			rvb += M.vec3_dot(av1, j.ang1);
 			rvb -= M.vec3_dot(av2, j.ang2);
 
-			float impulseT = -(rvt * md.massTB00 + rvb * md.massTB01);
-			float impulseB = -(rvt * md.massTB10 + rvb * md.massTB11);
+			double impulseT = -(rvt * md.massTB00 + rvb * md.massTB01);
+			double impulseB = -(rvt * md.massTB10 + rvb * md.massTB11);
 
-			float oldImpulseT = imp.impulseT;
-			float oldImpulseB = imp.impulseB;
+			double oldImpulseT = imp.impulseT;
+			double oldImpulseB = imp.impulseB;
 			imp.impulseT += impulseT;
 			imp.impulseB += impulseB;
 
 			// cone friction
-			float maxImpulse = row.friction * imp.impulseN;
+			double maxImpulse = row.friction * imp.impulseN;
 			if (maxImpulse == 0) {
 				imp.impulseT = 0;
 				imp.impulseB = 0;
 			} else {
-				float impulseLengthSq = imp.impulseT * imp.impulseT + imp.impulseB * imp.impulseB;
+				double impulseLengthSq = imp.impulseT * imp.impulseT + imp.impulseB * imp.impulseB;
 				if (impulseLengthSq > maxImpulse * maxImpulse) {
-					float invL = maxImpulse / MathUtil.sqrt(impulseLengthSq);
+					double invL = maxImpulse / MathUtil.sqrt(impulseLengthSq);
 					imp.impulseT *= invL;
 					imp.impulseB *= invL;
 				}
@@ -223,17 +223,17 @@ public class PgsContactConstraintSolver extends ConstraintSolver {
 			JacobianRow j;
 
 			// measure relative velocity
-			float rvn = 0;
+			double rvn = 0;
 			j = row.jacobianN;
 			rvn += M.vec3_dot(lv1, j.lin1);
 			rvn -= M.vec3_dot(lv2, j.lin2);
 			rvn += M.vec3_dot(av1, j.ang1);
 			rvn -= M.vec3_dot(av2, j.ang2);
 
-			float impulseN = (row.rhs - rvn) * md.massN;
-
+			double impulseN = (row.rhs - rvn) * md.massN;
+			//System.out.println(impulseN+""+j.lin1+j.lin2+rvn);
 			// clamp impulse
-			float oldImpulseN = imp.impulseN;
+			double oldImpulseN = imp.impulseN;
 			imp.impulseN += impulseN;
 			if (imp.impulseN < 0) imp.impulseN = 0;
 			impulseN = imp.impulseN - oldImpulseN;
@@ -255,8 +255,8 @@ public class PgsContactConstraintSolver extends ConstraintSolver {
 		constraint._syncManifold();
 		constraint._getPositionSolverInfo(info);
 
-		float invM1 = _b1._invMass;
-		float invM2 = _b2._invMass;
+		double invM1 = _b1._invMass;
+		double invM2 = _b2._invMass;
 
 		Mat3 invI1=_b1._invInertia;
 		Mat3 invI2 =_b2._invInertia;
@@ -308,16 +308,16 @@ public class PgsContactConstraintSolver extends ConstraintSolver {
 			JacobianRow j = row.jacobianN;
 
 			// measure relative velocity
-			float rvn = 0;
+			double rvn = 0;
 			rvn += M.vec3_dot(lv1, j.lin1);
 			rvn -= M.vec3_dot(lv2, j.lin2);
 			rvn += M.vec3_dot(av1, j.ang1);
 			rvn -= M.vec3_dot(av2, j.ang2);
 
-			float impulseP = (row.rhs - rvn) * md.massN * Setting.positionSplitImpulseBaumgarte;
+			double impulseP = (row.rhs - rvn) * md.massN * Setting.positionSplitImpulseBaumgarte;
 
 			// clamp impulse
-			float oldImpulseP = imp.impulseP;
+			double oldImpulseP = imp.impulseP;
 			imp.impulseP += impulseP;
 			if (imp.impulseP < 0) imp.impulseP = 0;
 			impulseP = imp.impulseP - oldImpulseP;
@@ -351,16 +351,16 @@ public class PgsContactConstraintSolver extends ConstraintSolver {
 			JacobianRow j = row.jacobianN;
 
 			// estimate translation along the normal
-			float rvn = 0;
+			double rvn = 0;
 			rvn += M.vec3_dot(lv1, j.lin1);
 			rvn -= M.vec3_dot(lv2, j.lin2);
 			rvn += M.vec3_dot(av1, j.ang1);
 			rvn -= M.vec3_dot(av2, j.ang2);
 
-			float impulseP = (row.rhs - rvn) * md.massN * Setting.positionNgsBaumgarte;
+			double impulseP = (row.rhs - rvn) * md.massN * Setting.positionNgsBaumgarte;
 
 			// clamp impulse
-			float oldImpulseP = imp.impulseP;
+			double oldImpulseP = imp.impulseP;
 			imp.impulseP += impulseP;
 			if (imp.impulseP < 0) imp.impulseP = 0;
 			impulseP = imp.impulseP - oldImpulseP;
@@ -397,9 +397,9 @@ public class PgsContactConstraintSolver extends ConstraintSolver {
 			JacobianRow jn = row.jacobianN;
 			JacobianRow jt = row.jacobianT;
 			JacobianRow jb = row.jacobianB;
-			float impN = imp.impulseN;
-			float impT = imp.impulseT;
-			float impB = imp.impulseB;
+			double impN = imp.impulseN;
+			double impT = imp.impulseT;
+			double impB = imp.impulseB;
 			Vec3 impulseL = new Vec3();
 
 			// store lateral impulse

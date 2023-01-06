@@ -8,13 +8,13 @@ public class SpringDamper {
 	 * The frequency of the spring in Hz. Set `0.0` to disable the spring and make
 	 * the constraint totally rigid.
 	 */
-	public float frequency;
+	public double frequency;
 
 	/**
 	 * The damping ratio of the constraint. Set `1.0` to make the constraint
 	 * critically dumped.
 	 */
-	public float dampingRatio;
+	public double dampingRatio;
 
 	/**
 	 * Whether to use symplectic Euler method instead of implicit Euler method, to
@@ -38,7 +38,7 @@ public class SpringDamper {
 	 * `this.frequency` is set to `frequency`, and `this.dampingRatio` is set to
 	 * `dampingRatio`.
 	 */
-	public SpringDamper setSpring(float frequency, float dampingRatio) {
+	public SpringDamper setSpring(double frequency, double dampingRatio) {
 		this.frequency = frequency;
 		this.dampingRatio = dampingRatio;
 		return this;

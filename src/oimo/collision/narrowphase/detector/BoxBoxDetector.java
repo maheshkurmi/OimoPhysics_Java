@@ -13,7 +13,7 @@ import oimo.common.Vec3;
  * Box vs Box detector.
  */
 public class BoxBoxDetector extends Detector {
-	private static  final float EDGE_BIAS_MULT=1.0f;
+	private static  final double EDGE_BIAS_MULT=1.0f;
 
 	FaceClipper clipper;
 
@@ -26,7 +26,7 @@ public class BoxBoxDetector extends Detector {
 	}
 
 	@Override 
-	public void detectImpl(DetectorResult result, Geometry geom1, Geometry geom2, Transform tf1, Transform tf2, CachedDetectorData cachedData) {
+	protected void detectImpl(DetectorResult result, Geometry geom1, Geometry geom2, Transform tf1, Transform tf2, CachedDetectorData cachedData) {
 		BoxGeometry b1 =  (BoxGeometry) geom1;
 		BoxGeometry b2 =  (BoxGeometry) geom2;
 
@@ -76,9 +76,12 @@ public class BoxBoxDetector extends Detector {
 		//   a = cross(z2, _) | w2|x2.a| + h2|y2.a|
 		//   a = _            | w2|x2.a| + h2|y2.a| + d2|z2.a|
 
-		Vec3 c1=tf1._position;
-		Vec3 c2=tf2._position;
-		Vec3 c12=c2.sub(c1); // from center1 to center2
+		Vec3 c1=new Vec3();
+		Vec3 c2=new Vec3();
+		Vec3 c12=new Vec3(); // from center1 to center2
+		M.vec3_assign(c1, tf1._position);
+		M.vec3_assign(c2, tf2._position);
+		M.vec3_sub(c12, c2, c1);
 
 		// bases
 		Vec3 x1=new Vec3();
@@ -95,12 +98,12 @@ public class BoxBoxDetector extends Detector {
 		M.mat3_getCol(z2, tf2._rotation, 2);
 
 		// half extents of each box
-		float w1=b1._halfExtents.x;
-		float h1=b1._halfExtents.y;
-		float d1=b1._halfExtents.y;
-		float w2=b2._halfExtents.x;
-		float h2=b2._halfExtents.x;
-		float d2=b2._halfExtents.x;
+		double w1=b1._halfExtents.x;
+		double h1=b1._halfExtents.y;
+		double d1=b1._halfExtents.z;
+		double w2=b2._halfExtents.x;
+		double h2=b2._halfExtents.y;
+		double d2=b2._halfExtents.z;
 
 		// scaled bases by half extents
 		Vec3 sx1=x1.scale(w1);
@@ -113,13 +116,11 @@ public class BoxBoxDetector extends Detector {
 
 		// --------------------- SAT check start ---------------------
 
-		float proj1;
-		float proj2;
-		float projSum;
-		float projC12;
-		float projC12Abs;
+		double proj1;
+		double proj2;
+		double projC12;
 
-		float mDepth = MathUtil.POSITIVE_INFINITY;
+		double mDepth = MathUtil.POSITIVE_INFINITY;
 		int mId = -1;
 		int mSign = 0;
 		Vec3 mAxis=new Vec3();
@@ -131,12 +132,12 @@ public class BoxBoxDetector extends Detector {
 		proj2 = project(x1, sx2, sy2, sz2);
 		projC12 = M.vec3_dot(x1, c12);
 		//BoxBoxDetectorMacro.satCheck(mDepth, mId, mSign, mAxis, proj1, proj2, projC12, x1, 0, 1.0);
-		float sum = proj1 + proj2;
+		double sum = proj1 + proj2;
 		boolean neg = projC12 < 0;
-		float abs = neg ? -projC12 : projC12;
+		double abs = neg ? -projC12 : projC12;
 		if(abs < sum) {
-			float depth = sum - abs;
-			if(depth < mDepth) {
+			double depth = sum - abs;
+			if(depth*EDGE_BIAS_MULT< mDepth) {
 				mDepth = depth;
 				mId = 0;
 				mAxis.set(x1);
@@ -156,8 +157,8 @@ public class BoxBoxDetector extends Detector {
 		neg = projC12 < 0;
 		abs = neg ? -projC12 : projC12;
 		if(abs < sum) {
-			float depth = sum - abs;
-			if(depth < mDepth) {
+			double depth = sum - abs;
+			if(depth*EDGE_BIAS_MULT< mDepth) {
 				mDepth = depth;
 				mId = 1;
 				mAxis.set(y1);
@@ -176,8 +177,8 @@ public class BoxBoxDetector extends Detector {
 		neg = projC12 < 0;
 		abs = neg ? -projC12 : projC12;
 		if(abs < sum) {
-			float depth = sum - abs;
-			if(depth < mDepth) {
+			double depth = sum - abs;
+			if(depth*EDGE_BIAS_MULT< mDepth) {
 				mDepth = depth;
 				mId = 2;
 				mAxis.set(z1);
@@ -204,8 +205,8 @@ public class BoxBoxDetector extends Detector {
 		neg = projC12 < 0;
 		abs = neg ? -projC12 : projC12;
 		if(abs < sum) {
-			float depth = sum - abs;
-			if(depth < mDepth) {
+			double depth = sum - abs;
+			if(depth*EDGE_BIAS_MULT< mDepth) {
 				mDepth = depth;
 				mId = 3;
 				mAxis.set(x2);
@@ -225,8 +226,8 @@ public class BoxBoxDetector extends Detector {
 		neg = projC12 < 0;
 		abs = neg ? -projC12 : projC12;
 		if(abs < sum) {
-			float depth = sum - abs;
-			if(depth < mDepth) {
+			double depth = sum - abs;
+			if(depth*EDGE_BIAS_MULT< mDepth) {
 				mDepth = depth;
 				mId = 4;
 				mAxis.set(y2);
@@ -246,8 +247,8 @@ public class BoxBoxDetector extends Detector {
 		neg = projC12 < 0;
 		abs = neg ? -projC12 : projC12;
 		if(abs < sum) {
-			float depth = sum - abs;
-			if(depth < mDepth) {
+			double depth = sum - abs;
+			if(depth*EDGE_BIAS_MULT< mDepth) {
 				mDepth = depth;
 				mId = 5;
 				mAxis.set(z2);
@@ -281,8 +282,8 @@ public class BoxBoxDetector extends Detector {
 			neg = projC12 < 0;
 			abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				float depth = sum - abs;
-				if(depth < mDepth) {
+				double depth = sum - abs;
+				if(depth*EDGE_BIAS_MULT< mDepth) {
 					mDepth = depth;
 					mId = 6;
 					mAxis.set(edgeAxis);
@@ -305,8 +306,8 @@ public class BoxBoxDetector extends Detector {
 			neg = projC12 < 0;
 			abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				float depth = sum - abs;
-				if(depth < mDepth) {
+				double depth = sum - abs;
+				if(depth*EDGE_BIAS_MULT< mDepth) {
 					mDepth = depth;
 					mId = 7;
 					mAxis.set(edgeAxis);
@@ -329,8 +330,8 @@ public class BoxBoxDetector extends Detector {
 			neg = projC12 < 0;
 			abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				float depth = sum - abs;
-				if(depth < mDepth) {
+				double depth = sum - abs;
+				if(depth*EDGE_BIAS_MULT< mDepth) {
 					mDepth = depth;
 					mId = 8;
 					mAxis.set(edgeAxis);
@@ -353,8 +354,8 @@ public class BoxBoxDetector extends Detector {
 			neg = projC12 < 0;
 			abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				float depth = sum - abs;
-				if(depth < mDepth) {
+				double depth = sum - abs;
+				if(depth*EDGE_BIAS_MULT< mDepth) {
 					mDepth = depth;
 					mId = 9;
 					mAxis.set(edgeAxis);
@@ -377,8 +378,8 @@ public class BoxBoxDetector extends Detector {
 			neg = projC12 < 0;
 			abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				float depth = sum - abs;
-				if(depth < mDepth) {
+				double depth = sum - abs;
+				if(depth*EDGE_BIAS_MULT< mDepth) {
 					mDepth = depth;
 					mId = 10;
 					mAxis.set(edgeAxis);
@@ -401,8 +402,8 @@ public class BoxBoxDetector extends Detector {
 			neg = projC12 < 0;
 			abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				float depth = sum - abs;
-				if(depth < mDepth) {
+				double depth = sum - abs;
+				if(depth*EDGE_BIAS_MULT< mDepth) {
 					mDepth = depth;
 					mId = 11;
 					mAxis.set(edgeAxis);
@@ -425,8 +426,8 @@ public class BoxBoxDetector extends Detector {
 			neg = projC12 < 0;
 			abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				float depth = sum - abs;
-				if(depth < mDepth) {
+				double depth = sum - abs;
+				if(depth*EDGE_BIAS_MULT< mDepth) {
 					mDepth = depth;
 					mId = 12;
 					mAxis.set(edgeAxis);
@@ -449,8 +450,8 @@ public class BoxBoxDetector extends Detector {
 			neg = projC12 < 0;
 			abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				float depth = sum - abs;
-				if(depth < mDepth) {
+				double depth = sum - abs;
+				if(depth*EDGE_BIAS_MULT< mDepth) {
 					mDepth = depth;
 					mId = 13;
 					mAxis.set(edgeAxis);
@@ -473,8 +474,8 @@ public class BoxBoxDetector extends Detector {
 			neg = projC12 < 0;
 			abs = neg ? -projC12 : projC12;
 			if(abs < sum) {
-				float depth = sum - abs;
-				if(depth < mDepth) {
+				double depth = sum - abs;
+				if(depth*EDGE_BIAS_MULT< mDepth) {
 					mDepth = depth;
 					mId = 14;
 					mAxis.set(edgeAxis);
@@ -539,13 +540,13 @@ public class BoxBoxDetector extends Detector {
 			Vec3 r=new Vec3();
 			M.vec3_sub(r, p1, p2);
 
-			float dot12 = M.vec3_dot(dir1, dir2);
-			float dot1r = M.vec3_dot(dir1, r);
-			float dot2r = M.vec3_dot(dir2, r);
+			double dot12 = M.vec3_dot(dir1, dir2);
+			double dot1r = M.vec3_dot(dir1, r);
+			double dot2r = M.vec3_dot(dir2, r);
 
-			float invDet = 1 / (1 - dot12 * dot12);
-			float t1 = (dot12 * dot2r - dot1r) * invDet;
-			float t2 = (dot2r - dot12 * dot1r) * invDet;
+			double invDet = 1 / (1 - dot12 * dot12);
+			double t1 = (dot12 * dot2r - dot1r) * invDet;
+			double t2 = (dot2r - dot12 * dot1r) * invDet;
 
 			// compute closest points and normal
 			Vec3 cp1=new Vec3();
@@ -562,9 +563,6 @@ public class BoxBoxDetector extends Detector {
 
 		// --------------------- face-face collision check ---------------------
 
-		float tmpX;
-		float tmpY;
-		float tmpZ;
 		boolean swapped;
 
 		if (mId >= 3) { // swap box1 and box2
@@ -573,13 +571,13 @@ public class BoxBoxDetector extends Detector {
 			BoxGeometry tmp = b1;
 			b1 = b2;
 			b2 = tmp;
-			float tmp1 = w1;
+			double tmp1 = w1;
 			w1 = w2;
 			w2 = tmp1;
-			float tmp2 = h1;
+			double tmp2 = h1;
 			h1 = h2;
 			h2 = tmp2;
-			float tmp3 = d1;
+			double tmp3 = d1;
 			d1 = d2;
 			d2 = tmp3;
 			M.vec3_swap( c1, c2);
@@ -601,8 +599,8 @@ public class BoxBoxDetector extends Detector {
 		Vec3 refNormal=new Vec3();
 		Vec3 refX=new Vec3();
 		Vec3 refY=new Vec3();
-		float refW;
-		float refH;
+		double refW;
+		double refH;
 
 		switch (mId) {
 			case 0: // x+ or x-
@@ -612,6 +610,7 @@ public class BoxBoxDetector extends Detector {
 				M.vec3_assign(refY, z1);
 				refW = h1;
 				refH = d1;
+				break;
 			case 1: // y+ or y-
 				M.vec3_assign(refCenter, sy1);
 				M.vec3_assign(refNormal, y1);
@@ -619,6 +618,7 @@ public class BoxBoxDetector extends Detector {
 				M.vec3_assign(refY, x1);
 				refW = d1;
 				refH = w1;
+				break;
 			default: // z+ or z-
 				M.vec3_assign(refCenter, sz1);
 				M.vec3_assign(refNormal, z1);
@@ -632,7 +632,7 @@ public class BoxBoxDetector extends Detector {
 			refCenter.negateEq();
 			refNormal.negateEq();
 			M.vec3_swap( refX, refY);
-			float tmp=refW;
+			double tmp=refW;
 			refW=refH;
 			refH=tmp;
 		}
@@ -642,10 +642,10 @@ public class BoxBoxDetector extends Detector {
 
 		// --------------------- find incident face ---------------------
 
-		float minIncDot = 1;
+		double minIncDot = 1;
 		int incId = 0;
 
-		float incDot;
+		double incDot;
 		incDot = M.vec3_dot(refNormal, x2);
 		if (incDot < minIncDot) { // x+
 			minIncDot = incDot;
@@ -682,14 +682,19 @@ public class BoxBoxDetector extends Detector {
 		switch (incId) {
 			case 0:
 				getBoxFace(incV1, incV2, incV3, incV4, sx2, sy2, sz2, "x+");
+				break;
 			case 1:
 				getBoxFace(incV1, incV2, incV3, incV4, sx2, sy2, sz2, "x-");
+				break;
 			case 2:
 				getBoxFace(incV1, incV2, incV3, incV4, sx2, sy2, sz2, "y+");
+				break;
 			case 3:
 				getBoxFace(incV1, incV2, incV3, incV4, sx2, sy2, sz2, "y-");
+				break;
 			case 4:
 				getBoxFace(incV1, incV2, incV3, incV4, sx2, sy2, sz2, "z+");
+				break;
 			default:
 				getBoxFace(incV1, incV2, incV3, incV4, sx2, sy2, sz2, "z-");
 		}
@@ -725,9 +730,9 @@ public class BoxBoxDetector extends Detector {
 
 		// add contact points
 		for (int i=0; i<clipper.numVertices;i++) {
-			float clippedVertexX;
-			float clippedVertexY;
-			float clippedVertexZ;
+			double clippedVertexX;
+			double clippedVertexY;
+			double clippedVertexZ;
 			IncidentVertex v = this.clipper.vertices[i];
 			clippedVertexX = v.wx;
 			clippedVertexY = v.wy;
@@ -735,16 +740,16 @@ public class BoxBoxDetector extends Detector {
 			clippedVertexX += c1.x;
 			clippedVertexY += c1.y;
 			clippedVertexZ += c1.z;
-			float clippedVertexToRefCenterX;
-			float clippedVertexToRefCenterY;
-			float clippedVertexToRefCenterZ;
+			double clippedVertexToRefCenterX;
+			double clippedVertexToRefCenterY;
+			double clippedVertexToRefCenterZ;
 			clippedVertexToRefCenterX = refCenter.x - clippedVertexX;
 			clippedVertexToRefCenterY = refCenter.y - clippedVertexY;
 			clippedVertexToRefCenterZ = refCenter.z - clippedVertexZ;
-			float depth = clippedVertexToRefCenterX * refNormal.x + clippedVertexToRefCenterY * refNormal.y + clippedVertexToRefCenterZ * refNormal.z;
-			float clippedVertexOnRefFaceX;
-			float clippedVertexOnRefFaceY;
-			float clippedVertexOnRefFaceZ;
+			double depth = clippedVertexToRefCenterX * refNormal.x + clippedVertexToRefCenterY * refNormal.y + clippedVertexToRefCenterZ * refNormal.z;
+			double clippedVertexOnRefFaceX;
+			double clippedVertexOnRefFaceY;
+			double clippedVertexOnRefFaceZ;
 			clippedVertexOnRefFaceX = clippedVertexX + refNormal.x * depth;
 			clippedVertexOnRefFaceY = clippedVertexY + refNormal.y * depth;
 			clippedVertexOnRefFaceZ = clippedVertexZ + refNormal.z * depth;
@@ -762,10 +767,10 @@ public class BoxBoxDetector extends Detector {
 	 * Returns half of the projected length of the box with scaled bases
 	 * (`sx`, `sy`, `sz`) onto the normalized axis `axis`.
 	 */
-	private float project(Vec3 axis, Vec3 sx, Vec3 sy, Vec3 sz) {
-		float dx = M.vec3_dot(axis, sx);
-		float dy = M.vec3_dot(axis, sy);
-		float dz = M.vec3_dot(axis, sz);
+	private double project(Vec3 axis, Vec3 sx, Vec3 sy, Vec3 sz) {
+		double dx = M.vec3_dot(axis, sx);
+		double dy = M.vec3_dot(axis, sy);
+		double dz = M.vec3_dot(axis, sz);
 		if (dx < 0)
 			dx = -dx;
 		if (dy < 0)
@@ -778,9 +783,9 @@ public class BoxBoxDetector extends Detector {
 	/**
 	 * 2D version of `project`.
 	 */
-	private float project2(Vec3 axis, Vec3 sx, Vec3 sy) {
-		float dx = M.vec3_dot(axis, sx);
-		float dy = M.vec3_dot(axis, sy);
+	private double project2(Vec3 axis, Vec3 sx, Vec3 sy) {
+		double dx = M.vec3_dot(axis, sx);
+		double dy = M.vec3_dot(axis, sy);
 		if (dx < 0)
 			dx = -dx;
 		if (dy < 0)
@@ -856,13 +861,13 @@ public class BoxBoxDetector extends Detector {
 	
 	private class IncidentVertex {
 		// projected coord
-		public float x;
-		public float y;
+		public double x;
+		public double y;
 
 		// world coord
-		public float wx;
-		public float wy;
-		public float wz;
+		public double wx;
+		public double wy;
+		public double wz;
 
 		public IncidentVertex() {
 			x = 0;
@@ -872,7 +877,7 @@ public class BoxBoxDetector extends Detector {
 			wz = 0;
 		}
 
-		public void init(float x, float y, float wx,float wy,float wz) {
+		public void init(double x, double y, double wx,double wy,double wz) {
 			this.x = x;
 			this.y = y;
 			this.wx = wx;
@@ -888,7 +893,7 @@ public class BoxBoxDetector extends Detector {
 			wz = v.wz;
 		}
 
-		 public void interp(IncidentVertex v1, IncidentVertex v2, float t) {
+		 public void interp(IncidentVertex v1, IncidentVertex v2, double t) {
 			x = v1.x + (v2.x - v1.x) * t;
 			y = v1.y + (v2.y - v1.y) * t;
 			wx = v1.wx + (v2.wx - v1.wx) * t;
@@ -898,8 +903,8 @@ public class BoxBoxDetector extends Detector {
 	}
 
 	private  class FaceClipper {
-		public float w;
-		public float h;
+		public double w;
+		public double h;
 		public int numVertices;
 		public IncidentVertex[] vertices;
 
@@ -919,14 +924,14 @@ public class BoxBoxDetector extends Detector {
 			}
 		}
 
-		 public void init(float w, float h) {
+		 public void init(double w, double h) {
 			this.w = w;
 			this.h = h;
 			numVertices = 0;
 			numTmpVertices = 0;
 		}
 
-		 public void addIncidentVertex(float x, float y, float wx, float wy, float wz) {
+		 public void addIncidentVertex(double x, double y, double wx, double wy, double wz) {
 			vertices[numVertices++].init(x, y, wx, wy, wz);
 		}
 
@@ -952,23 +957,23 @@ public class BoxBoxDetector extends Detector {
 				return;
 
 			// TODO: maximize area
-			float max1 = MathUtil.NEGATIVE_INFINITY;
-			float min1 = MathUtil.POSITIVE_INFINITY;
-			float max2 = MathUtil.NEGATIVE_INFINITY;
-			float min2 = MathUtil.POSITIVE_INFINITY;
+			double max1 = MathUtil.NEGATIVE_INFINITY;
+			double min1 = MathUtil.POSITIVE_INFINITY;
+			double max2 = MathUtil.NEGATIVE_INFINITY;
+			double min2 = MathUtil.POSITIVE_INFINITY;
 			IncidentVertex max1V = null;
 			IncidentVertex min1V = null;
 			IncidentVertex max2V = null;
 			IncidentVertex min2V = null;
-			float e1x = 1;
-			float e1y = 1;
-			float e2x = -1;
-			float e2y = 1;
+			double e1x = 1;
+			double e1y = 1;
+			double e2x = -1;
+			double e2y = 1;
 
 			for (int i=0;i<numVertices;i++) {
 				IncidentVertex v = vertices[i];
-				float dot1 = v.x * e1x + v.y * e1y;
-				float dot2 = v.x * e2x + v.y * e2y;
+				double dot1 = v.x * e1x + v.y * e1y;
+				double dot2 = v.x * e2x + v.y * e2y;
 				if (i == 0) { // issue #32
 					max1 = dot1;
 					max1V = v;
@@ -1009,8 +1014,8 @@ public class BoxBoxDetector extends Detector {
 			for (int i=0;i<numVertices;i++) {
 				IncidentVertex v1 = vertices[i];
 				IncidentVertex v2 = vertices[(i + 1) % numVertices];
-				float s1 = w + v1.x;
-				float s2 = w + v2.x;
+				double s1 = w + v1.x;
+				double s2 = w + v2.x;
 				clipWithParam(v1, v2, s1, s2);
 			}
 		}
@@ -1019,8 +1024,8 @@ public class BoxBoxDetector extends Detector {
 			for (int i=0;i<numVertices;i++) {
 				IncidentVertex v1 = vertices[i];
 				IncidentVertex v2 = vertices[(i + 1) % numVertices];
-				float s1 = w - v1.x;
-				float s2 = w - v2.x;
+				double s1 = w - v1.x;
+				double s2 = w - v2.x;
 				clipWithParam(v1, v2, s1, s2);
 			}
 		}
@@ -1029,8 +1034,8 @@ public class BoxBoxDetector extends Detector {
 			for (int i=0;i<numVertices;i++) {
 				IncidentVertex v1 = vertices[i];
 				IncidentVertex v2 = vertices[(i + 1) % numVertices];
-				float s1 = h + v1.y;
-				float s2 = h + v2.y;
+				double s1 = h + v1.y;
+				double s2 = h + v2.y;
 				clipWithParam(v1, v2, s1, s2);
 			}
 		}
@@ -1039,8 +1044,8 @@ public class BoxBoxDetector extends Detector {
 			for (int i=0;i<numVertices;i++) {
 				IncidentVertex v1 = vertices[i];
 				IncidentVertex v2 = vertices[(i + 1) % numVertices];
-				float s1 = h - v1.y;
-				float s2 = h - v2.y;
+				double s1 = h - v1.y;
+				double s2 = h - v2.y;
 				clipWithParam(v1, v2, s1, s2);
 			}
 		}
@@ -1054,7 +1059,7 @@ public class BoxBoxDetector extends Detector {
 			numTmpVertices = 0;
 		}
 
-		protected void  clipWithParam(IncidentVertex v1, IncidentVertex v2, float s1, float s2) {
+		protected void  clipWithParam(IncidentVertex v1, IncidentVertex v2, double s1, double s2) {
 			if (s1 > 0 && s2 > 0) {
 				add(v1);
 			} else if (s1 > 0 && s2 <= 0) {
@@ -1071,7 +1076,7 @@ public class BoxBoxDetector extends Detector {
 			tmpVertices[numTmpVertices++].copyFrom(v);
 		}
 
-		protected void  interp(IncidentVertex v1, IncidentVertex v2, float t) {
+		protected void  interp(IncidentVertex v1, IncidentVertex v2, double t) {
 			tmpVertices[numTmpVertices++].interp(v1, v2, t);
 		}
 	}

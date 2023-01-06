@@ -9,13 +9,13 @@ import oimo.common.Vec3;
  * A capsule collision geometry aligned with the y-axis.
  */
 public class CapsuleGeometry extends ConvexGeometry {
-	public float _radius;
-	public float _halfHeight;
+	public double _radius;
+	public double _halfHeight;
 
 	/**
 	 * Creates a capsule collision geometry of radius `radius` and half-height `halfHeight`.
 	 */
-	public CapsuleGeometry(float radius, float halfHeight) {
+	public CapsuleGeometry(double radius, double halfHeight) {
 		super(GeometryType.CAPSULE);
 		_radius = radius;
 		_halfHeight = halfHeight;
@@ -26,34 +26,34 @@ public class CapsuleGeometry extends ConvexGeometry {
 	/**
 	 * Returns the radius of the capsule.
 	 */
-	public float getRadius() {
+	public double getRadius() {
 		return _radius;
 	}
 
 	/**
 	 * Returns the half-height of the capsule.
 	 */
-	public float getHalfHeight() {
+	public double getHalfHeight() {
 		return _halfHeight;
 	}
 
 	@Override 
 	public void _updateMass() {
-		float r2 = _radius * _radius;
-		float hh2 = _halfHeight * _halfHeight;
+		double r2 = _radius * _radius;
+		double hh2 = _halfHeight * _halfHeight;
 
-		float cylinderVolume = MathUtil.TWO_PI * r2 * _halfHeight;
-		float sphereVolume = MathUtil.PI * r2 * _radius * 4 / 3;
+		double cylinderVolume = MathUtil.TWO_PI * r2 * _halfHeight;
+		double sphereVolume = MathUtil.PI * r2 * _radius * 4 / 3.0;
 		_volume = cylinderVolume + sphereVolume;
 
-		float invVolume = _volume == 0 ? 0 : 1 / _volume;
+		double invVolume = _volume == 0 ? 0 : 1 / _volume;
 
-		float inertiaY = invVolume * (
+		double inertiaY = invVolume * (
 			cylinderVolume * r2 * 0.5f +
 			sphereVolume * r2 * 0.4f
 		);
 
-		float inertiaXZ = invVolume * (
+		double inertiaXZ = invVolume * (
 			cylinderVolume * (r2 * 0.25f + hh2 / 3) +
 			sphereVolume * (r2 * 0.4f + _halfHeight * _radius * 0.75f + hh2)
 		);
@@ -63,9 +63,9 @@ public class CapsuleGeometry extends ConvexGeometry {
 
 	@Override 
 	public void _computeAabb(Aabb aabb, Transform tf) {
-		Vec3 radVec=_TMP_V1;
+		Vec3 radVec=new Vec3();
 		radVec.set( _radius, _radius, _radius);
-		Vec3 axis=_TMP_V2;
+		Vec3 axis=new Vec3();
 		M.mat3_getCol(axis, tf._rotation, 1);
 		M.vec3_abs(axis, axis);
 		M.vec3_scale(axis, axis, _halfHeight);
@@ -86,24 +86,24 @@ public class CapsuleGeometry extends ConvexGeometry {
 
 	@Override 
 	public boolean _rayCastLocal(Vec3 begin, Vec3 end, RayCastHit result) {
-		float p1x = begin.x;
-		float p1y = begin.y;
-		float p1z = begin.z;
-		float p2x = end.x;
-		float p2y = end.y;
-		float p2z = end.z;
-		float halfH = _halfHeight;
-		float dx = p2x - p1x;
-		float dy = p2y - p1y;
-		float dz = p2z - p1z;
+		double p1x = begin.x;
+		double p1y = begin.y;
+		double p1z = begin.z;
+		double p2x = end.x;
+		double p2y = end.y;
+		double p2z = end.z;
+		double halfH = _halfHeight;
+		double dx = p2x - p1x;
+		double dy = p2y - p1y;
+		double dz = p2z - p1z;
 
 		// XZ
-		float tminxz = 0;
-		float tmaxxz = 1;
-		float a = dx * dx + dz * dz;
-		float b = p1x * dx + p1z * dz;
-		float c = (p1x * p1x + p1z * p1z) - _radius * _radius;
-		float D = b * b - a * c;
+		double tminxz = 0;
+		double tmaxxz = 1;
+		double a = dx * dx + dz * dz;
+		double b = p1x * dx + p1z * dz;
+		double c = (p1x * p1x + p1z * p1z) - _radius * _radius;
+		double D = b * b - a * c;
 		if (D < 0) return false;
 		if (a > 0) {
 			var sqrtD = MathUtil.sqrt(D);
@@ -116,8 +116,8 @@ public class CapsuleGeometry extends ConvexGeometry {
 			tmaxxz = 1;
 		}
 
-		float crossY = p1y + dy * tminxz;
-		float min;
+		double crossY = p1y + dy * tminxz;
+		double min;
 
 		if (crossY > -halfH && crossY < halfH) {
 			//hits with cylinder
@@ -133,14 +133,14 @@ public class CapsuleGeometry extends ConvexGeometry {
 		}
 
 		//hits with sphere
-		float sphereY = crossY < 0 ? -halfH : halfH;
-		Vec3 spherePos=_TMP_V1;
-		Vec3 sphereToBegin=_TMP_V2;
+		double sphereY = crossY < 0 ? -halfH : halfH;
+		Vec3 spherePos=new Vec3();
+		Vec3 sphereToBegin=new Vec3();
 		spherePos.set(0, sphereY, 0);
 		M.vec3_sub(sphereToBegin, begin, spherePos);
 
 		// sphere test
-		Vec3 d=_TMP_V2;
+		Vec3 d=new Vec3();
 		M.vec3_sub(d, end, begin);
 
 		a = M.vec3_dot(d, d);
@@ -150,7 +150,7 @@ public class CapsuleGeometry extends ConvexGeometry {
 		D = b * b - a * c;
 		if (D < 0) return false;
 
-		float t = (-b - MathUtil.sqrt(D)) / a;
+		double t = (-b - MathUtil.sqrt(D)) / a;
 		if (t < 0 || t > 1) return false;
 
 		Vec3 hitPos=sphereToBegin.addScaledEq(d, t);

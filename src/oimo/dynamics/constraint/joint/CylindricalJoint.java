@@ -23,12 +23,12 @@ public class CylindricalJoint extends Joint {
 
 	public BasisTracker _basis;
 
-	float angle=0;
-	float angularErrorY=0;
-	float angularErrorZ=0;
-	float translation=0;
-	float linearErrorY=0;
-	float linearErrorZ=0;
+	double angle=0;
+	double angularErrorY=0;
+	double angularErrorZ=0;
+	double translation=0;
+	double linearErrorY=0;
+	double linearErrorZ=0;
 
 	/**
 	 * Creates a new cylindrical joint by configuration `config`.
@@ -60,18 +60,18 @@ public class CylindricalJoint extends Joint {
 
 	protected void getInfo(JointSolverInfo info, TimeStep timeStep, boolean isPositionPart) {
 		// compute ERP
-		float erp = getErp(timeStep, isPositionPart);
+		double erp = getErp(timeStep, isPositionPart);
 
 		// compute rhs
-		float linRhsY = linearErrorY * erp;
-		float linRhsZ = linearErrorZ * erp;
-		float angRhsY = angularErrorY * erp;
-		float angRhsZ = angularErrorZ * erp;
+		double linRhsY = linearErrorY * erp;
+		double linRhsZ = linearErrorZ * erp;
+		double angRhsY = angularErrorY * erp;
+		double angRhsZ = angularErrorZ * erp;
 
 		JointSolverInfoRow row;
 		JacobianRow j;
-		float translationalMotorMass = 1 / (_b1._invMass + _b2._invMass);
-		float rotationalMotorMass = this.computeEffectiveInertiaMoment(_basis.x);
+		double translationalMotorMass = 1 / (_b1._invMass + _b2._invMass);
+		double rotationalMotorMass = this.computeEffectiveInertiaMoment(_basis.x);
 
 		// linear X
 		if (_translSd.frequency <= 0 || !isPositionPart) {
@@ -133,14 +133,14 @@ public class CylindricalJoint extends Joint {
 	}
 
 	private void computeErrors() {
-		float cos;
+		double cos;
 
 		// compute angular error along Y and Z
 		Vec3 TMP=new Vec3();
 		Vec3 angError=TMP;
 		M.vec3_cross(angError, _basisX1, _basisX2);
 		cos = M.vec3_dot(_basisX1, _basisX2);
-		float theta = MathUtil.safeAcos(cos);
+		double theta = MathUtil.safeAcos(cos);
 		M.vec3_normalize(angError, angError);
 		M.vec3_scale(angError, angError, theta);
 		angularErrorY = M.vec3_dot(angError, _basis.y);
@@ -291,14 +291,14 @@ public class CylindricalJoint extends Joint {
 	/**
 	 * Returns the rotation angle in radians.
 	 */
-	public float getAngle() {
+	public double getAngle() {
 		return angle;
 	}
 
 	/**
 	 * Returns the translation of the joint.
 	 */
-	public float getTranslation() {
+	public double getTranslation() {
 		return translation;
 	}
 

@@ -10,9 +10,8 @@ import oimo.common.Vec3;
  */
 public abstract class Geometry {
 	public int _type;
-	public float _volume;
-	public Mat3 _inertiaCoeff; // I / mass
-	protected Vec3 _TMP_V1=new Vec3(),_TMP_V2=new Vec3();
+	public double _volume;
+	public Mat3 _inertiaCoeff=new Mat3(); // I / mass
 	
 	public Geometry (int type) {
 		_type = type;
@@ -56,7 +55,7 @@ public abstract class Geometry {
 	/**
 	 * Returns the volume of the collision geometry.
 	 */
-	public float getVolume() {
+	public double getVolume() {
 		return _volume;
 	}
 
@@ -69,8 +68,8 @@ public abstract class Geometry {
 	 * @param result Transform of this shape in World Space
 	 */
 	public boolean rayCast(Vec3 begin, Vec3 end, Transform transform, RayCastHit result) {
-		Vec3 beginLocal=_TMP_V1.copyFrom(begin);
-		Vec3 endLocal=_TMP_V2.copyFrom(end);
+		Vec3 beginLocal= begin.clone();
+		Vec3 endLocal= end.clone();
 		
 		//transform points in Shapes local frame by multiplying with inverse transform
 		M.vec3_sub(beginLocal, beginLocal, transform._position);

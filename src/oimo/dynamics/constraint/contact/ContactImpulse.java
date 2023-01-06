@@ -7,16 +7,16 @@ import oimo.dynamics.constraint.contact.ContactImpulse;
  */
 public class ContactImpulse {
 	// normal impulse
-	public float impulseN;
+	public double impulseN;
 
 	// tangent impulse
-	public float impulseT;
+	public double impulseT;
 
 	// binomal impulse
-	public float impulseB;
+	public double impulseB;
 
 	// position impulse
-	public float impulseP;
+	public double impulseP;
 
 	// lateral impulse
 	public Vec3 impulseL=new Vec3();

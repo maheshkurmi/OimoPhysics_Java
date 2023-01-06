@@ -214,24 +214,24 @@ public abstract class BroadPhase {
 
 	
 	public boolean aabbSegmentTest(Vec3 aabbMin, Vec3 aabbMax, Vec3 begin, Vec3 end) {
-		float x1 = begin.x;// .vec3_get(begin, 0);
-		float y1 = begin.y;
-		float z1 = begin.z;
-		float x2 = end.x;
-		float y2 = end.y;
-		float z2 = end.z;
-		float sminx = MathUtil.min(x1, x2);
-		float sminy = MathUtil.min(y1, y2);
-		float sminz = MathUtil.min(z1, z2);
-		float smaxx = MathUtil.max(x1, x2);
-		float smaxy = MathUtil.max(y1, y2);
-		float smaxz = MathUtil.max(z1, z2);
-		float pminx = aabbMin.x;// .vec3_get(aabbMin, 0);
-		float pminy = aabbMin.y;// M.vec3_get(aabbMin, 1);
-		float pminz = aabbMin.z;// M.vec3_get(aabbMin, 2);
-		float pmaxx = aabbMax.x;// .vec3_get(aabbMax, 0);
-		float pmaxy = aabbMax.y;// .vec3_get(aabbMax, 1);
-		float pmaxz = aabbMax.z;// .vec3_get(aabbMax, 2);
+		double x1 = begin.x;// .vec3_get(begin, 0);
+		double y1 = begin.y;
+		double z1 = begin.z;
+		double x2 = end.x;
+		double y2 = end.y;
+		double z2 = end.z;
+		double sminx = MathUtil.min(x1, x2);
+		double sminy = MathUtil.min(y1, y2);
+		double sminz = MathUtil.min(z1, z2);
+		double smaxx = MathUtil.max(x1, x2);
+		double smaxy = MathUtil.max(y1, y2);
+		double smaxz = MathUtil.max(z1, z2);
+		double pminx = aabbMin.x;// .vec3_get(aabbMin, 0);
+		double pminy = aabbMin.y;// M.vec3_get(aabbMin, 1);
+		double pminz = aabbMin.z;// M.vec3_get(aabbMin, 2);
+		double pmaxx = aabbMax.x;// .vec3_get(aabbMax, 0);
+		double pmaxy = aabbMax.y;// .vec3_get(aabbMax, 1);
+		double pmaxz = aabbMax.z;// .vec3_get(aabbMax, 2);
 
 		if (
 		// axis1: (1, 0, 0)
@@ -241,21 +241,21 @@ public abstract class BroadPhase {
 			return false;
 		}
 
-		float dx = x2 - x1;
-		float dy = y2 - y1;
-		float dz = z2 - z1;
-		float adx = MathUtil.abs(dx);
-		float ady = MathUtil.abs(dy);
-		float adz = MathUtil.abs(dz);
-		float pextx = (pmaxx - pminx) * 0.5f;
-		float pexty = (pmaxy - pminy) * 0.5f;
-		float pextz = (pmaxz - pminz) * 0.5f;
-		float pcntx = (pmaxx + pminx) * 0.5f;
-		float pcnty = (pmaxy + pminy) * 0.5f;
-		float pcntz = (pmaxz + pminz) * 0.5f;
-		float cpx = x1 - pcntx;
-		float cpy = y1 - pcnty;
-		float cpz = z1 - pcntz;
+		double dx = x2 - x1;
+		double dy = y2 - y1;
+		double dz = z2 - z1;
+		double adx = MathUtil.abs(dx);
+		double ady = MathUtil.abs(dy);
+		double adz = MathUtil.abs(dz);
+		double pextx = (pmaxx - pminx) * 0.5f;
+		double pexty = (pmaxy - pminy) * 0.5f;
+		double pextz = (pmaxz - pminz) * 0.5f;
+		double pcntx = (pmaxx + pminx) * 0.5f;
+		double pcnty = (pmaxy + pminy) * 0.5f;
+		double pcntz = (pmaxz + pminz) * 0.5f;
+		double cpx = x1 - pcntx;
+		double cpy = y1 - pcnty;
+		double cpz = z1 - pcntz;
 
 		if (
 		// axis4: (dx, dy, dz) x (1, 0, 0) = (0, dz, -dy)

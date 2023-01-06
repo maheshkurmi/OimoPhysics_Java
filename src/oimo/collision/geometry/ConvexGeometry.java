@@ -11,7 +11,7 @@ import oimo.common.Vec3;
  */
 public abstract class  ConvexGeometry extends Geometry {
 	// TODO: divide margin into "inner" margin and "outer" margin
-	public float _gjkMargin;
+	public double _gjkMargin;
 	// if true GJK ray cast is used rather than default 
 	public boolean _useGjkRayCast;
 
@@ -24,14 +24,14 @@ public abstract class  ConvexGeometry extends Geometry {
 	/**
 	 * Returns the GJK mergin around the "core" of the convex geometry.
 	 */
-	public float getGjkMergin() {
+	public double getGjkMergin() {
 		return _gjkMargin;
 	}
 
 	/**
 	 * Sets the GJK mergin around the "core" to `gjkMergin`.
 	 */
-	public void setGjkMergin(float gjkMergin) {
+	public void setGjkMergin(double gjkMergin) {
 		if (gjkMergin < 0) gjkMergin = 0;
 		_gjkMargin = gjkMergin;
 	}

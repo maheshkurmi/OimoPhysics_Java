@@ -8,7 +8,7 @@ public class MassData {
 	/**
 	 * Mass. `0` for a non-dynamic rigid body.
 	 */
-	public float mass;
+	public double mass;
 
 	/**
 	 * Inertia tensor in local space. Zero matrix for a non-dynamic rigid body.

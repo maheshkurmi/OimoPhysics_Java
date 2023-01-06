@@ -48,8 +48,8 @@ public class DetectorResult {
 	 * Returns the maximum depth of the result points. Returns `0.0` if no result
 	 * points are available.
 	 */
-	public float getMaxDepth() {
-		float max = 0;
+	public double getMaxDepth() {
+		double max = 0;
 		for (int i =0; i<numPoints;i++) {
 			if (points[i].depth > max) {
 				max = points[i].depth;

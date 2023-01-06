@@ -45,7 +45,7 @@ public class World {
 	int _numSolversInIslands;
 
 	DebugDraw _debugDraw;
-	Performance performance;
+	public Performance performance;
 	RayCastWrapper _rayCastWrapper;
 	RayCastWrapper.ConvexCastWrapper _convexCastWrapper;
 	RayCastWrapper.ConvexCastWrapper.AabbTestWrapper _aabbTestWrapper;
@@ -57,8 +57,11 @@ public class World {
 	/**
 	 * Creates a new physics world, with broad-phase collision detection algorithm `broadPhaseType` and
 	 * gravitational acceleration `gravity`.
+	 * @param broadPhaseType 1=Bruteforce 2=BVM
+	 * @param gravity
 	 */
 	public World(int broadPhaseType ,Vec3 gravity ) {
+		broadPhaseType=1;
 		switch(broadPhaseType) {
 		case BroadPhaseType.BRUTE_FORCE:
 			_broadPhase = new BruteForceBroadPhase();
@@ -101,6 +104,7 @@ public class World {
 
 
 		_shapeIdCount = 0;
+		performance=new Performance(this);
 	}
 
 	void _updateContacts() {
@@ -276,9 +280,7 @@ public class World {
 
 	public void _removeShape(Shape shape) {
 		_broadPhase.destroyProxy(shape._proxy);
-		shape._proxy = null;
-		shape._id = -1;
-
+	
 		// destroy linked contacts
 		ContactLink cl = shape._rigidBody._contactLinkList;
 		while(cl != null) {
@@ -289,7 +291,9 @@ public class World {
 			}
 			cl=cl._next;
 		}
-	
+		shape._proxy = null;
+		shape._id = -1;
+
 		_numShapes--;
 	}
 
@@ -360,16 +364,22 @@ public class World {
 		switch (geom._type) {
 		case GeometryType.SPHERE:
 			_drawSphere(d,  (SphereGeometry) geom, tf, color);
+			break;
 		case GeometryType.BOX:
 			_drawBox(d,  (BoxGeometry) geom, tf, color);
+			break;
 		case GeometryType.CYLINDER:
 			_drawCylinder(d,  (CylinderGeometry) geom, tf, color);
+			break;
 		case GeometryType.CONE:
 			_drawCone(d,  (ConeGeometry) geom, tf, color);
+			break;
 		case GeometryType.CAPSULE:
 			_drawCapsule(d,  (CapsuleGeometry) geom, tf, color);
+			break;
 		case GeometryType.CONVEX_HULL:
 			_drawConvexHull(d,  (ConvexHullGeometry) geom, tf, color);
+			break;
 		}
 	}
 
@@ -522,10 +532,13 @@ public class World {
 			switch (p._id & 3) {
 			case 0:
 				color = style.contactColor;
+				break;
 			case 1:
 				color = style.contactColor2;
+				break;
 			case 2:
 				color = style.contactColor3;
+				break;
 			default:
 				color = style.contactColor4;
 			}
@@ -594,19 +607,26 @@ public class World {
 		if (d.drawJointLimits) {
 			switch (j._type) {
 			case JointType.SPHERICAL:
+				break;
 				// draw nothing here
 			case JointType._REVOLUTE:
 				_drawRevolute(d,  (RevoluteJoint) j, anchor1, anchor2, basisX1, basisY1, basisZ1, basisX2, basisY2, basisZ2);
+				break;
 			case JointType.CYLINDRICAL:
 				_drawCylindrical(d,  (CylindricalJoint) j, anchor1, anchor2, basisX1, basisY1, basisZ1, basisX2, basisY2, basisZ2);
+				break;
 			case JointType.PRISMATIC:
 				_drawPrismatic(d,  (PrismaticJoint) j, anchor1, anchor2, basisX1, basisY1, basisZ1, basisX2, basisY2, basisZ2);
+				break;
 			case JointType.UNIVERSAL:
 				_drawUniversal(d,  (UniversalJoint) j, anchor1, anchor2, basisX1, basisY1, basisZ1, basisX2, basisY2, basisZ2);
+				break;
 			case JointType.RAGDOLL:
 				_drawRagdoll(d,  (RagdollJoint) j, anchor1, anchor2, basisX1, basisY1, basisZ1, basisX2, basisY2, basisZ2);
+				break;
 			case JointType.GENERIC:
 				_drawGeneric(d,  (GenericJoint) j, anchor1, anchor2, basisX1, basisY1, basisZ1, basisX2, basisY2, basisZ2);
+				break;
 			}
 		}
 
@@ -625,14 +645,14 @@ public class World {
 	}
 
 	void _drawRevolute(DebugDraw d, RevoluteJoint j, Vec3 anchor1, Vec3 anchor2, Vec3 basisX1, Vec3 basisY1, Vec3 basisZ1, Vec3 basisX2, Vec3 basisY2, Vec3 basisZ2) {
-		float radius = d.style.jointRotationalConstraintRadius;
+		double radius = d.style.jointRotationalConstraintRadius;
 		Vec3 color = d.style.jointLineColor;
 		RotationalLimitMotor lm = j._lm;
 		_drawRotationalLimit(d, anchor1, basisY1, basisZ1, basisY2, radius, lm.lowerLimit, lm.upperLimit, color);
 	}
 
 	void _drawCylindrical(DebugDraw d, CylindricalJoint j, Vec3 anchor1, Vec3 anchor2, Vec3 basisX1, Vec3 basisY1, Vec3 basisZ1, Vec3 basisX2, Vec3 basisY2, Vec3 basisZ2) {
-		float radius = d.style.jointRotationalConstraintRadius;
+		double radius = d.style.jointRotationalConstraintRadius;
 		Vec3 color = d.style.jointLineColor;
 		RotationalLimitMotor rlm = j._rotLm;
 		TranslationalLimitMotor tlm = j._translLm;
@@ -642,7 +662,7 @@ public class World {
 	}
 
 	void _drawPrismatic(DebugDraw d, PrismaticJoint j, Vec3 anchor1, Vec3 anchor2, Vec3 basisX1, Vec3 basisY1, Vec3 basisZ1, Vec3 basisX2, Vec3 basisY2, Vec3 basisZ2) {
-		float radius = d.style.jointRotationalConstraintRadius;
+		double radius = d.style.jointRotationalConstraintRadius;
 		Vec3 color = d.style.jointLineColor;
 		TranslationalLimitMotor lm = j._lm;
 
@@ -650,7 +670,7 @@ public class World {
 	}
 
 	void  _drawUniversal(DebugDraw d, UniversalJoint j, Vec3 anchor1, Vec3 anchor2, Vec3 basisX1, Vec3 basisY1, Vec3 basisZ1, Vec3 basisX2, Vec3 basisY2, Vec3 basisZ2) {
-		float radius = d.style.jointRotationalConstraintRadius;
+		double radius = d.style.jointRotationalConstraintRadius;
 		Vec3 color = d.style.jointLineColor;
 		RotationalLimitMotor lm1 = j._lm1;
 		RotationalLimitMotor lm2 = j._lm2;
@@ -660,7 +680,7 @@ public class World {
 	}
 
 	void  _drawRagdoll(DebugDraw d, RagdollJoint j, Vec3 anchor1, Vec3 anchor2, Vec3 basisX1, Vec3 basisY1, Vec3 basisZ1, Vec3 basisX2, Vec3 basisY2, Vec3 basisZ2) {
-		float radius = d.style.jointRotationalConstraintRadius;
+		double radius = d.style.jointRotationalConstraintRadius;
 		Vec3 color = d.style.jointLineColor;
 		RotationalLimitMotor lm = j._twistLm;
 
@@ -673,7 +693,7 @@ public class World {
 	}
 
 	void  _drawGeneric(DebugDraw d, GenericJoint j,Vec3 anchor1, Vec3 anchor2, Vec3 basisX1, Vec3 basisY1, Vec3 basisZ1, Vec3 basisX2, Vec3 basisY2, Vec3 basisZ2) {
-		float radius = d.style.jointRotationalConstraintRadius;
+		double radius = d.style.jointRotationalConstraintRadius;
 		Vec3 color = d.style.jointLineColor;
 		TranslationalLimitMotor txlm = j._translLms[0];
 		TranslationalLimitMotor tylm = j._translLms[1];
@@ -693,7 +713,7 @@ public class World {
 		_drawRotationalLimit(d, anchor2, basisX2, basisY2, basisX2, radius, rzlm.lowerLimit - j._angleZ, rzlm.upperLimit - j._angleZ, color);
 	}
 
-	void _drawRotationalLimit(DebugDraw d, Vec3 center, Vec3 ex, Vec3 ey, Vec3 needle, float radius, float min, float max, Vec3 color) {
+	void _drawRotationalLimit(DebugDraw d, Vec3 center, Vec3 ex, Vec3 ey, Vec3 needle, double radius, double min, double max, Vec3 color) {
 		if (min != max) {
 			Vec3 to = _pool.vec3().copyFrom(center).addScaledEq(needle, radius);
 			d.line(center, to, color);
@@ -706,7 +726,7 @@ public class World {
 		}
 	}
 
-	void _drawTranslationalLimit(DebugDraw d, Vec3 center, Vec3 ex, float min, float max, Vec3 color) {
+	void _drawTranslationalLimit(DebugDraw d, Vec3 center, Vec3 ex, double min, double max, Vec3 color) {
 		if (min < max) {
 			Vec3 lower = _pool.vec3().copyFrom(center).addScaledEq(ex, min);
 			Vec3 upper = _pool.vec3().copyFrom(center).addScaledEq(ex, max);
@@ -717,12 +737,12 @@ public class World {
 	}
 
 	void _drawTranslationalLimit3D(DebugDraw d, Vec3 center, Vec3 ex, Vec3 ey, Vec3 ez, TranslationalLimitMotor xlm, TranslationalLimitMotor ylm, TranslationalLimitMotor zlm, Vec3 color) {
-		float minx = xlm.lowerLimit;
-		float maxx = xlm.upperLimit;
-		float miny = ylm.lowerLimit;
-		float maxy = ylm.upperLimit;
-		float minz = zlm.lowerLimit;
-		float maxz = zlm.upperLimit;
+		double minx = xlm.lowerLimit;
+		double maxx = xlm.upperLimit;
+		double miny = ylm.lowerLimit;
+		double maxy = ylm.upperLimit;
+		double minz = zlm.lowerLimit;
+		double maxz = zlm.upperLimit;
 		Vec3 lower = _pool.vec3();
 		Vec3 upper = _pool.vec3();
 		Vec3 xyz = _pool.vec3().copyFrom(center).addScaledEq(ex, minx).addScaledEq(ey, miny).addScaledEq(ez, minz);
@@ -758,10 +778,10 @@ public class World {
 		_pool.disposeVec3(XYZ);
 	}
 
-	void _drawEllipseOnSphere(DebugDraw d,Vec3 center,Vec3 normal, Vec3 x,Vec3 y, float radiansX, float radiansY, float radius, Vec3 color) {
+	void _drawEllipseOnSphere(DebugDraw d,Vec3 center,Vec3 normal, Vec3 x,Vec3 y, double radiansX, double radiansY, double radius, Vec3 color) {
 		int n = 16;
-		float theta = 0;
-		float dTheta = MathUtil.TWO_PI / n;
+		double theta = 0;
+		double dTheta = MathUtil.TWO_PI / n;
 
 		Vec3 rotVec = _pool.vec3();
 		Quat rotQ = _pool.quat();
@@ -769,12 +789,12 @@ public class World {
 		Vec3 prevV = _pool.vec3();
 
 		for (int i=0; i<n + 1;i++) {
-			float rx = MathUtil.cos(theta) * radiansX;
-			float ry = MathUtil.sin(theta) * radiansY;
+			double rx = MathUtil.cos(theta) * radiansX;
+			double ry = MathUtil.sin(theta) * radiansY;
 
-			float halfRotAng = MathUtil.sqrt(rx * rx + ry * ry);
-			float rotSin = MathUtil.sin(halfRotAng * 0.5f);
-			float rotCos = MathUtil.cos(halfRotAng * 0.5f);
+			double halfRotAng = MathUtil.sqrt(rx * rx + ry * ry);
+			double rotSin = MathUtil.sin(halfRotAng * 0.5f);
+			double rotCos = MathUtil.cos(halfRotAng * 0.5f);
 			rotVec.zero().addScaledEq(x, rx).addScaledEq(y, ry);
 			rotVec.scaleEq(1 / halfRotAng * rotSin);
 			rotQ.init(rotVec.x, rotVec.y, rotVec.z, rotCos);
@@ -803,7 +823,7 @@ public class World {
 	/**
 	 * Advances the simulation by the time step `timeStep`.
 	 */
-	public void step(float timeStep) {
+	public void step(double timeStep) {
 		if (_timeStep.dt > 0) {
 			_timeStep.dtRatio = timeStep / _timeStep.dt;
 		}

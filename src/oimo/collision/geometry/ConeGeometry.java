@@ -8,96 +8,109 @@ import oimo.common.M;
  * A cone collision geometry aligned with the y-axis.
  */
 public class ConeGeometry extends ConvexGeometry {
-	public float _radius;
-	public float _halfHeight;
+	public double _radius;
+	public double _halfHeight;
 
-	float sinTheta;
-	float cosTheta;
+	double sinTheta;
+	double cosTheta;
 
-	private static Vec3 _TMP_V3=new Vec3();
 	/**
 	 * Creates a cone collision geometry of radius `radius` and half-height `halfHeight`.
+	 * Center located at symmetry axis and at midpoint of cone
 	 */
-	public ConeGeometry(float radius, float halfHeight) {
+	public ConeGeometry(double radius, double halfHeight) {
 		super(GeometryType.CONE);
 		_radius = radius;
 		_halfHeight = halfHeight;
 		sinTheta = radius / MathUtil.sqrt(radius * radius + 4 * halfHeight * halfHeight);
 		cosTheta = 2 * halfHeight / MathUtil.sqrt(radius * radius + 4 * halfHeight * halfHeight);
 		_updateMass();
+		
 	}
 
 	/**
 	 * Returns the radius of the cone.
 	 */
-	public float getRadius() {
+	public double getRadius() {
 		return _radius;
 	}
 
 	/**
 	 * Returns the half-height of the cone.
 	 */
-	public float getHalfHeight() {
+	public double getHalfHeight() {
 		return _halfHeight;
 	}
 
 	@Override 
 	public void _updateMass() {
-		float r2 = _radius * _radius;
-		float h2 = _halfHeight * _halfHeight * 4;
-		_volume = MathUtil.PI * r2 * _halfHeight * 2 / 3;
+		double r2 = _radius * _radius;
+		double h2 = _halfHeight * _halfHeight * 4;
+		_volume = MathUtil.PI * r2 * _halfHeight * 2 / 3.0;
+		//MOI about midpoint of cone
 		M.mat3_diagonal(_inertiaCoeff,
-			1 / 20 * (3 * r2 + 2 * h2),
-			3 / 10 * r2,
-			1 / 20 * (3 * r2 + 2 * h2)
+			1 / 20.0 * (3 * r2 + 2 * h2),
+			3 / 10.0 * r2,
+			1 / 20.0 * (3 * r2 + 2 * h2)
 		);
+		//System.out.println(_inertiaCoeff);
 	}
 
 	@Override 
 	public void _computeAabb(Aabb aabb, Transform tf) {
-		Vec3 axis=_TMP_V1;
-		Vec3 eh=_TMP_V2;
-		Vec3 er=_TMP_V3;
+		Vec3 axis=new Vec3();
+		Vec3 axis2=new Vec3();
+		Vec3 eh=new Vec3();
+		Vec3 er=new Vec3();
 		M.mat3_getCol(axis, tf._rotation, 1);
-		//extract radius vector
-		M.vec3_set(er, MathUtil.sqrt(1 - axis.x*axis.x), MathUtil.sqrt(1 - axis.y*axis.y), MathUtil.sqrt(1 - axis.z*axis.z));
+		M.vec3_compWiseMul(axis2, axis, axis);
+
+		double axis2x = axis2.x;
+		double axis2y = axis2.y;
+		double axis2z = axis2.z;
+
+		M.vec3_set(er, MathUtil.sqrt(1 - axis2x), MathUtil.sqrt(1 - axis2y), MathUtil.sqrt(1 - axis2z));
 		M.vec3_scale(er, er, _radius);
+
 		M.vec3_scale(eh, axis, _halfHeight);
 
-		Vec3 rmin=new Vec3(-eh.x-er.x,-eh.y-er.y,-eh.z-er.z); // -(signed projected axis) - (projected radius)
-		Vec3 rmax=new Vec3(-eh.x+er.x,-eh.y+er.y,-eh.z+er.z); // -(signed projected axis) + (projected radius)
-		
-		Vec3 max=_TMP_V1;
+		Vec3 rmin=new Vec3(); // -(signed projected axis) - (projected radius)
+		Vec3 rmax=new Vec3(); // -(signed projected axis) + (projected radius)
+		M.vec3_negate(rmin, eh);
+		M.vec3_sub(rmin, rmin, er);
+		M.vec3_negate(rmax, eh);
+		M.vec3_add(rmax, rmax, er);
+
+		Vec3 max=new Vec3(); 
+		Vec3 min=new Vec3(); 
 		M.vec3_max(max, rmin, rmax);
 		M.vec3_max(max, max, eh);
-		M.vec3_add(aabb._max, tf._position, max);
-		
-		Vec3 min=_TMP_V1;
 		M.vec3_min(min, rmin, rmax);
 		M.vec3_min(min, min, eh);
+
 		M.vec3_add(aabb._min, tf._position, min);
-		
+		M.vec3_add(aabb._max, tf._position, max);
 	
 	}
 
 	@Override 
 	public void computeLocalSupportingVertex(Vec3 dir, Vec3 out) {
-		float dx = dir.x;
-		float dy = dir.y;
-		float dz = dir.z;
+		double dx = dir.x;
+		double dy = dir.y;
+		double dz = dir.z;
 		if (dy > 0 && dy * dy > sinTheta * sinTheta * (dx * dx + dy * dy + dz * dz)) {
 			out.set(0, _halfHeight - _gjkMargin / sinTheta, 0);
 			if (out.y < 0) out.y = 0;
 			return;
 		}
-		float rx = dir.x;
-		float rz = dir.z;
-		float len = rx * rx + rz * rz;
-		float height = 2 * _halfHeight;
-		float coreRadius = (height - _gjkMargin) / height * _radius - _gjkMargin / cosTheta;
+		double rx = dir.x;
+		double rz = dir.z;
+		double len = rx * rx + rz * rz;
+		double height = 2 * _halfHeight;
+		double coreRadius = (height - _gjkMargin) / height * _radius - _gjkMargin / cosTheta;
 		if (coreRadius < 0) coreRadius = 0;
-		float invLen = len > 0 ? coreRadius / MathUtil.sqrt(len) : 0;
-		float coreHalfHeight = _halfHeight - _gjkMargin;
+		double invLen = len > 0 ? coreRadius / MathUtil.sqrt(len) : 0;
+		double coreHalfHeight = _halfHeight - _gjkMargin;
 		if (coreHalfHeight < 0) coreHalfHeight = 0;
 		out.x = rx * invLen;
 		out.y = -coreHalfHeight;
@@ -106,30 +119,30 @@ public class ConeGeometry extends ConvexGeometry {
 
 	@Override 
 	public boolean _rayCastLocal(Vec3 begin, Vec3 end,RayCastHit  result) {
-		float p1x = begin.x;
-		float p1y =	begin.y;
-		float p1z = begin.z;
-		float p2x = end.x;
-		float p2y = end.y;
-		float p2z = end.z;
-		float halfH = _halfHeight;
-		float dx = p2x - p1x;
-		float dy = p2y - p1y;
-		float dz = p2z - p1z;
+		double p1x = begin.x;
+		double p1y = begin.y;
+		double p1z = begin.z;
+		double p2x = end.x;
+		double p2y = end.y;
+		double p2z = end.z;
+		double halfH = _halfHeight;
+		double dx = p2x - p1x;
+		double dy = p2y - p1y;
+		double dz = p2z - p1z;
 
 		// Y
-		float tminy = 0;
-		float tmaxy = 1;
+		double tminy = 0;
+		double tmaxy = 1;
 		if (dy > -1e-6 && dy < 1e-6) {
 			if (p1y <= -halfH || p1y >= halfH) {
 				return false;
 			}
 		} else {
-			float invDy = 1 / dy;
-			float t1 = (-halfH - p1y) * invDy;
-			float t2 = (halfH - p1y) * invDy;
+			double invDy = 1 / dy;
+			double t1 = (-halfH - p1y) * invDy;
+			double t2 = (halfH - p1y) * invDy;
 			if (t1 > t2) {
-				float tmp = t1;
+				double tmp = t1;
 				t1 = t2;
 				t2 = tmp;
 			}
@@ -139,19 +152,19 @@ public class ConeGeometry extends ConvexGeometry {
 		if (tminy >= 1 || tmaxy <= 0) return false;
 
 		// XZ
-		float tminxz = 0;
-		float tmaxxz = 0;
+		double tminxz = 0;
+		double tmaxxz = 0;
 
 		p1y -= halfH; // translate so that the new origin be (0, -halfH, 0)
 
-		float cos2 = cosTheta * cosTheta;
-		float a = cos2 * (dx * dx + dy * dy + dz * dz) - dy * dy;
-		float b = cos2 * (p1x * dx + p1y * dy + p1z * dz) - p1y * dy;
-		float c = cos2 * (p1x * p1x + p1y * p1y + p1z * p1z) - p1y * p1y;
-		float D = b * b - a * c;
+		double cos2 = cosTheta * cosTheta;
+		double a = cos2 * (dx * dx + dy * dy + dz * dz) - dy * dy;
+		double b = cos2 * (p1x * dx + p1y * dy + p1z * dz) - p1y * dy;
+		double c = cos2 * (p1x * p1x + p1y * p1y + p1z * p1z) - p1y * p1y;
+		double D = b * b - a * c;
 		if (a != 0) {
 			if (D < 0) return false;
-			float sqrtD = MathUtil.sqrt(D);
+			double sqrtD = MathUtil.sqrt(D);
 			if (a < 0) {
 				// ((-inf, t1) union (t2, +inf)) join (0, 1)
 				if (dy > 0) {
@@ -172,7 +185,7 @@ public class ConeGeometry extends ConvexGeometry {
 				if (tminxz >= 1 || tmaxxz <= 0) return false;
 			}
 		} else {
-			float t = -c / (2 * b);
+			double t = -c / (2 * b);
 			if (b > 0) {
 				// (0, t)
 				tminxz = 0;
@@ -188,7 +201,7 @@ public class ConeGeometry extends ConvexGeometry {
 
 		p1y += halfH; // revert translation
 
-		float min;
+		double min;
 		if (tmaxxz <= tminy || tmaxy <= tminxz) return false;
 		if (tminxz < tminy) {
 			min = tminy;

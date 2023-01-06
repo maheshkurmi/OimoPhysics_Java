@@ -5,11 +5,11 @@ package oimo.dynamics.constraint.joint;
  */
 public class JointImpulse {
 	// constraint impulse
-	public float impulse;
+	public double impulse;
 	// motor impulse
-	public float impulseM;
+	public double impulseM;
 	// position impulse
-	public float impulseP;
+	public double impulseP;
 
 	public JointImpulse() {
 		clear();

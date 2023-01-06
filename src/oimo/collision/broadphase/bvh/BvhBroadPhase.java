@@ -56,7 +56,7 @@ public class BvhBroadPhase extends BroadPhase {
 		p._setAabb(aabb);
 
 		// fatten the AABB
-		float padding = Setting.bvhProxyPadding;
+		double padding = Setting.bvhProxyPadding;
 		p._aabbMin.sub3Eq(padding, padding, padding);
 		p._aabbMax.add3Eq(padding, padding, padding);
 		
@@ -106,37 +106,37 @@ public class BvhBroadPhase extends BroadPhase {
 
 	void rayCastRecursive(BvhNode node, Vec3 _p1,Vec3 _p2, BroadPhaseProxyCallback callback) {
 		// TODO: use stack?
-		float x1 = _p1.x;
-		float y1 = _p1.y;
-		float z1 = _p1.z;
-		float x2 = _p2.x;
-		float y2 = _p2.y;
-		float z2 = _p2.z;
-		float pminx = node._aabbMin.x;
-		float pminy = node._aabbMin.y;
-		float pminz = node._aabbMin.z;
-		float pmaxx = node._aabbMax.x;
-		float pmaxy = node._aabbMax.y;
-		float pmaxz = node._aabbMax.z;
+		double x1 = _p1.x;
+		double y1 = _p1.y;
+		double z1 = _p1.z;
+		double x2 = _p2.x;
+		double y2 = _p2.y;
+		double z2 = _p2.z;
+		double pminx = node._aabbMin.x;
+		double pminy = node._aabbMin.y;
+		double pminz = node._aabbMin.z;
+		double pmaxx = node._aabbMax.x;
+		double pmaxy = node._aabbMax.y;
+		double pmaxz = node._aabbMax.z;
 		boolean tmp;
 		if(pminx > (x1 > x2 ? x1 : x2) || pmaxx < (x1 < x2 ? x1 : x2) || pminy > (y1 > y2 ? y1 : y2) || pmaxy < (y1 < y2 ? y1 : y2) || pminz > (z1 > z2 ? z1 : z2) || pmaxz < (z1 < z2 ? z1 : z2)) {
 			tmp = false;
 		} else {
-			float dx = x2 - x1;
-			float dy = y2 - y1;
-			float dz = z2 - z1;
-			float adx = dx < 0 ? -dx : dx;
-			float ady = dy < 0 ? -dy : dy;
-			float adz = dz < 0 ? -dz : dz;
-			float pextx = (pmaxx - pminx) * 0.5f;
-			float pexty = (pmaxy - pminy) * 0.5f;
-			float pextz = (pmaxz - pminz) * 0.5f;
-			float cpx = x1 - (pmaxx + pminx) * 0.5f;
-			float cpy = y1 - (pmaxy + pminy) * 0.5f;
-			float cpz = z1 - (pmaxz + pminz) * 0.5f;
+			double dx = x2 - x1;
+			double dy = y2 - y1;
+			double dz = z2 - z1;
+			double adx = dx < 0 ? -dx : dx;
+			double ady = dy < 0 ? -dy : dy;
+			double adz = dz < 0 ? -dz : dz;
+			double pextx = (pmaxx - pminx) * 0.5f;
+			double pexty = (pmaxy - pminy) * 0.5f;
+			double pextz = (pmaxz - pminz) * 0.5f;
+			double cpx = x1 - (pmaxx + pminx) * 0.5f;
+			double cpy = y1 - (pmaxy + pminy) * 0.5f;
+			double cpz = z1 - (pmaxz + pminz) * 0.5f;
 			boolean tmp1;
 			boolean tmp2;
-			float x = cpy * dz - cpz * dy;
+			double x = cpy * dz - cpz * dy;
 			if(!((x < 0 ? -x : x) - (pexty * adz + pextz * ady) > 0)) {
 				x = cpz * dx - cpx * dz;
 				tmp2 = (x < 0 ? -x : x) - (pextz * adx + pextx * adz) > 0;

@@ -14,11 +14,11 @@ public class SimplexUtil {
 		Vec3 v1=vec1;
 		Vec3 v2=vec2;
 	
-		float v12x=v2.x-v1.x;
-		float v12y=v2.y-v1.y;
+		double v12x=v2.x-v1.x;
+		double v12y=v2.y-v1.y;
 		
-		float d=v12x*v12x+v12y*v12y; //M.vec3_dot(v12, v12);
-		float t=v12x*v1.x+v12y*v1.y; //M.vec3_dot(v12, v1);
+		double d=v12x*v12x+v12y*v12y; //M.vec3_dot(v12, v12);
+		double t=v12x*v1.x+v12y*v1.y; //M.vec3_dot(v12, v1);
 		t = -t / d;
 
 		if (t < 0) {
@@ -64,50 +64,47 @@ public class SimplexUtil {
 		M.vec3_cross(n12, v12, n);
 		M.vec3_cross(n23, v23, n);
 		M.vec3_cross(n31, v31, n);
-		float d12 = M.vec3_dot(v1, n12);
-		float d23 = M.vec3_dot(v2, n23);
-		float d31 = M.vec3_dot(v3, n31);
+		double d12 = M.vec3_dot(v1, n12);
+		double d23 = M.vec3_dot(v2, n23);
+		double d31 = M.vec3_dot(v3, n31);
 
-		float mind = -1;
+		double mind = -1;
 		Vec3 minv=new Vec3();
 		int mini = 0; // index of voronoi region
 
 		if (d12 < 0) {
 			int b = projectOrigin2(vec1, vec2, out);
-			float d = out.x * out.x + out.y * out.y + out.z * out.z;
+			double d = out.x * out.x + out.y * out.y + out.z * out.z;
 			mini = b;
 			mind = d;
-			minv.set(out);
+			M.vec3_fromVec3(minv, out);
 			//M.vec3_fromVec3(minv, out);
 		}
 		if (d23 < 0) {
 			int b = projectOrigin2(vec2, vec3, out);
-			float d = out.x * out.x + out.y * out.y + out.z * out.z;
+			double d = out.x * out.x + out.y * out.y + out.z * out.z;
 			if (mind < 0 || d < mind) {
 				mini = b << 1; // 00000021 -> 00000210
 				mind = d;
-				minv.set(out);
-				//M.vec3_fromVec3(minv, out);
+				M.vec3_fromVec3(minv, out);
 			}
 		}
 		if (d31 < 0) {
 			int b = projectOrigin2(vec1, vec3, out);
-			float d = out.x * out.x + out.y * out.y + out.z * out.z;
+			double d = out.x * out.x + out.y * out.y + out.z * out.z;
 			if (mind < 0 || d < mind) {
 				mini = b & 1 | (b & 2) << 1; // 00000021 -> 00000201
 				mind = d;
-				minv.set(out);
-				//M.vec3_fromVec3(minv, out);
+				M.vec3_fromVec3(minv, out);
 			}
 		}
 		if (mind > 0) {
-			out.set(minv);
-			//M.vec3_toVec3(out, minv);
+			M.vec3_toVec3(out, minv);
 			return mini;
 		}
 		n.normalize();
-		float dn = M.vec3_dot(v1, n);
-		float l2 = M.vec3_dot(n, n);
+		double dn = M.vec3_dot(v1, n);
+		double l2 = M.vec3_dot(n, n);
 		l2 = dn / l2;
 		M.vec3_scale(minv, n, l2);
 		M.vec3_toVec3(out, minv);
@@ -143,48 +140,47 @@ public class SimplexUtil {
 		M.vec3_cross(n243, v24, v23);
 
 		int sign = M.vec3_dot(v12, n243) > 0 ? 1 : -1;
-		float d123 = M.vec3_dot(v1, n123);
-		float d134 = M.vec3_dot(v1, n134);
-		float d142 = M.vec3_dot(v1, n142);
-		float d243 = M.vec3_dot(v2, n243);
+		double d123 = M.vec3_dot(v1, n123);
+		double d134 = M.vec3_dot(v1, n134);
+		double d142 = M.vec3_dot(v1, n142);
+		double d243 = M.vec3_dot(v2, n243);
 
-		float mind = -1;
+		double mind = -1;
 		Vec3 minv=new Vec3();
 		int mini = 0; // index of voronoi region
 
 		if (d123 * sign < 0) {
 			int b = projectOrigin3(vec1, vec2, vec3, out);
-			float d = out.x * out.x + out.y * out.y + out.z * out.z;
+			double d = out.x * out.x + out.y * out.y + out.z * out.z;
 			mini = b;
 			mind = d;
-			minv.set(out);
-			//M.vec3_fromVec3(minv, out);
+			M.vec3_fromVec3(minv, out);
 		}
 		if (d134 * sign < 0) {
 			int b = projectOrigin3(vec1, vec3, vec4, out);
-			float d = out.x * out.x + out.y * out.y + out.z * out.z;
+			double d = out.x * out.x + out.y * out.y + out.z * out.z;
 			if (mind < 0 || d < mind) {
 				mini = b & 1 | (b & 6) << 1; // 00000321 -> 00003201
 				mind = d;
-				minv.set(out);
+				M.vec3_fromVec3(minv, out);
 			}
 		}
 		if (d142 * sign < 0) {
 			int b = projectOrigin3(vec1, vec2, vec4, out);
-			float d = out.x * out.x + out.y * out.y + out.z * out.z;
+			double d = out.x * out.x + out.y * out.y + out.z * out.z;
 			if (mind < 0 || d < mind) {
 				mini = b & 3 | (b & 4) << 1; // 00000321 -> 00003021
 				mind = d;
-				minv.set(out);
+				M.vec3_fromVec3(minv, out);
 			}
 		}
 		if (d243 * sign < 0) {
 			int b = projectOrigin3(vec2, vec3, vec4, out);
-			float d = out.x * out.x + out.y * out.y + out.z * out.z;
+			double d = out.x * out.x + out.y * out.y + out.z * out.z;
 			if (mind < 0 || d < mind) {
 				mini = b << 1; // 00000321 -> 00003210
 				mind = d;
-				minv.set(out);
+				M.vec3_fromVec3(minv, out);
 			}
 		}
 

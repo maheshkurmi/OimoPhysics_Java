@@ -10,7 +10,7 @@ import oimo.dynamics.callback.ContactCallback;
  * this class can safely be reused as a shape will not have any references
  * of a field of this class.
  */
-class ShapeConfig {
+public class ShapeConfig {
 	/**
 	 * The shape's local position relative to the parent rigid body's origin.
 	 */
@@ -25,17 +25,17 @@ class ShapeConfig {
 	/**
 	 * The coefficient of friction of the shape.
 	 */
-	public float friction;
+	public double friction;
 
 	/**
 	 * The coefficient of restitution of the shape.
 	 */
-	public float restitution;
+	public double restitution;
 
 	/**
 	 * The density of the shape, usually in Kg/m^3.
 	 */
-	public float density;
+	public double density;
 
 	/**
 	 * The collision geometry of the shape.

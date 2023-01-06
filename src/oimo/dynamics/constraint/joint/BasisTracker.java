@@ -33,8 +33,8 @@ public class BasisTracker {
 	}
 
 	public void trackByAxis(int axis) {
-		float invM1 = joint._b1._invMass;
-		float invM2 = joint._b2._invMass;
+		double invM1 = joint._b1._invMass;
+		double invM2 = joint._b2._invMass;
 		Quat q=new Quat();
 		Quat idQ=new Quat();
 		Quat slerpQ=new Quat();

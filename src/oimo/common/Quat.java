@@ -12,22 +12,22 @@ public class Quat {
 	/**
 	 * The x-value of the imaginary part of the quaternion.
 	 */
-	public float x=0;
+	public double x=0;
 
 	/**
 	 * The y-value of the imaginary part of the quaternion.
 	 */
-	public float y=0;
+	public double y=0;
 
 	/**
 	 * The z-value of the imaginary part of the quaternion.
 	 */
-	public float z=0;
+	public double z=0;
 
 	/**
 	 * The real part of the quaternion.
 	 */
-	public float w=1;
+	public double w=1;
 
 	/**
 	 * Constructor - initializes Quat as identity (real part=1 and imaginary part as zero).
@@ -38,7 +38,7 @@ public class Quat {
 	/**
 	 * Creates a new quaternion  in form w+ i(x+y+z) 
 	 */
-	public Quat(float x, float y, float z, float w) {
+	public Quat(double x, double y, double z, double w) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -46,7 +46,7 @@ public class Quat {
 		numCreations++;
 	}
 
-	public Quat set(float x, float y, float z, float w) {
+	public Quat set(double x, double y, double z, double w) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -64,7 +64,7 @@ public class Quat {
 	/**
 	 * Sets all values at once and returns `this`.
 	 */
-	public Quat init(float x, float y, float z, float w) {
+	public Quat init(double x, double y, double z, double w) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -89,7 +89,7 @@ public class Quat {
 	/**
 	 * Returns `this` * `s`.
 	 */
-	public Quat scale(float s) {
+	public Quat scale(double s) {
 		return new Quat(x * s, y * s, z * s, w * s);
 	}
 
@@ -110,28 +110,28 @@ public class Quat {
 	/**
 	 * Sets this quaternion to `this` * `s` and returns `this`.
 	 */
-	public Quat scaleEq(float s) {
+	public Quat scaleEq(double s) {
 		return set(x * s, y * s, z * s, w * s);
 	}
 
 	/**
 	 * Returns the length of the quaternion.
 	 */
-	public float length() {
+	public double length() {
 		return MathUtil.sqrt(x * x + y * y + z * z + w * w);
 	}
 
 	/**
 	 * Returns the squared length of the quaternion.
 	 */
-	public float lengthSq() {
+	public double lengthSq() {
 		return x * x + y * y + z * z + w * w;
 	}
 
 	/**
 	 * Returns the dot product of `this` and `q`.
 	 */
-	public float dot(Quat q) {
+	public double dot(Quat q) {
 		return x * q.x + y * q.y + z * q.z + w * q.w;
 	}
 
@@ -141,7 +141,7 @@ public class Quat {
 	 * If the length is zero, zero quaterinon is returned.
 	 */
 	public Quat normalized() {
-		float invLen = length();
+		double invLen = length();
 		if (invLen > 0)
 			invLen = 1 / invLen;
 		return new Quat(x * invLen, y * invLen, z * invLen, w * invLen);
@@ -153,7 +153,7 @@ public class Quat {
 	 * If the length is zero, this quaternion is set to zero quaternion.
 	 */
 	public Quat normalize() {
-		float invLen = length();
+		double invLen = length();
 		if (invLen > 0)
 			invLen = 1 / invLen;
 		return set(x * invLen, y * invLen, z * invLen, w * invLen);
@@ -164,13 +164,13 @@ public class Quat {
 	 * from `v1` to `v2`, and return `this`.
 	 */
 	public Quat setArc(Vec3 v1, Vec3 v2) {
-		float x1 = v1.x;
-		float y1 = v1.y;
-		float z1 = v1.z;
-		float x2 = v2.x;
-		float y2 = v2.y;
-		float z2 = v2.z;
-		float d = x1 * x2 + y1 * y2 + z1 * z2;
+		double x1 = v1.x;
+		double y1 = v1.y;
+		double z1 = v1.z;
+		double x2 = v2.x;
+		double y2 = v2.y;
+		double z2 = v2.z;
+		double d = x1 * x2 + y1 * y2 + z1 * z2;
 
 		this.w = MathUtil.sqrt((((1 + d)) * 0.5f));
 		if ((this.w == 0)) {
@@ -212,9 +212,9 @@ public class Quat {
 		}
 
 		d = (0.5f / this.w);
-		float cx = ((y1 * z2) - (z1 * y2));
-		float cy = ((z1 * x2) - (x1 * z2));
-		float cz = ((x1 * y2) - (y1 * x2));
+		double cx = ((y1 * z2) - (z1 * y2));
+		double cy = ((z1 * x2) - (x1 * z2));
+		double cz = ((x1 * y2) - (y1 * x2));
 		this.x = (cx * d);
 		this.y = (cy * d);
 		this.z = (cz * d);
@@ -226,12 +226,12 @@ public class Quat {
 	 * `q` with interpolation paraeter `t`. Both quaternions `this` and `q` must be
 	 * normalized.
 	 */
-	public Quat slerp(Quat q, float t) {
-		float qx;
-		float qy;
-		float qz;
-		float qw;
-		float d = dot(q);
+	public Quat slerp(Quat q, double t) {
+		double qx;
+		double qy;
+		double qz;
+		double qw;
+		double d = dot(q);
 		if (d < 0) {
 			d = -d;
 			qx = -q.x;
@@ -249,22 +249,22 @@ public class Quat {
 			return new Quat(x + (qx - x) * t, y + (qy - y) * t, z + (qz - z) * t, w + (qw - w) * t).normalize();
 		}
 		// target angle
-		float theta = t * MathUtil.acos(d);
+		double theta = t * MathUtil.acos(d);
 
 		// make q orthogonal to this
 		qx -= x * d;
 		qy -= y * d;
 		qz -= z * d;
 		qw -= w * d;
-		float invLen = 1 / MathUtil.sqrt(qx * qx + qy * qy + qz * qz + qw * qw);
+		double invLen = 1 / MathUtil.sqrt(qx * qx + qy * qy + qz * qz + qw * qw);
 		qx *= invLen;
 		qy *= invLen;
 		qz *= invLen;
 		qw *= invLen;
 
 		// mix them
-		float sin = MathUtil.sin(theta);
-		float cos = MathUtil.cos(theta);
+		double sin = MathUtil.sin(theta);
+		double cos = MathUtil.cos(theta);
 		return new Quat(x * cos + qx * sin, y * cos + qy * sin, z * cos + qz * sin, w * cos + qw * sin);
 	}
 
@@ -294,11 +294,11 @@ public class Quat {
 	 * have determinant 1.
 	 */
 	public Quat fromMat3(Mat3 m) {
-		float e00 = m.e00;
-		float e11 = m.e11;
-		float e22 = m.e22;
-		float trace = e00 + e11 + e22;
-		float s = 0;
+		double e00 = m.e00;
+		double e11 = m.e11;
+		double e22 = m.e22;
+		double trace = e00 + e11 + e22;
+		double s = 0;
 		if ((trace > 0)) {
 			s = MathUtil.sqrt((trace + 1));
 			this.w = (0.5f * s);

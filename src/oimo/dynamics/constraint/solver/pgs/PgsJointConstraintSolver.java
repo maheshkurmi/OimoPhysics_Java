@@ -38,8 +38,8 @@ public class PgsJointConstraintSolver extends ConstraintSolver {
 		_b1 = info.b1;
 		_b2 = info.b2;
 
-		float invM1 = _b1._invMass;
-		float invM2 = _b2._invMass;
+		double invM1 = _b1._invMass;
+		double invM2 = _b2._invMass;
 
 		Mat3 invI1=_b1._invInertia;
 		Mat3 invI2=_b2._invInertia;
@@ -86,7 +86,7 @@ public class PgsJointConstraintSolver extends ConstraintSolver {
 	@Override 
 	public void warmStart(TimeStep timeStep) {
 
-		float factor= joint._getWarmStartingFactor();
+		double factor= joint._getWarmStartingFactor();
 
 		// adjust impulse for variable time step
 		factor *= timeStep.dtRatio;
@@ -118,7 +118,7 @@ public class PgsJointConstraintSolver extends ConstraintSolver {
 			imp.impulse *= factor;
 			imp.impulseM *= factor;
 
-			float impulse = imp.impulse + imp.impulseM;
+			double impulse = imp.impulse + imp.impulseM;
 
 			// apply initial impulse
 			M.vec3_addRhsScaled(lv1, lv1, md.invMLin1, impulse);
@@ -154,16 +154,16 @@ public class PgsJointConstraintSolver extends ConstraintSolver {
 			if (row.motorMaxImpulse == 0) continue;
 
 			// measure relative velocity
-			float rv = 0;
+			double rv = 0;
 			rv += M.vec3_dot(lv1, j.lin1);
 			rv -= M.vec3_dot(lv2, j.lin2);
 			rv += M.vec3_dot(av1, j.ang1);
 			rv -= M.vec3_dot(av2, j.ang2);
 
-			float impulseM = (-row.motorSpeed - rv) * md.massWithoutCfm;
+			double impulseM = (-row.motorSpeed - rv) * md.massWithoutCfm;
 
 			// clamp impulse
-			float oldImpulseM = imp.impulseM;
+			double oldImpulseM = imp.impulseM;
 			imp.impulseM += impulseM;
 			if (imp.impulseM < -row.motorMaxImpulse) {
 				imp.impulseM = -row.motorMaxImpulse;
@@ -191,16 +191,16 @@ public class PgsJointConstraintSolver extends ConstraintSolver {
 			JacobianRow j = row.jacobian;
 
 			// measure relative velocity
-			float rv = 0;
+			double rv = 0;
 			rv += M.vec3_dot(lv1, j.lin1);
 			rv -= M.vec3_dot(lv2, j.lin2);
 			rv += M.vec3_dot(av1, j.ang1);
 			rv -= M.vec3_dot(av2, j.ang2);
 
-			float impulse = (row.rhs - rv - imp.impulse * row.cfm) * md.mass;
+			double impulse = (row.rhs - rv - imp.impulse * row.cfm) * md.mass;
 
 			// clamp impulse
-			float oldImpulse = imp.impulse;
+			double oldImpulse = imp.impulse;
 			imp.impulse += impulse;
 			if (imp.impulse < row.minImpulse) {
 				imp.impulse = row.minImpulse;
@@ -256,8 +256,8 @@ public class PgsJointConstraintSolver extends ConstraintSolver {
 		_b1 = info.b1;
 		_b2 = info.b2;
 
-		float invM1 = _b1._invMass;
-		float invM2 = _b2._invMass;
+		double invM1 = _b1._invMass;
+		double invM2 = _b2._invMass;
 
 		Mat3 invI1=_b1._invInertia;
 		Mat3 invI2=_b2._invInertia;
@@ -315,16 +315,16 @@ public class PgsJointConstraintSolver extends ConstraintSolver {
 			JacobianRow j = row.jacobian;
 
 			// measure relative velocity
-			float rv = 0;
+			double rv = 0;
 			rv += M.vec3_dot(lv1, j.lin1);
 			rv -= M.vec3_dot(lv2, j.lin2);
 			rv += M.vec3_dot(av1, j.ang1);
 			rv -= M.vec3_dot(av2, j.ang2);
 
-			float impulseP = (row.rhs * Setting.positionSplitImpulseBaumgarte - rv) * md.mass;
+			double impulseP = (row.rhs * Setting.positionSplitImpulseBaumgarte - rv) * md.mass;
 
 			// clamp impulse
-			float oldImpulseP = imp.impulseP;
+			double oldImpulseP = imp.impulseP;
 			imp.impulseP += impulseP;
 			if (imp.impulseP < row.minImpulse) {
 				imp.impulseP = row.minImpulse;
@@ -363,16 +363,16 @@ public class PgsJointConstraintSolver extends ConstraintSolver {
 			JacobianRow j = row.jacobian;
 
 			// measure relative velocity
-			float rv = 0;
+			double rv = 0;
 			rv += M.vec3_dot(lv1, j.lin1);
 			rv -= M.vec3_dot(lv2, j.lin2);
 			rv += M.vec3_dot(av1, j.ang1);
 			rv -= M.vec3_dot(av2, j.ang2);
 
-			float impulseP = (row.rhs * Setting.positionNgsBaumgarte - rv) * md.mass;
+			double impulseP = (row.rhs * Setting.positionNgsBaumgarte - rv) * md.mass;
 
 			// clamp impulse
-			float oldImpulseP = imp.impulseP;
+			double oldImpulseP = imp.impulseP;
 			imp.impulseP += impulseP;
 			if (imp.impulseP < row.minImpulse) {
 				imp.impulseP = row.minImpulse;

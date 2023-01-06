@@ -353,7 +353,7 @@ public class EpaPolyhedron {
 
 	public EpaTriangle _getBestTriangle() {
 		EpaTriangle f = _triangleList;
-		float mind = MathUtil.POSITIVE_INFINITY;
+		double mind = MathUtil.POSITIVE_INFINITY;
 		EpaTriangle minf = null;
 		while(f != null) {
 			if(f._distanceSq < mind) {
@@ -376,4 +376,38 @@ public class EpaPolyhedron {
 		}
 		return first;
 	}
+	
+	
+	public void _clear() {
+		while (_numTriangles > 0) {
+			EpaTriangle t = _triangleList;
+			_numTriangles--;
+			EpaTriangle prev = t._prev;
+			EpaTriangle next = t._next;
+			if (prev != null) {
+				prev._next = next;
+			}
+			if (next != null) {
+				next._prev = prev;
+			}
+			if (t ==_triangleList) {
+				_triangleList = _triangleList._next;
+			}
+			if (t == _triangleListLast) {
+				_triangleListLast = _triangleListLast._prev;
+			}
+			t._next = null;
+			t._prev = null;
+			t.removeReferences();
+			t._next = _trianglePool;
+			_trianglePool = t;
+		}
+		while (_numVertices > 0) {
+			EpaVertex v = _vertices[--_numVertices];
+			v.removeReferences();
+			v._next = _vertexPool;
+			_vertexPool = v;
+		}
+	}
+	
 }

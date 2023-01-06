@@ -46,7 +46,7 @@ public class Performance {
 	private long[] times = new long[] { 0, 0, 0, 0 };
 
 	private long[] f = new long[] { 0, 0, 0 };
-	private float fps = 0;
+	private double fps = 0;
 
 	private long tt = 0;
 

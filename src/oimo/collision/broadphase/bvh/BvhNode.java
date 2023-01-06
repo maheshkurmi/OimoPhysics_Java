@@ -74,10 +74,10 @@ public class BvhNode {
 		_height = (h1 > h2 ? h1 : h2) + 1;
 	}
 
-	 public float _perimeter() {
-		float x = _aabbMax.x-_aabbMin.x;// M.vec3_get(size, 0);
-		float y = _aabbMax.y-_aabbMin.y;//.vec3_get(size, 1);
-		float z = _aabbMax.z-_aabbMin.z;// = M.vec3_get(size, 2);
+	 public double _perimeter() {
+		double x = _aabbMax.x-_aabbMin.x;// M.vec3_get(size, 0);
+		double y = _aabbMax.y-_aabbMin.y;//.vec3_get(size, 1);
+		double z = _aabbMax.z-_aabbMin.z;// = M.vec3_get(size, 2);
 		return x * (y + z) + y * z;
 	}
 

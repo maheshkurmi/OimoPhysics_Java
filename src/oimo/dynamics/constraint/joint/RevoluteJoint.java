@@ -22,9 +22,9 @@ public class RevoluteJoint extends Joint {
 
 	public BasisTracker _basis;
 
-	float angle;
-	float angularErrorY;
-	float angularErrorZ;
+	double angle;
+	double angularErrorY;
+	double angularErrorZ;
 	Vec3 linearError;
 
 	/**
@@ -41,7 +41,7 @@ public class RevoluteJoint extends Joint {
 		angle = 0;
 		angularErrorY = 0;
 		angularErrorZ = 0;
-
+		linearError=new Vec3();
 		_basis = new BasisTracker(this);
 
 		_sd = config.springDamper.clone();
@@ -52,14 +52,14 @@ public class RevoluteJoint extends Joint {
 
 	protected void getInfo(JointSolverInfo info, TimeStep timeStep, boolean isPositionPart) {
 		// compute ERP
-		float erp = getErp(timeStep, isPositionPart);
+		double erp = getErp(timeStep, isPositionPart);
 
 		// compute rhs
-		float linRhsX = linearError.x*erp;//M.vec3_get(linearRhs, 0);
-		float linRhsY = linearError.y*erp;//M.vec3_get(linearRhs, 1);
-		float linRhsZ = linearError.z*erp;//M.vec3_get(linearRhs, 2);
-		float angRhsY = angularErrorY * erp;
-		float angRhsZ = angularErrorZ * erp;
+		double linRhsX = linearError.x*erp;//M.vec3_get(linearRhs, 0);
+		double linRhsY = linearError.y*erp;//M.vec3_get(linearRhs, 1);
+		double linRhsZ = linearError.z*erp;//M.vec3_get(linearRhs, 2);
+		double angRhsY = angularErrorY * erp;
+		double angRhsZ = angularErrorZ * erp;
 
 		Mat3 crossR1=new Mat3();
 		Mat3 crossR2=new Mat3();
@@ -70,7 +70,7 @@ public class RevoluteJoint extends Joint {
 		
 		JointSolverInfoRow row;
 		JacobianRow j;
-		float motorMass = this.computeEffectiveInertiaMoment(_basis.x);
+		double motorMass = this.computeEffectiveInertiaMoment(_basis.x);
 
 		// linear X
 		row = info.addRow(_impulses[0]);
@@ -135,8 +135,8 @@ public class RevoluteJoint extends Joint {
 		// compute angular error along Y and Z
 		Vec3 angError =_basisX1.cross(_basisX2);
 		//M.vec3_cross(angError, _basisX1, _basisX2);
-		float cos = M.vec3_dot(_basisX1, _basisX2);
-		float theta = MathUtil.safeAcos(cos);
+		double cos = M.vec3_dot(_basisX1, _basisX2);
+		double theta = MathUtil.safeAcos(cos);
 		M.vec3_normalize(angError, angError);
 		M.vec3_scale(angError, angError, theta);
 		angularErrorY = M.vec3_dot(angError, _basis.y);
@@ -269,7 +269,7 @@ public class RevoluteJoint extends Joint {
 	/**
 	 * Returns the rotation angle in radians.
 	 */
-	public float getAngle() {
+	public double getAngle() {
 		return angle;
 	}
 

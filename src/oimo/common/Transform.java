@@ -37,6 +37,9 @@ public class Transform {
 	 * This does not create a new instance of `Vec3`.
 	 */
 	public void getPositionTo(Vec3 position) {
+		if(position==null) {
+			System.out.println(this);
+		}
 		position.copyFrom(_position);
 	}
 

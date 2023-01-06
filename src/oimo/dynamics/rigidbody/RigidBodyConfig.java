@@ -7,7 +7,7 @@ import oimo.common.Vec3;
  * class can safely be reused, as a rigid body will not have any references to a field of
  * this class.
  */
-class RigidBodyConfig {
+public class RigidBodyConfig {
 	/**
 	 * The world position of the rigid body's center of gravity.
 	 */
@@ -43,13 +43,13 @@ class RigidBodyConfig {
 	 * The damping coefficient of the linear velocity. Set positive values to
 	 * gradually reduce the linear velocity.
 	 */
-	public float linearDamping;
+	public double linearDamping;
 
 	/**
 	 * The damping coefficient of the angular velocity. Set positive values to
 	 * gradually reduce the angular velocity.
 	 */
-	public float angularDamping;
+	public double angularDamping;
 
 	/**
 	 * Default constructor.

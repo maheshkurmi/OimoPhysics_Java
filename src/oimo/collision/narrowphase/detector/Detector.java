@@ -8,6 +8,7 @@ import oimo.common.Vec3;
  * Interface of a collision detector for narrow-phase collision detection.
  */
 public abstract class Detector {
+	//internal flag to chek order of shape type being collided so that Box-Sphere and Sphere-box can be handled by single detector
 	boolean swapped;
 
 	public Detector(boolean swapped) {
@@ -16,22 +17,22 @@ public abstract class Detector {
 
 	// --- private ---
 
-	public void setNormal(DetectorResult result, Vec3 n) {
+	protected void setNormal(DetectorResult result, Vec3 n) {
 		setNormal(result, n.x,n.y,n.z);
 	}
 	
-	public void setNormal(DetectorResult result, float nx, float ny, float nz) {
+	protected void setNormal(DetectorResult result, double nx, double ny, double nz) {
 		result.normal.set(nx,ny,nz);
 		if (swapped) {
 			result.normal.negateEq();
 		}
 	}
 
-	public void addPoint(DetectorResult result,Vec3 pos1, Vec3 pos2, float depth, int id) {
+	protected void addPoint(DetectorResult result,Vec3 pos1, Vec3 pos2, double depth, int id) {
 		addPoint(result,pos1.x,pos1.y,pos1.z,pos2.x,pos2.y,pos2.z,depth,id);
 	}
 	
-	public void addPoint(DetectorResult result,float p1x,float p1y,float p1z, float p2x,float p2y,float p2z, float depth, int id) {
+	protected void addPoint(DetectorResult result,double p1x,double p1y,double p1z, double p2x,double p2y,double p2z, double depth, int id) {
 		DetectorResultPoint p = result.points[result.numPoints++];
 		p.depth = depth;
 		p.id = id;
@@ -44,7 +45,7 @@ public abstract class Detector {
 		}
 	}
 
-	public abstract void detectImpl(DetectorResult result, Geometry geom1, Geometry geom2, Transform tf1, Transform tf2, CachedDetectorData cachedData);
+	protected abstract void detectImpl(DetectorResult result, Geometry geom1, Geometry geom2, Transform tf1, Transform tf2, CachedDetectorData cachedData);
 
 	// --- public ---
 

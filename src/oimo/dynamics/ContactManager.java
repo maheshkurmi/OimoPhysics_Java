@@ -178,6 +178,12 @@ public class ContactManager {
 				}
 				Aabb aabb1 = s1._aabb;
 				Aabb aabb2 = s2._aabb;
+				
+				if(s1._proxy==null||s2._proxy==null) {
+					System.out.println("Error: Proxy null  Contactmanager.destroyOutdatedContacts()" );
+					_destroyContact(c);
+					return;
+				}
 				if (!_broadPhase.isOverlapping(s1._proxy, s2._proxy) || !shouldCollide(s1, s2)) {
 					// the proxy pair is separated or shouldn't collide
 					_destroyContact(c);

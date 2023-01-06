@@ -25,9 +25,9 @@ public class UniversalJoint extends Joint {
 	public Vec3 _axisY;
 	public Vec3 _axisZ;
 
-	public float _angleX;
-	public float _angleY;
-	public float _angleZ;
+	public double _angleX;
+	public double _angleY;
+	public double _angleZ;
 
 	boolean xSingular;
 	boolean ySingular;
@@ -49,10 +49,16 @@ public class UniversalJoint extends Joint {
 		_angleY = 0;
 		_angleZ = 0;
 
+		_axisX=new Vec3();
+		_axisY=new Vec3();
+		_axisZ=new Vec3();
+		
 		xSingular = false;
 		ySingular = false;
 		zSingular = false;
 
+		linearError=new Vec3();
+		
 		_sd1 = config.springDamper1.clone();
 		_sd2 = config.springDamper2.clone();
 		_lm1 = config.limitMotor1.clone();
@@ -76,8 +82,8 @@ public class UniversalJoint extends Joint {
 		//     inv(rot1) * rot2
 		// and NOT
 		//     rot2 * inv(rot1)
-		Mat3 relRot =rot1.transposeEq().mulEq(rot2);
-		//M.mat3_mulLhsTransposed(relRot, rot1, rot2);
+		Mat3 relRot =new Mat3();///rot1.transposeEq().mulEq(rot2);
+		M.mat3_mulLhsTransposed(relRot, rot1, rot2);
 
 		Vec3 angleAxisX=_basisX1;
 		Vec3 angleAxisZ=_basisZ2;
@@ -111,13 +117,13 @@ public class UniversalJoint extends Joint {
 
 	protected void getInfo(JointSolverInfo info,TimeStep timeStep, boolean isPositionPart) {
 		// compute ERP
-		float erp = getErp(timeStep, isPositionPart);
+		double erp = getErp(timeStep, isPositionPart);
 
 		// compute rhs
-		float linRhsX = linearError.x*erp;
-		float linRhsY = linearError.y*erp;
-		float linRhsZ = linearError.z*erp;
-		float angRhsY = _angleY * erp;
+		double linRhsX = linearError.x*erp;
+		double linRhsY = linearError.y*erp;
+		double linRhsZ = linearError.z*erp;
+		double angRhsY = _angleY * erp;
 
 		Mat3 crossR1=new Mat3();
 		Mat3 crossR2=new Mat3();
@@ -128,8 +134,8 @@ public class UniversalJoint extends Joint {
 		
 		JointSolverInfoRow row;
 		JacobianRow j;
-		float motorMassX = this.computeEffectiveInertiaMoment(_axisX);
-		float motorMassZ =this.computeEffectiveInertiaMoment(_axisZ);
+		double motorMassX = this.computeEffectiveInertiaMoment(_axisX);
+		double motorMassZ =this.computeEffectiveInertiaMoment(_axisZ);
 
 		// linear X
 		row = info.addRow(_impulses[0]);
@@ -209,8 +215,8 @@ public class UniversalJoint extends Joint {
 		//     inv(rot1) * rot2
 		// but NOT
 		//     rot2 * inv(rot1)
-		var relRot=rot1.transposeEq().mulEq(rot2);
-		//M.mat3_mulLhsTransposed(relRot, rot1, rot2);
+		Mat3 relRot=new Mat3();//rot1.transposeEq().mulEq(rot2);
+		M.mat3_mulLhsTransposed(relRot, rot1, rot2);
 
 		Vec3 angles=new Vec3();
 		M.mat3_toEulerXyz(angles, relRot);
@@ -350,14 +356,14 @@ public class UniversalJoint extends Joint {
 	/**
 	 * Returns the rotation angle along the first body's constraint axis.
 	 */
-	public float getAngle1() {
+	public double getAngle1() {
 		return _angleX;
 	}
 
 	/**
 	 * Returns the rotation angle along the second body's constraint axis.
 	 */
-	public float getAngle2() {
+	public double getAngle2() {
 		return _angleZ;
 	}
 

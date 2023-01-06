@@ -57,8 +57,8 @@ public class Joint {
 	public Vec3 _appliedForce;
 	public Vec3 _appliedTorque;
 
-	public float _breakForce;
-	public float _breakTorque;
+	public double _breakForce;
+	public double _breakTorque;
 
 	public int _type;
 
@@ -84,8 +84,10 @@ public class Joint {
 		switch (config.solverType) {
 		case ConstraintSolverType._DIRECT:
 			_solver = new DirectJointConstraintSolver(this);
+			break;
 		case ConstraintSolverType._ITERATIVE:
 			_solver = new PgsJointConstraintSolver(this);
+			break;
 		}
 
 		_localAnchor1=config.localAnchor1.clone();
@@ -105,6 +107,17 @@ public class Joint {
 		
 	
 
+		_basisX1 =new Vec3();
+		_basisY1 =new Vec3();
+		_basisZ1 =new Vec3();
+		_basisX2 =new Vec3();
+		_basisY2 =new Vec3();
+		_basisZ2 =new Vec3();
+		
+		_appliedForce=new Vec3();
+		_appliedTorque=new Vec3();
+
+		
 		_impulses = new JointImpulse[Setting.maxJacobianRows];
 		for (int i=0;i<Setting.maxJacobianRows;i++) {
 			_impulses[i] = new JointImpulse();
@@ -265,10 +278,10 @@ public class Joint {
 		M.vec3_mulMat3(_localBasisZ2, _localBasisZ1, slerpM);
 	}
 
-	protected void setSolverInfoRowLinear(JointSolverInfoRow row, float diff, TranslationalLimitMotor lm, float mass, SpringDamper sd, TimeStep timeStep, boolean isPositionPart) {
-		float cfmFactor;
-		float erp;
-		float slop = Setting.linearSlop;
+	protected void setSolverInfoRowLinear(JointSolverInfoRow row, double diff, TranslationalLimitMotor lm, double mass, SpringDamper sd, TimeStep timeStep, boolean isPositionPart) {
+		double cfmFactor;
+		double erp;
+		double slop = Setting.linearSlop;
 
 		if (isPositionPart) {
 			cfmFactor = 0;
@@ -283,14 +296,14 @@ public class Joint {
 				//     deltaImpulse = (1 / (1 / mass + CFM)) * (posError * ERP - velocity - totalImpulse * CFM)
 				//                  = mass / (1 + CFM_factor) * (posError * ERP - velocity) - totalImpulse * CFM_factor / (1 + CFM_factor)
 
-				float omega = MathUtil.TWO_PI * sd.frequency;
-				float zeta = sd.dampingRatio;
+				double omega = MathUtil.TWO_PI * sd.frequency;
+				double zeta = sd.dampingRatio;
 				if(zeta < oimo.common.Setting.minSpringDamperDampingRatio) {
 					zeta = oimo.common.Setting.minSpringDamperDampingRatio;
 				}
-				float h = timeStep.dt;
-				float c = 2 * zeta * omega;
-				float k = omega * omega;
+				double h = timeStep.dt;
+				double c = 2 * zeta * omega;
+				double k = omega * omega;
 				if(sd.useSymplecticEuler) {
 					cfmFactor = 1 / (h * c);
 					erp = k / c;
@@ -312,12 +325,12 @@ public class Joint {
 			}
 		}
 
-		float lower = lm.lowerLimit;
-		float upper = lm.upperLimit;
+		double lower = lm.lowerLimit;
+		double upper = lm.upperLimit;
 
-		float minImp;
-		float maxImp;
-		float error;
+		double minImp;
+		double maxImp;
+		double error;
 		if (lower > upper) {
 			// inactive
 			minImp = 0;
@@ -352,7 +365,7 @@ public class Joint {
 		}
 
 		// inverse motor mass
-		float invMass = mass == 0 ? 0 : 1 / mass;
+		double invMass = mass == 0 ? 0 : 1 / mass;
 
 		row.minImpulse = minImp;
 		row.maxImpulse = maxImp;
@@ -360,10 +373,10 @@ public class Joint {
 		row.rhs = error * erp;
 	}
 
-	protected void setSolverInfoRowAngular(JointSolverInfoRow row,float diff, RotationalLimitMotor lm,float mass, SpringDamper sd, TimeStep timeStep, boolean isPositionPart) {
-		float cfmFactor;
-		float erp;
-		float slop = Setting.angularSlop;
+	protected void setSolverInfoRowAngular(JointSolverInfoRow row,double diff, RotationalLimitMotor lm,double mass, SpringDamper sd, TimeStep timeStep, boolean isPositionPart) {
+		double cfmFactor;
+		double erp;
+		double slop = Setting.angularSlop;
 
 		if (isPositionPart) {
 			cfmFactor = 0;
@@ -378,14 +391,14 @@ public class Joint {
 				//     deltaImpulse = (1 / (1 / mass + CFM)) * (posError * ERP - velocity - totalImpulse * CFM)
 				//                  = mass / (1 + CFM_factor) * (posError * ERP - velocity) - totalImpulse * CFM_factor / (1 + CFM_factor)
 
-				float omega = MathUtil.TWO_PI * sd.frequency;
-				float zeta = sd.dampingRatio;
+				double omega = MathUtil.TWO_PI * sd.frequency;
+				double zeta = sd.dampingRatio;
 				if(zeta < oimo.common.Setting.minSpringDamperDampingRatio) {
 					zeta = oimo.common.Setting.minSpringDamperDampingRatio;
 				}
-				float h = timeStep.dt;
-				float c = 2 * zeta * omega;
-				float k = omega * omega;
+				double h = timeStep.dt;
+				double c = 2 * zeta * omega;
+				double k = omega * omega;
 				if(sd.useSymplecticEuler) {
 					cfmFactor = 1 / (h * c);
 					erp = k / c;
@@ -407,18 +420,18 @@ public class Joint {
 			}
 		}
 
-		float lower = lm.lowerLimit;
-		float upper = lm.upperLimit;
+		double lower = lm.lowerLimit;
+		double upper = lm.upperLimit;
 
 		// adjust theta (in [-pi, pi] => in [mid - pi, mid + pi])
-		float mid = (lower + upper) * 0.5f;
+		double mid = (lower + upper) * 0.5f;
 		diff -= mid;
 		diff = ((diff + MathUtil.PI) % MathUtil.TWO_PI + MathUtil.TWO_PI) % MathUtil.TWO_PI - MathUtil.PI;
 		diff += mid;
 
-		float minImp;
-		float maxImp;
-		float error;
+		double minImp;
+		double maxImp;
+		double error;
 		if (lower > upper) {
 			// inactive
 			minImp = 0;
@@ -453,7 +466,7 @@ public class Joint {
 		}
 
 		// inverse motor mass
-		float invMass = mass == 0 ? 0 : 1 / mass;
+		double invMass = mass == 0 ? 0 : 1 / mass;
 
 		row.minImpulse = minImp;
 		row.maxImpulse = maxImp;
@@ -467,7 +480,7 @@ public class Joint {
 	 * @param isPositionPart
 	 * @return
 	 */
-	protected float getErp(TimeStep timeStep,boolean isPositionPart) {
+	protected double getErp(TimeStep timeStep,boolean isPositionPart) {
 		if (isPositionPart) {
 			return 1;
 		} else {
@@ -479,17 +492,17 @@ public class Joint {
 		}
 	}
 
-	protected float computeEffectiveInertiaMoment(Vec3 axis) {
+	protected double computeEffectiveInertiaMoment(Vec3 axis) {
 		Vec3 ia1=new Vec3();
 		Vec3 ia2=new Vec3();
 		M.vec3_mulMat3(ia1, axis, _b1._invInertia);
 		M.vec3_mulMat3(ia2, axis, _b2._invInertia);
-		float invI1 = M.vec3_dot(ia1, axis);
-		float invI2 = M.vec3_dot(ia2, axis);
+		double invI1 = M.vec3_dot(ia1, axis);
+		double invI2 = M.vec3_dot(ia2, axis);
 		if (invI1 > 0) {
-			float rsq = M.vec3_dot(_relativeAnchor1, _relativeAnchor1);
-			float dot = M.vec3_dot(axis, _relativeAnchor1);
-			float projsq = rsq - dot * dot;
+			double rsq = M.vec3_dot(_relativeAnchor1, _relativeAnchor1);
+			double dot = M.vec3_dot(axis, _relativeAnchor1);
+			double projsq = rsq - dot * dot;
 			if (projsq > 0) {
 				if (_b1._invMass > 0) {
 					invI1 = 1 / (1 / invI1 + _b1._mass * projsq);
@@ -499,9 +512,9 @@ public class Joint {
 			}
 		}
 		if (invI2 > 0) {
-			float rsq = M.vec3_dot(_relativeAnchor2, _relativeAnchor2);
-			float dot = M.vec3_dot(axis, _relativeAnchor2);
-			float projsq = rsq - dot * dot;
+			double rsq = M.vec3_dot(_relativeAnchor2, _relativeAnchor2);
+			double dot = M.vec3_dot(axis, _relativeAnchor2);
+			double projsq = rsq - dot * dot;
 			if (projsq > 0) {
 				if (_b2._invMass > 0) {
 					invI2 = 1 / (1 / invI2 + _b2._mass * projsq);
@@ -513,17 +526,17 @@ public class Joint {
 		return invI1 + invI2 == 0 ? 0 : 1 / (invI1 + invI2);
 	}
 
-	protected float computeEffectiveInertiaMoment2(Vec3 axis1, Vec3 axis2) {
+	protected double computeEffectiveInertiaMoment2(Vec3 axis1, Vec3 axis2) {
 		Vec3 ia1=new Vec3();
 		Vec3 ia2=new Vec3();
 		M.vec3_mulMat3(ia1, axis1, _b1._invInertia);
 		M.vec3_mulMat3(ia2, axis2, _b2._invInertia);
-		float invI1 = M.vec3_dot(ia1, axis1);
-		float invI2 = M.vec3_dot(ia2, axis2);
+		double invI1 = M.vec3_dot(ia1, axis1);
+		double invI2 = M.vec3_dot(ia2, axis2);
 		if (invI1 > 0) {
-			float rsq = M.vec3_dot(_relativeAnchor1, _relativeAnchor1);
-			float dot = M.vec3_dot(axis1, _relativeAnchor1);
-			float projsq = rsq * rsq - dot * dot;
+			double rsq = M.vec3_dot(_relativeAnchor1, _relativeAnchor1);
+			double dot = M.vec3_dot(axis1, _relativeAnchor1);
+			double projsq = rsq * rsq - dot * dot;
 			if (projsq > 0) {
 				if (_b1._invMass > 0) {
 					invI1 = 1 / (1 / invI1 + _b1._mass * projsq);
@@ -533,9 +546,9 @@ public class Joint {
 			}
 		}
 		if (invI2 > 0) {
-			float rsq = M.vec3_dot(_relativeAnchor2, _relativeAnchor2);
-			float dot = M.vec3_dot(axis2, _relativeAnchor2);
-			float projsq = rsq * rsq - dot * dot;
+			double rsq = M.vec3_dot(_relativeAnchor2, _relativeAnchor2);
+			double dot = M.vec3_dot(axis2, _relativeAnchor2);
+			double projsq = rsq * rsq - dot * dot;
 			if (projsq > 0) {
 				if (_b2._invMass > 0) {
 					invI2 = 1 / (1 / invI2 + _b2._mass * projsq);
@@ -549,7 +562,7 @@ public class Joint {
 
 	// --- internal ---
 
-	 public float _getWarmStartingFactor() {
+	 public double _getWarmStartingFactor() {
 		switch (_positionCorrectionAlgorithm) {
 		case PositionCorrectionAlgorithm.BAUMGARTE:
 			return Setting.jointWarmStartingFactorForBaungarte;
@@ -593,8 +606,8 @@ public class Joint {
 	}
 
 	public void _checkDestruction() {
-		float forceSq = M.vec3_dot(_appliedForce, _appliedForce);
-		float torqueSq = M.vec3_dot(_appliedTorque, _appliedTorque);
+		double forceSq = M.vec3_dot(_appliedForce, _appliedForce);
+		double torqueSq = M.vec3_dot(_appliedTorque, _appliedTorque);
 
 		if (_breakForce > 0 && forceSq > _breakForce * _breakForce) {
 			_world.removeJoint(this);
@@ -843,7 +856,7 @@ public class Joint {
 	 *
 	 * Returns `0` if the joint is unbreakable.
 	 */
-	public float getBreakForce() {
+	public double getBreakForce() {
 		return _breakForce;
 	}
 
@@ -852,7 +865,7 @@ public class Joint {
 	 *
 	 * Set `0` for unbreakable joints.
 	 */
-	public void setBreakForce(float breakForce) {
+	public void setBreakForce(double breakForce) {
 		_breakForce = breakForce;
 	}
 
@@ -861,7 +874,7 @@ public class Joint {
 	 *
 	 * Returns `0` if the joint is unbreakable.
 	 */
-	public float getBreakTorque() {
+	public double getBreakTorque() {
 		return _breakTorque;
 	}
 
@@ -870,7 +883,7 @@ public class Joint {
 	 *
 	 * Set `0` for unbreakable joints.
 	 */
-	public void setBreakTorque(float breakTorque) {
+	public void setBreakTorque(double breakTorque) {
 		_breakTorque = breakTorque;
 	}
 

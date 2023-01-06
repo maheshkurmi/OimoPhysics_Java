@@ -24,9 +24,9 @@ public class Shape {
 	public Transform  _ptransform;
 	public Transform _transform;
 
-	public float _restitution;
-	public float _friction;
-	public float _density;
+	public double _restitution;
+	public double _friction;
+	public double _density;
 
 	public Aabb _aabb;
 
@@ -100,35 +100,35 @@ public class Shape {
 	/**
 	 * Returns the coefficient of friction.
 	 */
-	public float getFriction() {
+	public double getFriction() {
 		return _friction;
 	}
 
 	/**
 	 * Sets the coefficient of friction to `friction`.
 	 */
-	public void setFriction(float friction) {
+	public void setFriction(double friction) {
 		_friction = friction;
 	}
 
 	/**
 	 * Returns the coefficient of restitution.
 	 */
-	public float getRestitution() {
+	public double getRestitution() {
 		return _restitution;
 	}
 
 	/**
 	 * Sets the coefficient of restitution to `restitution`.
 	 */
-	public void setRestitution(float restitution) {
+	public void setRestitution(double restitution) {
 		_restitution = restitution;
 	}
 
 	/**
 	 * Returns the density of the shape.
 	 */
-	public float getDensity() {
+	public double getDensity() {
 		return _density;
 	}
 
@@ -137,7 +137,7 @@ public class Shape {
 	 *
 	 * This affects the parent rigid body's mass data.
 	 */
-	public void setDensity(float density) {
+	public void setDensity(double density) {
 		_density = density;
 		if (_rigidBody != null) {
 			_rigidBody._shapeModified();

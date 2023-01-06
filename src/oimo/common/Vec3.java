@@ -11,17 +11,17 @@ public class Vec3 {
 	/**
 	 * The x-value of the vector.
 	 */
-	public float x=0;
+	public double x=0;
 
 	/**
 	 * The y-value of the vector.
 	 */
-	public float y=0;
+	public double y=0;
 
 	/**
 	 * The z-value of the vector.
 	 */
-	public float z=0;
+	public double z=0;
 
 	/**
 	 * Creates a new vector as origin or zero vector
@@ -33,7 +33,7 @@ public class Vec3 {
 	/**
 	 * Creates a new vector. The vector is zero vector by default.
 	 */
-	public Vec3(float x,float y, float z) {
+	public Vec3(double x,double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -45,7 +45,7 @@ public class Vec3 {
 	/**
 	 * Sets all values at once and returns 'this'.
 	 */
-	public Vec3 set(float x,float y, float z) {
+	public Vec3 set(double x,double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -81,14 +81,14 @@ public class Vec3 {
 	/**
 	 * Returns new ('this.x' + 'vx', 'this.y' + 'vy', 'this.z' + 'vz').
 	 */
-	public Vec3 add(float vx, float vy, float vz) {
+	public Vec3 add(double vx, double vy, double vz) {
 		return new Vec3(x + vx, y + vy, z + vz);
 	}
 
 	/**
 	 * Returns new 'this' + 'v' * 's'.
 	 */
-	public Vec3 addScaled(Vec3 v, float s) {
+	public Vec3 addScaled(Vec3 v, double s) {
 		return new Vec3(x + v.x * s, y + v.y * s, z + v.z * s);
 	}
 
@@ -102,28 +102,28 @@ public class Vec3 {
 	/**
 	 * Returns ('this.x' - 'vx', 'this.y' - 'vy', 'this.z' - 'vz').
 	 */
-	public Vec3 sub(float vx, float vy, float vz) {
+	public Vec3 sub(double vx, double vy, double vz) {
 		return new Vec3(x - vx, y - vy, z - vz);
 	}
 
 	/**
 	 * Returns new 'this' * 's'.
 	 */
-	public Vec3 scale(float s) {
+	public Vec3 scale(double s) {
 		return new Vec3(x * s, y * s, z * s);
 	}
 
 	/**
 	 * Returns new ('this.x' * 'sx', 'this.y' * 'sy', 'this.z' * 'sz').
 	 */
-	public Vec3 scale(float sx, float sy, float sz) {
+	public Vec3 scale(double sx, double sy, double sz) {
 		return new Vec3(x * sx, y * sy, z * sz);
 	}
 
 	/**
 	 * Returns the dot product of 'this' and 'v'.
 	 */
-	public float dot(Vec3 v) {
+	public double dot(Vec3 v) {
 		return x * v.x + y * v.y + z * v.z;
 	}
 
@@ -149,14 +149,14 @@ public class Vec3 {
 	/**
 	 * Sets this vector to ('this.x' + 'vx', 'this.y' + 'vy', 'this.z' + 'vz') and returns 'this'.
 	 */
-	public Vec3 add3Eq(float vx, float vy, float vz) {
+	public Vec3 add3Eq(double vx, double vy, double vz) {
 		return set(x + vx, y + vy, z + vz);
 	}
 
 	/**
 	 * Sets this vector to 'this' + 'v' * 's' and returns 'this'.
 	 */
-	public Vec3 addScaledEq(Vec3 v, Float s) {
+	public Vec3 addScaledEq(Vec3 v, double s) {
 		return set(x + v.x * s, y + v.y * s, z + v.z * s);
 	}
 
@@ -170,21 +170,21 @@ public class Vec3 {
 	/**
 	 * Sets this vector to ('this.x' - 'vx', 'this.y' - 'vy', 'this.z' - 'vz') and returns 'this'.
 	 */
-	public Vec3 sub3Eq(float vx, float vy, float vz) {
+	public Vec3 sub3Eq(double vx, double vy, double vz) {
 		return set(x - vx, y - vy, z - vz);
 	}
 
 	/**
 	 * Sets this vector to 'this' * 's' and returns 'this'.
 	 */
-	public Vec3 scaleEq(float s) {
+	public Vec3 scaleEq(double s) {
 		return set(x * s, y * s, z * s);
 	}
 
 	/**
 	 * Sets this vector to ('this.x' * 'sx', 'this.y' * 'sy', 'this.z' * 'sz') and returns 'this'.
 	 */
-	public Vec3 scale3Eq(float sx, float sy, float sz) {
+	public Vec3 scale3Eq(double sx, double sy, double sz) {
 		return set(x * sx, y * sy, z * sz);
 	}
 
@@ -225,17 +225,18 @@ public class Vec3 {
 	 * Returns the new vector after this vector is transformed by 'tf'.
 	 */
 	public Vec3 mulTransform(Transform tf) {
-//		
-//		var v:IVec3;
-//		M.vec3_fromVec3(v, this);
-//		M.vec3_mulMat3(v, v, tf._rotation);
-//		M.vec3_add(v, v, tf._position);
-//		var res = new Vec3();
-//		M.vec3_toVec3(res, v);
+		
 		Vec3 v=new Vec3();
-		M.vec3_mulMat3(this, v, tf._rotation);
-		this.addEq(tf._position);
-		return this;
+		M.vec3_fromVec3(v, this);
+		M.vec3_mulMat3(v, v, tf._rotation);
+		M.vec3_add(v, v, tf._position);
+		return v;
+//		
+//		Vec3 v=new Vec3();
+//		
+//		M.vec3_mulMat3(this, v, tf._rotation);
+//		this.addEq(tf._position);
+//		return this;
 	}
 
 	/**
@@ -278,14 +279,14 @@ public class Vec3 {
 	/**
 	 * Returns the length of the vector.
 	 */
-	public float length() {
+	public double length() {
 		return MathUtil.sqrt(x * x + y * y + z * z);
 	}
 
 	/**
 	 * Returns the squared length of the vector.
 	 */
-	public float lengthSq() {
+	public double lengthSq() {
 		return x * x + y * y + z * z;
 	}
 
@@ -295,7 +296,7 @@ public class Vec3 {
 	 * If the length is zero, zero vector is returned.
 	 */
 	public Vec3 normalized() {
-		float invLen = length();
+		double invLen = length();
 		if (invLen > 0) invLen = 1 / invLen;
 		return new Vec3(x * invLen, y * invLen, z * invLen);
 	}
@@ -306,7 +307,7 @@ public class Vec3 {
 	 * If the length is zero, this vector is set to zero vector.
 	 */
 	public Vec3 normalize() {
-		float invLen = length();
+		double invLen = length();
 		if (invLen > 0) invLen = 1 / invLen;
 		return set(x * invLen, y * invLen, z * invLen);
 	}
@@ -346,7 +347,7 @@ public class Vec3 {
 	 * Returns the string representation of the vector.
 	 */
 	public String toString() {
-		return String.format("Vec3[%.3f,%.3f,%.3f]",this.x,this,y,this.z);
+		return String.format("Vec3[%.3f,%.3f,%.3f]",this.x,this.y,this.z);
 	}
 
 	

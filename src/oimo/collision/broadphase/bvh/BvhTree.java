@@ -41,12 +41,12 @@ public class BvhTree {
 			System.out.println(indent + root._proxy._id);
 		} else {
 			_print(root._children[0], indent + "  ");
-			float tmp =0;
-			float sizeX = root._aabbMax.x - root._aabbMin.x ;
-			float sizeY = root._aabbMax.y - root._aabbMin.y;
-			float sizeZ = root._aabbMax.z - root._aabbMin.z;
-			float y = sizeY;
-			float z = sizeZ;
+			double tmp =0;
+			double sizeX = root._aabbMax.x - root._aabbMin.x ;
+			double sizeY = root._aabbMax.y - root._aabbMin.y;
+			double sizeZ = root._aabbMax.z - root._aabbMin.z;
+			double y = sizeY;
+			double z = sizeZ;
 			if(sizeX * (y + z) + y * z > 0) {
 				sizeX = root._aabbMax.x - root._aabbMin.x ;
 				sizeY = root._aabbMax.y - root._aabbMin.y;

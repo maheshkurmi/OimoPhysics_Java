@@ -21,7 +21,7 @@ public class DetectorResultPoint {
 	 * The amount of the overlap. This becomes negative if two geometries are
 	 * separate.
 	 */
-	public float depth;
+	public double depth;
 
 	/**
 	 * The identification of the result point.

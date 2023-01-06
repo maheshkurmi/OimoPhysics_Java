@@ -14,47 +14,47 @@ public class Mat3 {
 	/**
 	 * The element at row 0 column 0.
 	 */
-	public float e00=1;
+	public double e00=1;
 
 	/**
 	 * The element at row 0 column 1.
 	 */
-	public float e01=0;
+	public double e01=0;
 
 	/**
 	 * The element at row 0 column 2.
 	 */
-	public float e02=1;
+	public double e02=0;
 
 	/**
 	 * The element at row 1 column 0.
 	 */
-	public float e10=0;
+	public double e10=0;
 
 	/**
 	 * The element at row 1 column 1.
 	 */
-	public float e11=1;
+	public double e11=1;
 
 	/**
 	 * The element at row 1 column 2.
 	 */
-	public float e12=0;
+	public double e12=0;
 
 	/**
 	 * The element at row 2 column 0.
 	 */
-	public float e20=0;
+	public double e20=0;
 
 	/**
 	 * The element at row 2 column 1.
 	 */
-	public float e21=0;
+	public double e21=0;
 
 	/**
 	 * The element at row 2 column 2.
 	 */
-	public float e22=1;
+	public double e22=1;
 
 	/**
 	 * Creates identity Matrix 
@@ -66,9 +66,9 @@ public class Mat3 {
 	/**
 	 * Creates a new matrix. The matrix is identity by default.
 	 */
-	public Mat3(float e00,float e01,float e02,
-			float e10,float e11,float e12,
-			float e20,float e21,float e22) {
+	public Mat3(double e00,double e01,double e02,
+			double e10,double e11,double e12,
+			double e20,double e21,double e22) {
 		this.e00 = e00;
 		this.e01 = e01;
 		this.e02 = e02;
@@ -81,9 +81,9 @@ public class Mat3 {
 		numCreations++;
 	}
 
-	public Mat3 set(float e00,float e01,float e02,
-			float e10,float e11,float e12,
-			float e20,float e21,float e22) {
+	public Mat3 set(double e00,double e01,double e02,
+			double e10,double e11,double e12,
+			double e20,double e21,double e22) {
 		this.e00 = e00;
 		this.e01 = e01;
 		this.e02 = e02;
@@ -145,7 +145,7 @@ public class Mat3 {
 	/**
 	 * Returns new `this` * `s`
 	 */
-	public Mat3 scale(float s) {
+	public Mat3 scale(double s) {
 		return new Mat3(
 			e00 * s, e01 * s, e02 * s,
 			e10 * s, e11 * s, e12 * s,
@@ -212,7 +212,7 @@ public class Mat3 {
 	/**
 	 * Sets this matrix to `this` * `s` and returns `this`.
 	 */
-	public Mat3 scaleEq(float s) {
+	public Mat3 scaleEq(double s) {
 		return set(
 			e00 * s, e01 * s, e02 * s,
 			e10 * s, e11 * s, e12 * s,
@@ -278,7 +278,7 @@ public class Mat3 {
 	 * Where *scaling matrix* is a matrix which scales `sx` times, `sy` times and
 	 * `sz` times along the x-axis, y-axis and z-axis respectively.
 	 */
-	public Mat3 prependScale(float sx, float sy, float sz) {
+	public Mat3 prependScale(double sx, double sy, double sz) {
 		return new Mat3(
 			e00 * sx, e01 * sx, e02 * sx,
 			e10 * sy, e11 * sy, e12 * sy,
@@ -292,7 +292,7 @@ public class Mat3 {
 	 * Where *scaling matrix* is a matrix which scales `sx` times, `sy` times and
 	 * `sz` times along the x-axis, y-axis and z-axis respectively.
 	 */
-	public Mat3 appendScale(float sx,float sy,float sz) {
+	public Mat3 appendScale(double sx,double sy,double sz) {
 		return new Mat3(
 			e00 * sx, e01 * sy, e02 * sz,
 			e10 * sx, e11 * sy, e12 * sz,
@@ -306,19 +306,19 @@ public class Mat3 {
 	 * Where *rotation matrix* is a matrix which rotates `rad` in radians around the **normalized**
 	 * vector (`axisX`, `axisY`, `axisZ`).
 	 */
-	public Mat3 prependRotation(float rad, float axisX, float axisY, float axisZ) {
-		float s = (float) MathUtil.sin(rad);
-		float c = (float) MathUtil.cos(rad);
-		float c1 = 1 - c;
-		float r00 = axisX * axisX * c1 + c;
-		float r01 = axisX * axisY * c1 - axisZ * s;
-		float r02 = axisX * axisZ * c1 + axisY * s;
-		float r10 = axisY * axisX * c1 + axisZ * s;
-		float r11 = axisY * axisY * c1 + c;
-		float r12 = axisY * axisZ * c1 - axisX * s;
-		float r20 = axisZ * axisX * c1 - axisY * s;
-		float r21 = axisZ * axisY * c1 + axisX * s;
-		float r22 = axisZ * axisZ * c1 + c;
+	public Mat3 prependRotation(double rad, double axisX, double axisY, double axisZ) {
+		double s = (float) MathUtil.sin(rad);
+		double c = (float) MathUtil.cos(rad);
+		double c1 = 1 - c;
+		double r00 = axisX * axisX * c1 + c;
+		double r01 = axisX * axisY * c1 - axisZ * s;
+		double r02 = axisX * axisZ * c1 + axisY * s;
+		double r10 = axisY * axisX * c1 + axisZ * s;
+		double r11 = axisY * axisY * c1 + c;
+		double r12 = axisY * axisZ * c1 - axisX * s;
+		double r20 = axisZ * axisX * c1 - axisY * s;
+		double r21 = axisZ * axisY * c1 + axisX * s;
+		double r22 = axisZ * axisZ * c1 + c;
 		return new Mat3(
 			r00 * e00 + r01 * e10 + r02 * e20,
 			r00 * e01 + r01 * e11 + r02 * e21,
@@ -338,19 +338,19 @@ public class Mat3 {
 	 * Where *rotation matrix* is a matrix which rotates `rad` in radians around the **normalized**
 	 * vector (`axisX`, `axisY`, `axisZ`).
 	 */
-	public Mat3 appendRotation(float rad, float axisX, float axisY, float axisZ) {
-		float s = (float) MathUtil.sin(rad);
-		float c = (float) MathUtil.cos(rad);
-		float c1 = 1 - c;
-		float r00 = axisX * axisX * c1 + c;
-		float r01 = axisX * axisY * c1 - axisZ * s;
-		float r02 = axisX * axisZ * c1 + axisY * s;
-		float r10 = axisY * axisX * c1 + axisZ * s;
-		float r11 = axisY * axisY * c1 + c;
-		float r12 = axisY * axisZ * c1 - axisX * s;
-		float r20 = axisZ * axisX * c1 - axisY * s;
-		float r21 = axisZ * axisY * c1 + axisX * s;
-		float r22 = axisZ * axisZ * c1 + c;
+	public Mat3 appendRotation(double rad, double axisX, double axisY, double axisZ) {
+		double s = (float) MathUtil.sin(rad);
+		double c = (float) MathUtil.cos(rad);
+		double c1 = 1 - c;
+		double r00 = axisX * axisX * c1 + c;
+		double r01 = axisX * axisY * c1 - axisZ * s;
+		double r02 = axisX * axisZ * c1 + axisY * s;
+		double r10 = axisY * axisX * c1 + axisZ * s;
+		double r11 = axisY * axisY * c1 + c;
+		double r12 = axisY * axisZ * c1 - axisX * s;
+		double r20 = axisZ * axisX * c1 - axisY * s;
+		double r21 = axisZ * axisY * c1 + axisX * s;
+		double r22 = axisZ * axisZ * c1 + c;
 		return new Mat3(
 			e00 * r00 + e01 * r10 + e02 * r20,
 			e00 * r01 + e01 * r11 + e02 * r21,
@@ -370,7 +370,7 @@ public class Mat3 {
 	 * Where *scaling matrix* is a matrix which scales `sx` times, `sy` times and
 	 * `sz` times along the x-axis, y-axis and z-axis respectively.
 	 */
-	public Mat3 prependScaleEq(float sx,float sy,float sz) {
+	public Mat3 prependScaleEq(double sx,double sy,double sz) {
 		return set(
 			e00 * sx, e01 * sx, e02 * sx,
 			e10 * sy, e11 * sy, e12 * sy,
@@ -384,7 +384,7 @@ public class Mat3 {
 	 * Where *scaling matrix* is a matrix which scales `sx` times, `sy` times and
 	 * `sz` times along the x-axis, y-axis and z-axis respectively.
 	 */
-	public Mat3 appendScaleEq(float sx,float sy,float sz) {
+	public Mat3 appendScaleEq(double sx,double sy,double sz) {
 		return set(
 			e00 * sx, e01 * sy, e02 * sz,
 			e10 * sx, e11 * sy, e12 * sz,
@@ -398,19 +398,19 @@ public class Mat3 {
 	 * Where *rotation matrix* is a matrix which rotates `rad` in radians around the **normalized**
 	 * vector (`axisX`, `axisY`, `axisZ`).
 	 */
-	public Mat3 prependRotationEq(float rad, float axisX, float axisY, float axisZ) {
-		float s = (float) MathUtil.sin(rad);
-		float c = (float) MathUtil.cos(rad);
-		float c1 = 1 - c;
-		float r00 = axisX * axisX * c1 + c;
-		float r01 = axisX * axisY * c1 - axisZ * s;
-		float r02 = axisX * axisZ * c1 + axisY * s;
-		float r10 = axisY * axisX * c1 + axisZ * s;
-		float r11 = axisY * axisY * c1 + c;
-		float r12 = axisY * axisZ * c1 - axisX * s;
-		float r20 = axisZ * axisX * c1 - axisY * s;
-		float r21 = axisZ * axisY * c1 + axisX * s;
-		float r22 = axisZ * axisZ * c1 + c;
+	public Mat3 prependRotationEq(double rad, double axisX, double axisY, double axisZ) {
+		double s = (float) MathUtil.sin(rad);
+		double c = (float) MathUtil.cos(rad);
+		double c1 = 1 - c;
+		double r00 = axisX * axisX * c1 + c;
+		double r01 = axisX * axisY * c1 - axisZ * s;
+		double r02 = axisX * axisZ * c1 + axisY * s;
+		double r10 = axisY * axisX * c1 + axisZ * s;
+		double r11 = axisY * axisY * c1 + c;
+		double r12 = axisY * axisZ * c1 - axisX * s;
+		double r20 = axisZ * axisX * c1 - axisY * s;
+		double r21 = axisZ * axisY * c1 + axisX * s;
+		double r22 = axisZ * axisZ * c1 + c;
 		return set(
 			r00 * e00 + r01 * e10 + r02 * e20,
 			r00 * e01 + r01 * e11 + r02 * e21,
@@ -430,7 +430,7 @@ public class Mat3 {
 	 * Where *rotation matrix* is a matrix which rotates `rad` in radians around the **normalized**
 	 * vector (`axisX`, `axisY`, `axisZ`).
 	 */
-	public Mat3 appendRotationEq(float rad, float axisX, float axisY, float axisZ) {
+	public Mat3 appendRotationEq(double rad, double axisX, double axisY, double axisZ) {
 		var s = MathUtil.sin(rad);
 		var c = MathUtil.cos(rad);
 		var c1 = 1 - c;
@@ -481,14 +481,14 @@ public class Mat3 {
 	/**
 	 * Returns the determinant.
 	 */
-	public float determinant() {
+	public double determinant() {
 		return e00 * (e11 * e22 - e12 * e21) - e01 * (e10 * e22 - e12 * e20) + e02 * (e10 * e21 - e11 * e20);
 	}
 
 	/**
 	 * Returns the trace.
 	 */
-	public float trace() {
+	public double trace() {
 		return e00 + e11 + e22;
 	}
 
@@ -498,16 +498,16 @@ public class Mat3 {
 	 * If the determinant is zero, zero matrix is returned.
 	 */
 	public Mat3 inverse() {
-		float d00 = e11 * e22 - e12 * e21;
-		float d01 = e10 * e22 - e12 * e20;
-		float d02 = e10 * e21 - e11 * e20;
-		float d10 = e01 * e22 - e02 * e21;
-		float d11 = e00 * e22 - e02 * e20;
-		float d12 = e00 * e21 - e01 * e20;
-		float d20 = e01 * e12 - e02 * e11;
-		float d21 = e00 * e12 - e02 * e10;
-		float d22 = e00 * e11 - e01 * e10;
-		float invDet = e00 * d00 - e01 * d01 + e02 * d02;
+		double d00 = e11 * e22 - e12 * e21;
+		double d01 = e10 * e22 - e12 * e20;
+		double d02 = e10 * e21 - e11 * e20;
+		double d10 = e01 * e22 - e02 * e21;
+		double d11 = e00 * e22 - e02 * e20;
+		double d12 = e00 * e21 - e01 * e20;
+		double d20 = e01 * e12 - e02 * e11;
+		double d21 = e00 * e12 - e02 * e10;
+		double d22 = e00 * e11 - e01 * e10;
+		double invDet = e00 * d00 - e01 * d01 + e02 * d02;
 		if (invDet != 0) invDet = 1 / invDet;
 		return new Mat3(
 			d00 * invDet, -d10 * invDet, d20 * invDet,
@@ -522,16 +522,16 @@ public class Mat3 {
 	 * If the determinant is zero, this matrix is set to zero matrix.
 	 */
 	public Mat3 inverseEq() {
-		float d00 = e11 * e22 - e12 * e21;
-		float d01 = e10 * e22 - e12 * e20;
-		float d02 = e10 * e21 - e11 * e20;
-		float d10 = e01 * e22 - e02 * e21;
-		float d11 = e00 * e22 - e02 * e20;
-		float d12 = e00 * e21 - e01 * e20;
-		float d20 = e01 * e12 - e02 * e11;
-		float d21 = e00 * e12 - e02 * e10;
-		float d22 = e00 * e11 - e01 * e10;
-		float invDet = e00 * d00 - e01 * d01 + e02 * d02;
+		double d00 = e11 * e22 - e12 * e21;
+		double d01 = e10 * e22 - e12 * e20;
+		double d02 = e10 * e21 - e11 * e20;
+		double d10 = e01 * e22 - e02 * e21;
+		double d11 = e00 * e22 - e02 * e20;
+		double d12 = e00 * e21 - e01 * e20;
+		double d20 = e01 * e12 - e02 * e11;
+		double d21 = e00 * e12 - e02 * e10;
+		double d22 = e00 * e11 - e01 * e10;
+		double invDet = e00 * d00 - e01 * d01 + e02 * d02;
 		if (invDet != 0) invDet = 1 / invDet;
 		return set(
 			d00 * invDet, -d10 * invDet, d20 * invDet,
@@ -546,15 +546,15 @@ public class Mat3 {
 	 * If `columnMajor` is true, the array is arranged in column-major order.
 	 * Otherwise, the array is arranged in row-major order.
 	 */
-	public float[] toArray(boolean columnMajor) {
+	public double[] toArray(boolean columnMajor) {
 		if (columnMajor) {
-			return new float[] {
+			return new double[] {
 				e00, e10, e20,
 				e01, e11, e21,
 				e02, e12, e22
 			};
 		} else {
-			return new float[] {
+			return new double[] {
 				e00, e01, e02,
 				e10, e11, e12,
 				e20, e21, e22
@@ -593,22 +593,22 @@ public class Mat3 {
 	 * Sets this matrix to the representation of the quaternion `q`, and returns `this`.
 	 */
 	public Mat3 fromQuat(Quat q) {
-		float x = q.x;
-		float y = q.y;
-		float z = q.z;
-		float w = q.w;
-		float x2 = 2 * x;
-		float y2 = 2 * y;
-		float z2 = 2 * z;
-		float xx = x * x2;
-		float yy = y * y2;
-		float zz = z * z2;
-		float xy = x * y2;
-		float yz = y * z2;
-		float xz = x * z2;
-		float wx = w * x2;
-		float wy = w * y2;
-		float wz = w * z2;
+		double x = q.x;
+		double y = q.y;
+		double z = q.z;
+		double w = q.w;
+		double x2 = 2 * x;
+		double y2 = 2 * y;
+		double z2 = 2 * z;
+		double xx = x * x2;
+		double yy = y * y2;
+		double zz = z * z2;
+		double xy = x * y2;
+		double yz = y * z2;
+		double xz = x * z2;
+		double wx = w * x2;
+		double wy = w * y2;
+		double wz = w * z2;
 		e00 = 1 - yy - zz;
 		e01 = xy - wz;
 		e02 = xz + wy;
@@ -635,13 +635,13 @@ public class Mat3 {
 	 * Rotation order is first X-axis, then rotated Y-axis, finally rotated Z-axis.
 	 * @param radX, radY, radZ angles in radians
 	 */
-	public Mat3 fromEulerXyz(float radX, float radY, float radZ) {
-		float sx =  MathUtil.sin(radX);
-		float sy =  MathUtil.sin(radY);
-		float sz =   MathUtil.sin(radZ);
-		float cx = MathUtil.cos(radX);
-		float cy =  MathUtil.cos(radY);
-		float cz = MathUtil.cos(radZ);
+	public Mat3 fromEulerXyz(double radX, double radY, double radZ) {
+		double sx =  MathUtil.sin(radX);
+		double sy =  MathUtil.sin(radY);
+		double sz =   MathUtil.sin(radZ);
+		double cx = MathUtil.cos(radX);
+		double cy =  MathUtil.cos(radY);
+		double cz = MathUtil.cos(radZ);
 		return set(
 			cy * cz,               -cy * sz,                 sy,
 			cx * sz + cz * sx * sy, cx * cz - sx * sy * sz, -cy * sx,
@@ -693,7 +693,7 @@ public class Mat3 {
 		//   [ cos(y)*sin(z), cos(x)*cos(z) + sin(x)*sin(y)*sin(z), cos(x)*sin(y)*sin(z) - cos(z)*sin(x)]
 		//   [       -sin(y),                        cos(y)*sin(x),                        cos(x)*cos(y)]
 
-		float sy = e02;
+		double sy = e02;
 
 		if (sy <= -1) { // y = -PI / 2
 			// |  0           0          -1 |
@@ -801,7 +801,7 @@ public class Mat3 {
 //	 * @return specified position vector after transformation
 //	 */
 //	public Vec3 transform(Vec3 position) {
-//		float x
+//		double x
 //		position.x = e00 * v.x + e01 * v.y + e02 * v.z ;
 //		position.y = e10 * v.x + e11 * v.y + e12 * v.z ;
 //		position.z = e20 * v.x + e21 * v.y + e22 * v.z ;

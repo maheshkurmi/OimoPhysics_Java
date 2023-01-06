@@ -19,7 +19,7 @@ public class RayCastHit {
 	/**
 	 * The ratio of the position the ray hit from the start point to the end point.
 	 */
-	public float fraction;
+	public double fraction;
 
 	/**
 	 * Default constructor.

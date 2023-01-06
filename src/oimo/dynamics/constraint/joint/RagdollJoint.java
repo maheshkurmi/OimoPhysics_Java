@@ -28,18 +28,18 @@ public class RagdollJoint extends Joint {
 	public SpringDamper _twistSd;
 	public SpringDamper _swingSd;
 	public RotationalLimitMotor _twistLm;
-	public float _maxSwingAngle1;
-	public float _maxSwingAngle2;
+	public double _maxSwingAngle1;
+	public double _maxSwingAngle2;
 
 	Vec3 swingAxis;
 	Vec3 twistAxis;
 
 	Vec3 linearError;
-	float swingError;
+	double swingError;
 	RotationalLimitMotor dummySwingLm;
 
-	public float _swingAngle;
-	public float _twistAngle;
+	public double _swingAngle;
+	public double _twistAngle;
 
 	/**
 	 * Creates a new ragdoll joint by configuration `config`.
@@ -74,6 +74,7 @@ public class RagdollJoint extends Joint {
 		_swingAngle = 0;
 		_twistAngle = 0;
 		swingError = 0;
+		linearError=new Vec3();
 		swingAxis=new Vec3();
 		twistAxis=new Vec3();
 	}
@@ -82,12 +83,12 @@ public class RagdollJoint extends Joint {
 
 	protected void getInfo(JointSolverInfo info, TimeStep timeStep, boolean isPositionPart) {
 		// compute ERP
-		float erp = getErp(timeStep, isPositionPart);
+		double erp = getErp(timeStep, isPositionPart);
 
 		// compute rhs
-		float linearRhsX = this.linearError.x * erp;
-		float linearRhsY = this.linearError.y * erp;
-		float linearRhsZ = this.linearError.z * erp;
+		double linearRhsX = this.linearError.x * erp;
+		double linearRhsY = this.linearError.y * erp;
+		double linearRhsZ = this.linearError.z * erp;
 		
 		Mat3 crossR1=new Mat3();;
 		Mat3 crossR2=new Mat3();
@@ -100,8 +101,8 @@ public class RagdollJoint extends Joint {
 
 		JointSolverInfoRow row;
 		JacobianRow j;
-		float swingMass =this.computeEffectiveInertiaMoment(swingAxis);
-		float twistMass = this.computeEffectiveInertiaMoment(_basisX2);
+		double swingMass =this.computeEffectiveInertiaMoment(swingAxis);
+		double twistMass = this.computeEffectiveInertiaMoment(_basisX2);
 
 		// linear X
 		row = info.addRow(_impulses[0]);
@@ -188,8 +189,8 @@ public class RagdollJoint extends Joint {
 		M.vec3_mulMat3Transposed(basisY2In1, _basisY2, swingM);
 
 		// compute twist angle
-		float yCoord;
-		float zCoord;
+		double yCoord;
+		double zCoord;
 		yCoord = M.vec3_dot(_basisY1, basisY2In1);
 		zCoord = M.vec3_dot(_basisZ1, basisY2In1);
 		_twistAngle = MathUtil.atan2(zCoord, yCoord);
@@ -199,7 +200,7 @@ public class RagdollJoint extends Joint {
 		M.vec3_normalize(twistAxis, twistAxis);
 
 		// scale the swing vector so that its length shows the swing rotation angle
-		float invLen = M.vec3_length(swingV);
+		double invLen = M.vec3_length(swingV);
 		if (invLen > 0) invLen = 1 / invLen;
 		M.vec3_scale(swingV, swingV, invLen * _swingAngle);
 
@@ -207,29 +208,29 @@ public class RagdollJoint extends Joint {
 		M.vec3_mulMat3Transposed(swingV, swingV, basis1Mat);
 
 		// project the swing rotation angles onto XY plane
-		float x = swingV.y;///.vec3_get(swingV, 1);
-		float y = swingV.z;//.vec3_get(swingV, 2);
+		double x = swingV.y;///.vec3_get(swingV, 1);
+		double y = swingV.z;//.vec3_get(swingV, 2);
 
 		// constraint ellipse: x^2/a^2 + y^2/b^2 <= 1
-		float a = _maxSwingAngle1;
-		float b = _maxSwingAngle2;
-		float invA2 = 1 / (a * a);
-		float invB2 = 1 / (b * b);
+		double a = _maxSwingAngle1;
+		double b = _maxSwingAngle2;
+		double invA2 = 1 / (a * a);
+		double invB2 = 1 / (b * b);
 
-		float w = x * x * invA2 + y * y * invB2;
+		double w = x * x * invA2 + y * y * invB2;
 		if (w == 0) {
 			M.vec3_set(swingAxis, 0, 0, 0);
 			swingError = 0;
 		} else {
-			float t = MathUtil.sqrt(1 / w);
-			float x0 = x * t;
-			float y0 = y * t;
-			float nx = x0 * invA2;
-			float ny = y0 * invB2;
+			double t = MathUtil.sqrt(1 / w);
+			double x0 = x * t;
+			double y0 = y * t;
+			double nx = x0 * invA2;
+			double ny = y0 * invB2;
 			invLen = 1 / MathUtil.sqrt(nx * nx + ny * ny);
 			nx *= invLen;
 			ny *= invLen;
-			float depth = (x - x0) * nx + (y - y0) * ny;
+			double depth = (x - x0) * nx + (y - y0) * ny;
 			if (depth > 0) {
 				swingError = depth;
 
@@ -386,14 +387,14 @@ public class RagdollJoint extends Joint {
 	/**
 	 * Returns the swing angle in radians.
 	 */
-	public float getSwingAngle() {
+	public double getSwingAngle() {
 		return _swingAngle;
 	}
 
 	/**
 	 * Returns the twist angle in radians.
 	 */
-	public float getTwistAngle() {
+	public double getTwistAngle() {
 		return _twistAngle;
 	}
 

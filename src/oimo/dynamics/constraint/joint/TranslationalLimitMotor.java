@@ -9,26 +9,26 @@ public  class TranslationalLimitMotor {
 	 *
 	 * The limit is disabled if `lowerLimit > upperLimit`.
 	 */
-	public float lowerLimit;
+	public double lowerLimit;
 
 	/**
 	 * The upper bound of the limit in usually meters.
 	 *
 	 * The limit is disabled if `lowerLimit > upperLimit`.
 	 */
-	public float upperLimit ;
+	public double upperLimit ;
 
 	/**
 	 * The target speed of the motor in usually meters per second.
 	 */
-	public float motorSpeed ;
+	public double motorSpeed ;
 
 	/**
 	 * The maximum force of the motor in usually newtons.
 	 *
 	 * The motor is disabled if `motorForce <= 0`.
 	 */
-	public float motorForce ;
+	public double motorForce ;
 
 	/**
 	 * Default constructor.
@@ -43,7 +43,7 @@ public  class TranslationalLimitMotor {
 	 * Sets limit properties at once and returns `this`.
 	 * `this.lowerLimit` is set to `lower`, and `this.upperLimit` is set to `upper`.
 	 */
-	public TranslationalLimitMotor setLimits(float lower , float upper ){
+	public TranslationalLimitMotor setLimits(double lower , double upper ){
 		lowerLimit = lower;
 		upperLimit = upper;
 		return this;
@@ -53,7 +53,7 @@ public  class TranslationalLimitMotor {
 	 * Sets motor properties at once and returns `this`.
 	 * `this.motorSpeed` is set to `speed`, and `this.motorForce` is set to `force`.
 	 */
-	public TranslationalLimitMotor setMotor(float speed , float force ) {
+	public TranslationalLimitMotor setMotor(double speed , double force ) {
 		motorSpeed = speed;
 		motorForce = force;
 		return this;

@@ -12,32 +12,32 @@ import oimo.dynamics.rigidbody.RigidBody;
 /**
  * Internal class
  */
-class MassMatrix {
+public class MassMatrix {
 	// matrix size
 	public int _size;
 	// inverse matrix elements
-	public float[][] _invMass;
-	public float[][] _invMassWithoutCfm;
+	public double[][] _invMass;
+	public double[][] _invMassWithoutCfm;
 
 	public JointSolverMassDataRow[] _massData;
 
-	public float[][][] _cachedSubmatrices;
+	public double[][][] _cachedSubmatrices;
 	public boolean[] _cacheComputed;
 	public int _maxSubmatrixId;
 
 	// temp matrix used for computing a inverse matrix
-	float[][] tmpMatrix;
+	double[][] tmpMatrix;
 
 	public MassMatrix(int size) {
 		_size = size;
 
-		tmpMatrix = new float[size][size];// new Vector<Vector<Float>>(_size);
-		_invMass = new float[size][size];// Vector<Vector<Float>>(_size);
-		_invMassWithoutCfm = new float[size][size];// new Vector<Vector<Float>>(_size);
+		tmpMatrix = new double[size][size];// new Vector<Vector<Float>>(_size);
+		_invMass = new double[size][size];// Vector<Vector<Float>>(_size);
+		_invMassWithoutCfm = new double[size][size];// new Vector<Vector<Float>>(_size);
 		for (int i = 0; i < _size; i++) {
-			tmpMatrix[i] = new float[size];// Vector<Float>(_size);
-			_invMass[i] = new float[size];// new Vector<Float>(_size);
-			_invMassWithoutCfm[i] = new float[size];// new Vector<Float>(_size);
+			tmpMatrix[i] = new double[size];// Vector<Float>(_size);
+			_invMass[i] = new double[size];// new Vector<Float>(_size);
+			_invMassWithoutCfm[i] = new double[size];// new Vector<Float>(_size);
 			for (int j = 0; j < _size; j++) {
 				tmpMatrix[i][j] = 0;
 				_invMass[i][j] = 0;
@@ -46,7 +46,7 @@ class MassMatrix {
 		}
 		_maxSubmatrixId = 1 << _size;
 		_cacheComputed = new boolean[_maxSubmatrixId];// new Vector<Bool>(_maxSubmatrixId);
-		_cachedSubmatrices = new float[_maxSubmatrixId][][];// Vector<Vector<Vector<Float>>>(_maxSubmatrixId);
+		_cachedSubmatrices = new double[_maxSubmatrixId][][];// Vector<Vector<Vector<Float>>>(_maxSubmatrixId);
 		for (int i = 0; i < _maxSubmatrixId; i++) {
 			// popcount (assuming the size of the matrix is less than 0x100 = 256)
 			int t = i;
@@ -55,9 +55,9 @@ class MassMatrix {
 			t = (t & 0xf) + (t >> 4 & 0xf);
 			var matrixSize = t;
 
-			float[][] subMatrix = new float[matrixSize][];
+			double[][] subMatrix = new double[matrixSize][];
 			for (int j = 0; j < matrixSize; j++) {
-				subMatrix[j] = new float[matrixSize];
+				subMatrix[j] = new double[matrixSize];
 				for (int k = 0; k < matrixSize; k++) {
 					subMatrix[j][k] = 0;
 				}
@@ -82,13 +82,13 @@ class MassMatrix {
 			}
 		}
 
-		float[][] src = tmpMatrix;
-		float[][] dst = _cachedSubmatrices[id];
-		float[] srci;
-		float[] dsti;
-		float[] srcj;
-		float[] dstj;
-		float diag;
+		double[][] src = tmpMatrix;
+		double[][] dst = _cachedSubmatrices[id];
+		double[] srci;
+		double[] dsti;
+		double[] srcj;
+		double[] dstj;
+		double diag;
 
 		switch (size) {
 		case 4:
@@ -695,16 +695,16 @@ class MassMatrix {
 	// --- internal ---
 
 	public void computeInvMass(JointSolverInfo info, JointSolverMassDataRow[] massData) {
-		float[][] invMass = this._invMass;
-		float[][] invMassWithoutCfm = this._invMassWithoutCfm;
+		double[][] invMass = this._invMass;
+		double[][] invMassWithoutCfm = this._invMassWithoutCfm;
 
 		int numRows = info.numRows;
 
 		RigidBody b1 = info.b1;
 		RigidBody b2 = info.b2;
 
-		float invM1;
-		float invM2;
+		double invM1;
+		double invM2;
 		invM1 = b1._invMass;
 		invM2 = b2._invMass;
 		Mat3 invI1 = b1._invInertia;
@@ -759,7 +759,7 @@ class MassMatrix {
 				JacobianRow j2 = info.rows[j].jacobian;
 				JointSolverMassDataRow md2 = massData[j];
 
-				float val = M.vec3_dot(j1.lin1, md2.invMLin1) + M.vec3_dot(j1.ang1, md2.invMAng1)
+				double val = M.vec3_dot(j1.lin1, md2.invMLin1) + M.vec3_dot(j1.ang1, md2.invMAng1)
 						+ M.vec3_dot(j1.lin2, md2.invMLin2) + M.vec3_dot(j1.ang2, md2.invMAng2);
 				if (i == j) {
 					invMass[i][j] = val + info.rows[i].cfm;
@@ -785,7 +785,7 @@ class MassMatrix {
 		clearCache();
 	}
 
-	public float[][] getSubmatrix(int[] indices, int n) {
+	public double[][] getSubmatrix(int[] indices, int n) {
 		int id = 0;
 		for (int i = 0; i < n; i++) {
 			id |= 1 << indices[i];
@@ -825,7 +825,7 @@ class MassMatrix {
 		}
 	}
 
-	public void dumpMatrix(float[][] data) {
+	public void dumpMatrix(double[][] data) {
 		if (data.length == 0) {
 			System.out.println("| |");
 			return;

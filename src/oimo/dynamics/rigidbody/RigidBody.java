@@ -1,5 +1,9 @@
 package oimo.dynamics.rigidbody;
 
+//import org.shikhar.simphy.gfx.canvas.scene3d.ModelNode;
+//import org.shikhar.simphy.gfx.canvas.scene3d.SceneNode3D;
+//import org.shikhar.simphy.gfx.math.Quaternion;
+
 import oimo.collision.geometry.*;
 import oimo.common.*;
 import oimo.dynamics.*;
@@ -33,20 +37,20 @@ public class RigidBody {
 
 	public int _type;
 
-	public float _sleepTime;
+	public double _sleepTime;
 	public boolean _sleeping;
 	public boolean _autoSleep;
 
-	public float _mass;
-	public float _invMass;
+	public double _mass;
+	public double _invMass;
 	public Mat3 _localInertia;
 	public Vec3 _rotFactor;
 	public Mat3 _invLocalInertia;
 	public Mat3 _invLocalInertiaWithoutRotFactor;
 	public Mat3 _invInertia;
 
-	public float _linearDamping;
-	public float _angularDamping;
+	public double _linearDamping;
+	public double _angularDamping;
 
 	public Vec3 _force;
 	public Vec3 _torque;
@@ -65,7 +69,7 @@ public class RigidBody {
 	public int _numJointLinks;
 
 	public boolean _addedToIsland;
-	public float _gravityScale;
+	public double _gravityScale;
 
 	/**
 	 * Extra field that users can use for their own purposes.
@@ -141,7 +145,7 @@ public class RigidBody {
 
 	// --- internal ---
 
-	public void _integrate(float dt) {
+	public void _integrate(double dt) {
 		switch (_type) {
 			case RigidBodyType._DYNAMIC:
 			case RigidBodyType._KINEMATIC:
@@ -150,8 +154,8 @@ public class RigidBody {
 				M.vec3_scale(translation, _vel, dt);
 				M.vec3_scale(rotation, _angVel, dt);
 
-				float translationLengthSq = M.vec3_dot(translation, translation);
-				float rotationLengthSq = M.vec3_dot(rotation, rotation);
+				double translationLengthSq = M.vec3_dot(translation, translation);
+				double rotationLengthSq = M.vec3_dot(rotation, rotation);
 
 				if (translationLengthSq == 0 && rotationLengthSq == 0) {
 					return; // no need of integration
@@ -159,14 +163,14 @@ public class RigidBody {
 
 				// limit linear velocity
 				if (translationLengthSq > Setting.maxTranslationPerStep * Setting.maxTranslationPerStep) {
-					float l = Setting.maxTranslationPerStep / MathUtil.sqrt(translationLengthSq);
+					double l = Setting.maxTranslationPerStep / MathUtil.sqrt(translationLengthSq);
 					M.vec3_scale(_vel, _vel, l);
 					M.vec3_scale(translation, translation, l);
 				}
 
 				// limit angular velocity
 				if (rotationLengthSq > Setting.maxRotationPerStep * Setting.maxRotationPerStep) {
-					float l = Setting.maxRotationPerStep / MathUtil.sqrt(rotationLengthSq);
+					double l = Setting.maxRotationPerStep / MathUtil.sqrt(rotationLengthSq);
 					M.vec3_scale(_angVel, _angVel, l);
 					M.vec3_scale(rotation, rotation, l);
 				}
@@ -174,18 +178,20 @@ public class RigidBody {
 				// update the transform
 				_applyTranslation(translation);
 				_applyRotation(rotation);
-
+				
+				break;
 			case RigidBodyType._STATIC:
 				M.vec3_zero(_vel);
 				M.vec3_zero(_angVel);
 				M.vec3_zero(_pseudoVel);
 				M.vec3_zero(_angPseudoVel);
+				break;
 		}
 	}
 
 	public void _integratePseudoVelocity() {
-		float pseudoVelLengthSq = M.vec3_dot(_pseudoVel, _pseudoVel);
-		float angPseudoVelLengthSq = M.vec3_dot(_angPseudoVel, _angPseudoVel);
+		double pseudoVelLengthSq = M.vec3_dot(_pseudoVel, _pseudoVel);
+		double angPseudoVelLengthSq = M.vec3_dot(_angPseudoVel, _angPseudoVel);
 		if (pseudoVelLengthSq == 0 && angPseudoVelLengthSq == 0) {
 			return; // no need of intgration
 		}
@@ -203,9 +209,12 @@ public class RigidBody {
 				// update the transform
 				_applyTranslation(translation);
 				_applyRotation(rotation);
+			   
+				break;
 			case RigidBodyType._STATIC:
 				M.vec3_zero(_pseudoVel);
 				M.vec3_zero(_angPseudoVel);
+				break;
 		}
 	}
 
@@ -225,15 +234,15 @@ public class RigidBody {
 
 	 public void _applyRotation(Vec3 rotation) {
 		// compute derivative of the quaternion
-		float theta = M.vec3_length(rotation);
-		float halfTheta = theta * 0.5f;
-		float rotationToSinAxisFactor; // sin(halfTheta) / theta;
-		 float cosHalfTheta; // cos(halfTheta)
+		double theta = M.vec3_length(rotation);
+		double halfTheta = theta * 0.5f;
+		double rotationToSinAxisFactor; // sin(halfTheta) / theta;
+		 double cosHalfTheta; // cos(halfTheta)
 		if (halfTheta < 0.5) {
 			// use Maclaurin expansion
-			float ht2 = halfTheta * halfTheta;
-			rotationToSinAxisFactor = (1 / 2) * (1 - ht2 * (1 / 6) + ht2 * ht2 * (1 / 120));
-			cosHalfTheta = 1 - ht2 * (1 / 2) + ht2 * ht2 * (1 / 24);
+			double ht2 = halfTheta * halfTheta;
+			rotationToSinAxisFactor = (1 / 2f) * (1 - ht2 * (1 / 6f) + ht2 * ht2 * (1 / 120f));
+			cosHalfTheta = 1 - ht2 * (1 / 2f) + ht2 * ht2 * (1 / 24f);
 		} else {
 			rotationToSinAxisFactor = MathUtil.sin(halfTheta) / theta;
 			cosHalfTheta = MathUtil.cos(halfTheta);
@@ -242,7 +251,6 @@ public class RigidBody {
 		M.vec3_scale(sinAxis, rotation, rotationToSinAxisFactor);
 		Quat dq=new Quat();
 		M.quat_fromVec3AndFloat(dq, sinAxis, cosHalfTheta);
-
 		// integrate quaternion
 		Quat q=new Quat();
 		M.quat_fromMat3(q, _transform._rotation);
@@ -252,6 +260,7 @@ public class RigidBody {
 
 		// update rotation
 		_transform._rotation.fromQuat(q);
+		
 		//M.mat3_fromQuat(_transform._rotation, q);
 
 		// update inertia tensor
@@ -270,6 +279,7 @@ public class RigidBody {
 			s._sync(_ptransform, _transform);
 			s=s._next;
 		}
+		  this.updateMesh();
 //		M.list_foreach(s, _next, {
 //			M.call(s._sync(_ptransform, _transform));
 //		});
@@ -291,7 +301,7 @@ public class RigidBody {
 
 	public void updateMass() {
 		Mat3 totalInertia=new Mat3();
-		float totalMass;
+		double totalMass;
 		M.mat3_zero(totalInertia);
 		totalMass = 0;
 
@@ -300,7 +310,7 @@ public class RigidBody {
 			Geometry g = s._geom;
 			g._updateMass();
 
-			float mass = s._density * g._volume;
+			double mass = s._density * g._volume;
 			Mat3 inertia=new Mat3();
 
 			// I_transformed = (R * I_localCoeff * R^T) * mass
@@ -332,7 +342,7 @@ public class RigidBody {
 
 	// compute inverse mass and inertias from _mass and _localInertia
 	public void completeMassData() {
-		float det;
+		double det;
 		det = _localInertia.determinant();//M.mat3_det(_localInertia);
 		if (_mass > 0 && det > 0 && _type == RigidBodyType._DYNAMIC) {
 			_invMass = 1 / _mass;
@@ -538,7 +548,7 @@ public class RigidBody {
 	 *
 	 * If the rigid body has infinite mass, `0` will be returned.
 	 */
-	public float getMass() {
+	public double getMass() {
 		return _mass;
 	}
 
@@ -840,7 +850,7 @@ public class RigidBody {
 	/**
 	 * Returns the gravity scaling factor of the rigid body.
 	 */
-	public float getGravityScale() {
+	public double getGravityScale() {
 		return _gravityScale;
 	}
 
@@ -849,7 +859,7 @@ public class RigidBody {
 	 *
 	 * If `0` is set, the rigid body will not be affected by gravity.
 	 */
-	public void setGravityScale(float gravityScale) {
+	public void setGravityScale(double gravityScale) {
 		_gravityScale = gravityScale;
 		wakeUp();
 	}
@@ -1103,7 +1113,7 @@ public class RigidBody {
 	 * Returns how long the rigid body is stopping moving. This returns `0` if the body
 	 * has already slept.
 	 */
-	public float getSleepTime() {
+	public double getSleepTime() {
 		return _sleepTime;
 	}
 
@@ -1120,46 +1130,83 @@ public class RigidBody {
 	/**
 	 * Returns the linear damping.
 	 */
-	public float getLinearDamping() {
+	public double getLinearDamping() {
 		return _linearDamping;
 	}
 
 	/**
 	 * Sets the linear damping to `damping`.
 	 */
-	public void setLinearDamping(float damping) {
+	public void setLinearDamping(double damping) {
 		_linearDamping = damping;
 	}
 
 	/**
 	 * Returns the angular damping.
 	 */
-	public float getAngularDamping() {
+	public double getAngularDamping() {
 		return _angularDamping;
 	}
 
 	/**
 	 * Sets the angular damping to `damping`.
 	 */
-	public void setAngularDamping(float damping) {
+	public void setAngularDamping(double damping) {
 		_angularDamping = damping;
 	}
 
-	/**
-	 * Returns the previous rigid body in the world.
-	 *
-	 * If the previous one does not exist, `null` will be returned.
-	 */
-	public RigidBody getPrev() {
-		return _prev;
+	public void updateMesh() {
+		
 	}
-
-	/**
-	 * Returns the next rigid body in the world.
-	 *
-	 * If the next one does not exist, `null` will be returned.
-	 */
-	public RigidBody getNext() {
-		return _next;
-	}
+//	
+//	SceneNode3D mesh;
+//	/**
+//	 * Returns the previous rigid body in the world.
+//	 *
+//	 * If the previous one does not exist, `null` will be returned.
+//	 */
+//	public RigidBody getPrev() {
+//		return _prev;
+//	}
+//
+//	/**
+//	 * Returns the next rigid body in the world.
+//	 *
+//	 * If the next one does not exist, `null` will be returned.
+//	 */
+//	public RigidBody getNext() {
+//		return _next;
+//	}
+//	
+//	
+//	  //---------------------------------------------
+//    // AUTO UPDATE SceneNode Model MESH
+//    //---------------------------------------------
+//
+//    public void connectMesh (SceneNode3D mesh ) {
+//
+//        this.mesh = mesh;
+//        this.updateMesh();
+//
+//    }
+//
+//	public SceneNode3D getMesh() {
+//		return mesh;
+//	}
+//	
+//	
+//	Quaternion q_=new Quaternion();
+//   public void updateMesh(){
+//
+//      
+//        if( this.getMesh() == null ) return;
+//        
+//        this.getMesh().setPosition((float)_transform._position.x,(float)_transform._position.y,(float)_transform._position.z );
+//       
+//        Vec3 v=_transform._rotation.toEulerXyz();
+//        //q_.set(q.x,q.y,q.z,q.w);
+//        this.getMesh().setRotation((float)v.x,(float)v.y,(float)v.z);
+//    
+//    }
+   
 }

@@ -17,13 +17,13 @@ public class ContactSolverInfoRow {
 	public JacobianRow jacobianB;
 
 	/** Used for both velocity and position solver. */
-	public float rhs;
+	public double rhs;
 
 	/** Used for velocity solver. */
-	public float cfm;
+	public double cfm;
 
 	/** Used for velocity solver. */
-	public float friction;
+	public double friction;
 
 	/** Used for both velocity and position solver. */
 	public ContactImpulse impulse;

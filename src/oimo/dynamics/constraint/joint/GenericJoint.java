@@ -25,17 +25,17 @@ public class GenericJoint extends Joint {
 	public Vec3 _axisY;
 	public Vec3 _axisZ;
 
-	public float _angleX;
-	public float _angleY;
-	public float _angleZ;
+	public double _angleX;
+	public double _angleY;
+	public double _angleZ;
 
 	boolean xSingular;
 	boolean ySingular;
 	boolean zSingular;
 
-	float translationX;
-	float translationY;
-	float translationZ;
+	double translationX;
+	double translationY;
+	double translationZ;
 
 	/**
 	 * Creates a new generic joint by configuration `config`.
@@ -55,6 +55,10 @@ public class GenericJoint extends Joint {
 		M.mat3_getCol(_localBasisY2, lb2, 1);
 		M.mat3_getCol(_localBasisZ2, lb2, 2);
 
+		_axisX=new Vec3();;
+		_axisY=new Vec3();;
+		_axisZ=new Vec3();;
+		
 		_angleX = 0;
 		_angleY = 0;
 		_angleZ = 0;
@@ -87,11 +91,31 @@ public class GenericJoint extends Joint {
 	}
 
 	private void updateConstraintAxes() {
+		Mat3 rot1=new Mat3();
+		Mat3 rot2=new Mat3();
+		M.mat3_fromCols(rot1, _basisX1, _basisY1, _basisZ1);
+		M.mat3_fromCols(rot2, _basisX2, _basisY2, _basisZ2);
+		//     local --(rot1)--> body1
+		//     local --(rot2)--> body2
+		//     body1 --(relRot)--> body2
+		// and
+		//     body1 -------------(relRot)------------> body2
+		//     body1 --(inv(rot1))--> local --(rot2)--> body2
+		//
+		// so relative rotation matrix is
+		//     inv(rot1) * rot2
+		// and NOT
+		//     rot2 * inv(rot1)
+		Mat3 relRot=new Mat3();
+		M.mat3_mulLhsTransposed(relRot, rot1, rot2);
 
-		Vec3 angleAxisX=_basisX1;
-		Vec3 angleAxisZ= _basisZ2;
-		Vec3 angleAxisY=angleAxisX.cross(angleAxisZ); // right-handed coordinate system
-		//M.vec3_cross(angleAxisY, angleAxisZ, angleAxisX);
+		
+		Vec3 angleAxisX=new Vec3();
+		Vec3 angleAxisZ=new Vec3();
+		Vec3 angleAxisY=new Vec3();
+		M.vec3_assign(angleAxisX, _basisX1);
+		M.vec3_assign(angleAxisZ, _basisZ2);
+		M.vec3_cross(angleAxisY, angleAxisZ, angleAxisX); // right-handed coordinate system
 
 		// constraint axes are not equal to rotation axes of Euler angles, because rotation axes
 		// of Euler angles are not orthogonal. if we want to constrain relative angular velocity
@@ -121,10 +145,10 @@ public class GenericJoint extends Joint {
 	private void getInfo(JointSolverInfo info, TimeStep timeStep, boolean isPositionPart) {
 		JointSolverInfoRow row;
 		JacobianRow j;
-		float translMotorMass = 1 / (_b1._invMass + _b2._invMass);
-		float motorMassX = this.computeEffectiveInertiaMoment(_axisX);
-		float motorMassY = this.computeEffectiveInertiaMoment(_axisY);
-		float motorMassZ = this.computeEffectiveInertiaMoment(_axisZ);
+		double translMotorMass = 1 / (_b1._invMass + _b2._invMass);
+		double motorMassX = this.computeEffectiveInertiaMoment(_axisX);
+		double motorMassY = this.computeEffectiveInertiaMoment(_axisY);
+		double motorMassZ = this.computeEffectiveInertiaMoment(_axisZ);
 
 		// linear X
 		if (_translSds[0].frequency <= 0 || !isPositionPart) {
@@ -210,18 +234,18 @@ public class GenericJoint extends Joint {
 		//     inv(rot1) * rot2
 		// but NOT
 		//     rot2 * inv(rot1)
-		rot1.transposeEq().mulEq(rot2);
-		//Mat3 relRot=new Mat3();
-		//M.mat3_mulLhsTransposed(relRot, rot1, rot2);
+		//rot1.transposeEq().mulEq(rot2);
+		Mat3 relRot=new Mat3();
+		M.mat3_mulLhsTransposed(relRot, rot1, rot2);
 
 		Vec3 angles=new Vec3();
-		M.mat3_toEulerXyz(angles, rot1);
+		M.mat3_toEulerXyz(angles, relRot);
 		_angleX = angles.x;//.vec3_get(angles, 0);
 		_angleY = angles.y;//.vec3_get(angles, 1);
 		_angleZ = angles.z;//.vec3_get(angles, 2);
 
 		// compute translations
-		Vec3 anchorDiff=angles;
+		Vec3 anchorDiff=new Vec3();
 		M.vec3_sub(anchorDiff, _anchor2, _anchor1);
 		translationX = M.vec3_dot(anchorDiff, _basisX1);
 		translationY = M.vec3_dot(anchorDiff, _basisY1);

@@ -60,7 +60,7 @@ public class Pool {
 	 * Returns a `Mat4` object. If an unused object of `Vec3` is pooled, this does
 	 * not create a new instance.
 	 */
-	public Mat4 Mat4() {
+	public Mat4 mat4() {
 		if ((this.sizeMat4 == 0)) {
 			//there is no free/disposed object so create new one
 			return new Mat4();
@@ -113,9 +113,10 @@ public class Pool {
 			int newLength = (this.sizeVec3 << 1);
 			Vec3[] newArray = new Vec3[newLength];
 			int i=0;
-			while (i++ < this.sizeVec3) {
+			while (i < this.sizeVec3) {
 				newArray[i] = this.stackVec3[i];
 				this.stackVec3[i] = null;
+				i++;
 			}
 			this.stackVec3 = newArray;
 		}
@@ -134,9 +135,10 @@ public class Pool {
 			int newLength = (this.sizeMat3 << 1);
 			Mat3[] newArray = new Mat3[newLength];
 			int i=0;
-			while (i++ < this.sizeMat3) {
+			while (i < this.sizeMat3) {
 				newArray[i] = this.stackMat3[i];
 				this.stackMat3[i] = null;
+				i++;
 			}
 			this.stackMat3 = newArray;
 		}
@@ -154,9 +156,10 @@ public class Pool {
 			int newLength = (this.sizeMat4 << 1);
 			Mat4[] newArray = new Mat4[newLength];
 			int i=0;
-			while (i++ < this.sizeMat4) {
+			while (i < this.sizeMat4) {
 				newArray[i] = this.stackMat4[i];
 				this.stackMat4[i] = null;
+				i++;
 			}
 			this.stackMat4 = newArray;
 		}
@@ -175,14 +178,15 @@ public class Pool {
 			int newLength = (this.sizeQuat << 1);
 			Quat[] newArray = new Quat[newLength];
 			int i=0;
-			while (i++ < this.sizeQuat) {
+			while (i< this.sizeQuat) {
 				newArray[i] = this.stackQuat[i];
 				this.stackQuat[i] = null;
+				i++;
 			}
 			this.stackQuat = newArray;
 		}
 		//add object to free pool
-		this.stackQuat[this.sizeMat4++] = q;
+		this.stackQuat[this.sizeQuat++] = q;
 	}
 
 

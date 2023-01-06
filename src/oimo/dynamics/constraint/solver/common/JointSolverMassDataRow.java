@@ -12,8 +12,8 @@ public class JointSolverMassDataRow {
 	public Vec3 invMAng2=new Vec3();
 
 	// mass
-	public float mass;
-	public float massWithoutCfm;
+	public double mass;
+	public double massWithoutCfm;
 
 	public JointSolverMassDataRow() {
 

@@ -20,7 +20,7 @@ public class ManifoldPoint {
 	// world position
 	public Vec3 _pos1=new Vec3();
 	public Vec3 _pos2=new Vec3();
-	public float _depth=0;
+	public double _depth=0;
 
 	public ContactImpulse _impulse= new ContactImpulse();
 
@@ -143,7 +143,7 @@ public class ManifoldPoint {
 	 * Returns the amount of the overlap. If the manifold point is separate, a negative
 	 * value is returned.
 	 */
-	public float getDepth() {
+	public double getDepth() {
 		return _depth;
 	}
 
@@ -157,21 +157,21 @@ public class ManifoldPoint {
 	/**
 	 * Returns the normal impulse of the manifold point.
 	 */
-	public float getNormalImpulse() {
+	public double getNormalImpulse() {
 		return _impulse.impulseN;
 	}
 
 	/**
 	 * Returns the tangent impulse of the manifold point.
 	 */
-	public float getTangentImpulse() {
+	public double getTangentImpulse() {
 		return _impulse.impulseT;
 	}
 
 	/**
 	 * Returns the binormal impulse of the manifold point.
 	 */
-	public float getBinormalImpulse() {
+	public double getBinormalImpulse() {
 		return _impulse.impulseB;
 	}
 

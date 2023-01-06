@@ -44,20 +44,20 @@ public class BvhStrategy {
 	// --- private ---
 
 	 int decideInsertionSimple(BvhNode currentNode,BvhNode leaf) {
-		 	float centerX;
-		 	float centerY;
-		 	float centerZ;
+		 	double centerX;
+		 	double centerY;
+		 	double centerZ;
 			centerX = leaf._aabbMin.x + leaf._aabbMax.x;
 			centerY = leaf._aabbMin.y + leaf._aabbMax.y;
 			centerZ = leaf._aabbMin.z + leaf._aabbMax.z;
 			BvhNode c1 = currentNode._children[0];
 			BvhNode c2 = currentNode._children[1];
-			float diff1X;
-			float diff1Y;
-			float diff1Z;
-			float diff2X;
-			float diff2Y;
-			float diff2Z;
+			double diff1X;
+			double diff1Y;
+			double diff1Z;
+			double diff2X;
+			double diff2Y;
+			double diff2Z;
 			diff1X = c1._aabbMin.x + c1._aabbMax.x;
 			diff1Y = c1._aabbMin.y + c1._aabbMax.y;
 			diff1Z = c1._aabbMin.z + c1._aabbMax.z;
@@ -80,26 +80,26 @@ public class BvhStrategy {
 	int decideInsertionMinimumSurfaceArea(BvhNode currentNode, BvhNode leaf) {
 		BvhNode c11 = currentNode._children[0];
 		BvhNode c21 = currentNode._children[1];
-		float ey = currentNode._aabbMax.y - currentNode._aabbMin.y;
-		float ez = currentNode._aabbMax.z - currentNode._aabbMin.z;
-		float combinedMinX;
-		float combinedMinY;
-		float combinedMinZ;
-		float combinedMaxX;
-		float combinedMaxY;
-		float combinedMaxZ;
+		double ey = currentNode._aabbMax.y - currentNode._aabbMin.y;
+		double ez = currentNode._aabbMax.z - currentNode._aabbMin.z;
+		double combinedMinX;
+		double combinedMinY;
+		double combinedMinZ;
+		double combinedMaxX;
+		double combinedMaxY;
+		double combinedMaxZ;
 		combinedMinX = currentNode._aabbMin.x < leaf._aabbMin.x ? currentNode._aabbMin.x : leaf._aabbMin.x;
 		combinedMinY = currentNode._aabbMin.y < leaf._aabbMin.y ? currentNode._aabbMin.y : leaf._aabbMin.y;
 		combinedMinZ = currentNode._aabbMin.z < leaf._aabbMin.z ? currentNode._aabbMin.z : leaf._aabbMin.z;
 		combinedMaxX = currentNode._aabbMax.x > leaf._aabbMax.x ? currentNode._aabbMax.x : leaf._aabbMax.x;
 		combinedMaxY = currentNode._aabbMax.y > leaf._aabbMax.y ? currentNode._aabbMax.y : leaf._aabbMax.y;
 		combinedMaxZ = currentNode._aabbMax.z > leaf._aabbMax.z ? currentNode._aabbMax.z : leaf._aabbMax.z;
-		float ey1 = combinedMaxY - combinedMinY;
-		float ez1 = combinedMaxZ - combinedMinZ;
-		float newArea = ((combinedMaxX - combinedMinX) * (ey1 + ez1) + ey1 * ez1) * 2;
-		float creatingCost = newArea * 2;
-		float incrementalCost = (newArea - ((currentNode._aabbMax.x - currentNode._aabbMin.x) * (ey + ez) + ey * ez) * 2) * 2;
-		float descendingCost1 = incrementalCost;
+		double ey1 = combinedMaxY - combinedMinY;
+		double ez1 = combinedMaxZ - combinedMinZ;
+		double newArea = ((combinedMaxX - combinedMinX) * (ey1 + ez1) + ey1 * ez1) * 2;
+		double creatingCost = newArea * 2;
+		double incrementalCost = (newArea - ((currentNode._aabbMax.x - currentNode._aabbMin.x) * (ey + ez) + ey * ez) * 2) * 2;
+		double descendingCost1 = incrementalCost;
 		combinedMinX = c11._aabbMin.x < leaf._aabbMin.x ? c11._aabbMin.x : leaf._aabbMin.x;
 		combinedMinY = c11._aabbMin.y < leaf._aabbMin.y ? c11._aabbMin.y : leaf._aabbMin.y;
 		combinedMinZ = c11._aabbMin.z < leaf._aabbMin.z ? c11._aabbMin.z : leaf._aabbMin.z;
@@ -117,7 +117,7 @@ public class BvhStrategy {
 			 ez1 = c11._aabbMax.z - c11._aabbMin.z;
 			descendingCost1 = incrementalCost + (((combinedMaxX - combinedMinX) * (ey + ez) + ey * ez) * 2 - ((c11._aabbMax.x - c11._aabbMin.x) * (ey1 + ez1) + ey1 * ez1) * 2);
 		}
-		float descendingCost2 = incrementalCost;
+		double descendingCost2 = incrementalCost;
 		combinedMinX = c21._aabbMin.x < leaf._aabbMin.x ? c21._aabbMin.x : leaf._aabbMin.x;
 		combinedMinY = c21._aabbMin.y < leaf._aabbMin.y ? c21._aabbMin.y : leaf._aabbMin.y;
 		combinedMinZ = c21._aabbMin.z < leaf._aabbMin.z ? c21._aabbMin.z : leaf._aabbMin.z;
@@ -149,12 +149,12 @@ public class BvhStrategy {
 	}
 
 	 int splitLeavesMean(BvhNode[] leaves, int from,int until) {
-		float invN = 1.0f / (until - from);
+		double invN = 1.0f / (until - from);
 
 		// mean := sum(min + max) / n
-		float centerMeanX = 0;
-		float centerMeanY = 0;
-		float centerMeanZ = 0;
+		double centerMeanX = 0;
+		double centerMeanY = 0;
+		double centerMeanZ = 0;
 		int _g = from;
 		while(_g < until) {
 			BvhNode leaf = leaves[_g++];
@@ -169,14 +169,14 @@ public class BvhStrategy {
 		centerMeanY *= invN;
 		centerMeanZ *= invN;
 
-		float varianceX = 0;
-		float varianceY = 0;
-		float varianceZ = 0;
+		double varianceX = 0;
+		double varianceY = 0;
+		double varianceZ = 0;
 		for (int i=from;i<until;i++) {
 			BvhNode leaf = leaves[i];
-			float diffX = leaf._tmp.x - centerMeanX;
-			float diffY = leaf._tmp.y - centerMeanY;
-			float diffZ = leaf._tmp.z - centerMeanZ;
+			double diffX = leaf._tmp.x - centerMeanX;
+			double diffY = leaf._tmp.y - centerMeanY;
+			double diffZ = leaf._tmp.z - centerMeanZ;
 			diffX *= diffX;
 			diffY *= diffY;
 			diffZ *= diffZ;
@@ -186,14 +186,14 @@ public class BvhStrategy {
 		}
 
 		// sort and split
-		float varX = varianceX;
-		float varY = varianceY;
-		float varZ = varianceZ;
+		double varX = varianceX;
+		double varY = varianceY;
+		double varZ = varianceZ;
 		int l = from;
 		int r = until - 1;
 		if(varX > varY) {
 			if(varX > varZ) {
-				float mean = centerMeanX;
+				double mean = centerMeanX;
 				while(true) {
 					while(!(leaves[l]._tmp.x <= mean)) ++l;
 					while(!(leaves[r]._tmp.x >= mean)) --r;
@@ -207,7 +207,7 @@ public class BvhStrategy {
 					--r;
 				}
 			} else {
-				float mean = centerMeanZ;
+				double mean = centerMeanZ;
 				while(true) {
 					while(!(leaves[l]._tmp.z <= mean)) ++l;
 					while(!(leaves[r]._tmp.z >= mean)) --r;
@@ -222,7 +222,7 @@ public class BvhStrategy {
 				}
 			}
 		} else if(varY > varZ) {
-			float mean = centerMeanY;
+			double mean = centerMeanY;
 			while(true) {
 				while(!(leaves[l]._tmp.y <= mean)) ++l;
 				while(!(leaves[r]._tmp.y >= mean)) --r;
@@ -236,7 +236,7 @@ public class BvhStrategy {
 				--r;
 			}
 		} else {
-			float mean = centerMeanZ;
+			double mean = centerMeanZ;
 			while(true) {
 				while(!(leaves[l]._tmp.z <= mean)) ++l;
 				while(!(leaves[r]._tmp.z >= mean)) --r;

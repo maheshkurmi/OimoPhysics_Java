@@ -11,20 +11,20 @@ public class JointSolverInfoRow {
 	public JacobianRow jacobian;
 
 	/** Used for both velocity and position solver. */
-	public float rhs;
+	public double rhs;
 
 	/** Used for velocity solver. */
-	public float cfm;
+	public double cfm;
 
 	/** Used for both velocity and position solver. */
-	public float minImpulse;
+	public double minImpulse;
 	/** Used for both velocity and position solver. */
-	public float maxImpulse;
+	public double maxImpulse;
 
 	/** Used for velocity solver. */
-	public float motorSpeed;
+	public double motorSpeed;
 	/** Used for velocity solver. */
-	public float motorMaxImpulse;
+	public double motorMaxImpulse;
 
 	/** Used for both velocity and position solver. */
 	public JointImpulse impulse;
@@ -51,14 +51,14 @@ public class JointSolverInfoRow {
 		impulse = null;
 	}
 
-	 public void equalLimit(float rhs, float cfm) {
+	 public void equalLimit(double rhs, double cfm) {
 		this.rhs = rhs;
 		this.cfm = cfm;
 		minImpulse = MathUtil.NEGATIVE_INFINITY;
 		maxImpulse = MathUtil.POSITIVE_INFINITY;
 	}
 
-	 public void motor(float speed,float maxImpulse) {
+	 public void motor(double speed,double maxImpulse) {
 		motorSpeed = speed;
 		motorMaxImpulse = maxImpulse;
 	}

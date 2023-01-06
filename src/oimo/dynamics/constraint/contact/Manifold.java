@@ -37,22 +37,22 @@ public class Manifold {
 
 	public void _buildBasis(Vec3 normal) {
 		M.vec3_fromVec3(_normal, normal);
-		float nx = normal.x;
-		float ny = normal.y;
-		float nz = normal.z;
-		float nx2 = nx * nx;
-		float ny2 = ny * ny;
-		float nz2 = nz * nz;
-		float tx;
-		float ty;
-		float tz;
-		float bx;
-		float by;
-		float bz;
+		double nx = normal.x;
+		double ny = normal.y;
+		double nz = normal.z;
+		double nx2 = nx * nx;
+		double ny2 = ny * ny;
+		double nz2 = nz * nz;
+		double tx;
+		double ty;
+		double tz;
+		double bx;
+		double by;
+		double bz;
 		if (nx2 < ny2) {
 			if (nx2 < nz2) {
 				// a < b, c
-				float invL = 1 / MathUtil.sqrt(ny2 + nz2);
+				double invL = 1 / MathUtil.sqrt(ny2 + nz2);
 				tx = 0;
 				ty = -nz * invL;
 				tz = ny * invL;
@@ -61,7 +61,7 @@ public class Manifold {
 				bz = nx * ty;
 			} else {
 				// c < a < b
-				float invL = 1 / MathUtil.sqrt(nx2 + ny2);
+				double invL = 1 / MathUtil.sqrt(nx2 + ny2);
 				tx = -ny * invL;
 				ty = nx * invL;
 				tz = 0;
@@ -72,7 +72,7 @@ public class Manifold {
 		} else {
 			if (ny2 < nz2) {
 				// b < a, c
-				float invL = 1 / MathUtil.sqrt(nx2 + nz2);
+				double invL = 1 / MathUtil.sqrt(nx2 + nz2);
 				tx = nz * invL;
 				ty = 0;
 				tz = -nx * invL;
@@ -81,7 +81,7 @@ public class Manifold {
 				bz = -ny * tx;
 			} else {
 				// c < b < a
-				float invL = 1 / MathUtil.sqrt(nx2 + ny2);
+				double invL = 1 / MathUtil.sqrt(nx2 + ny2);
 				tx = -ny * invL;
 				ty = nx * invL;
 				tz = 0;
@@ -105,12 +105,12 @@ public class Manifold {
 			M.vec3_add(p._pos1, p._relPos1, tf1._position);
 			M.vec3_add(p._pos2, p._relPos2, tf2._position);
 
-			float diffX=p._pos2.x- p._pos1.x;
-			float diffY=p._pos2.y- p._pos1.y;
-			float diffZ=p._pos2.z- p._pos1.z;
+			double diffX=p._pos2.x- p._pos1.x;
+			double diffY=p._pos2.y- p._pos1.y;
+			double diffZ=p._pos2.z- p._pos1.z;
 			p._depth = _normal.x*diffX+_normal.y*diffY+_normal.z*diffZ;
 			//M.vec3_sub(diff, p._pos1, p._pos2);
-			//var dotN:Float = M.vec3_dot(diff, _normal);
+			//var dotN:double = M.vec3_dot(diff, _normal);
 			//p._depth = -dotN;
 		}
 	}

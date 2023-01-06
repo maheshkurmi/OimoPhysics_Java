@@ -9,26 +9,26 @@ public class RotationalLimitMotor {
 	 *
 	 * The limit is disabled if `lowerLimit > upperLimit`.
 	 */
-	public float lowerLimit;
+	public double lowerLimit;
 
 	/**
 	 * The upper bound of the limit in radians.
 	 *
 	 * The limit is disabled if `lowerLimit > upperLimit`.
 	 */
-	public float upperLimit;
+	public double upperLimit;
 
 	/**
 	 * The target speed of the motor in usually radians per second.
 	 */
-	public float motorSpeed;
+	public double motorSpeed;
 
 	/**
 	 * The maximum torque of the motor in usually newton meters.
 	 *
 	 * The motor is disabled if `motorTorque <= 0`.
 	 */
-	public float motorTorque;
+	public double motorTorque;
 
 	/**
 	 * Default constructor.
@@ -43,7 +43,7 @@ public class RotationalLimitMotor {
 	 * Sets limit properties at once and returns `this`.
 	 * `this.lowerLimit` is set to `lower`, and `this.upperLimit` is set to `upper`.
 	 */
-	public RotationalLimitMotor setLimits(float lower, float upper) {
+	public RotationalLimitMotor setLimits(double lower, double upper) {
 		lowerLimit = lower;
 		upperLimit = upper;
 		return this;
@@ -53,7 +53,7 @@ public class RotationalLimitMotor {
 	 * Sets motor properties at once and returns `this`.
 	 * `this.motorSpeed` is set to `speed`, and `this.motorTorque` is set to `torque`.
 	 */
-	public RotationalLimitMotor setMotor(float speed,float torque) {
+	public RotationalLimitMotor setMotor(double speed,double torque) {
 		motorSpeed = speed;
 		motorTorque = torque;
 		return this;

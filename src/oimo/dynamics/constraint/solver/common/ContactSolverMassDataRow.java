@@ -25,13 +25,13 @@ public class ContactSolverMassDataRow {
 	public Vec3 invMAngB2=new Vec3();
 
 	// normal mass
-	public float massN;
+	public double massN;
 
 	// tangent/binormal mass matrix for cone friction
-	public float massTB00;
-	public float massTB01;
-	public float massTB10;
-	public float massTB11;
+	public double massTB00;
+	public double massTB01;
+	public double massTB10;
+	public double massTB11;
 
 	public ContactSolverMassDataRow() {
 	

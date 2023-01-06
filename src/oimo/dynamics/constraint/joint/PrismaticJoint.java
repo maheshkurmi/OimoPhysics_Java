@@ -23,9 +23,9 @@ public class PrismaticJoint extends Joint {
 
 	public BasisTracker _basis;
 
-	float translation;
-	float linearErrorY;
-	float linearErrorZ;
+	double translation;
+	double linearErrorY;
+	double linearErrorZ;
 	Vec3 angularError;
 
 	/**
@@ -55,18 +55,18 @@ public class PrismaticJoint extends Joint {
 
 	protected void getInfo(JointSolverInfo info, TimeStep timeStep, boolean isPositionPart) {
 		// compute ERP
-		float erp = getErp(timeStep, isPositionPart);
+		double erp = getErp(timeStep, isPositionPart);
 
 		// compute rhs
-		float linRhsY = linearErrorY * erp;
-		float linRhsZ = linearErrorZ * erp;
-		float angRhsX = angularError.x * erp;
-		float angRhsY = angularError.y * erp;
-		float angRhsZ = angularError.z * erp;
+		double linRhsY = linearErrorY * erp;
+		double linRhsZ = linearErrorZ * erp;
+		double angRhsX = angularError.x * erp;
+		double angRhsY = angularError.y * erp;
+		double angRhsZ = angularError.z * erp;
 
 		JointSolverInfoRow row;
 		JacobianRow j;
-		float motorMass = 1 / (_b1._invMass + _b2._invMass);
+		double motorMass = 1 / (_b1._invMass + _b2._invMass);
 
 		// linear X
 		if (_sd.frequency <= 0 || !isPositionPart) {
@@ -136,8 +136,8 @@ public class PrismaticJoint extends Joint {
 		Quat relQ=new Quat();
 		M.quat_fromMat3(relQ, relRot);
 
-		float cosHalfTheta = relQ.w;//.quat_getReal(relQ);
-		float theta = MathUtil.safeAcos(cosHalfTheta) * 2;
+		double cosHalfTheta = relQ.w;//.quat_getReal(relQ);
+		double theta = MathUtil.safeAcos(cosHalfTheta) * 2;
 		// [rotation vector] = [rotation axis] * [rotation angle]
 		
 		M.vec3_fromQuat(angularError, relQ);
@@ -266,7 +266,7 @@ public class PrismaticJoint extends Joint {
 	/**
 	 * Returns the translation of the joint.
 	 */
-	public float getTranslation() {
+	public double getTranslation() {
 		return translation;
 	}
 

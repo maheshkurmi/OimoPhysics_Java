@@ -21,10 +21,10 @@ public class ContactConstraint {
 	public Shape _s2;
 	public Transform _tf1;
 	public Transform _tf2;
-	public float _invM1;
-	public float _invM2;
-	public float _friction;
-	public float _restitution;
+	public double _invM1;
+	public double _invM2;
+	public double _friction;
+	public double _restitution;
 
 	public Mat3 _invI1;
 	public Mat3 _invI2;
@@ -80,8 +80,8 @@ public class ContactConstraint {
 		M.vec3_assign(tangent, _manifold._tangent);
 		M.vec3_assign(binormal, _manifold._binormal);
 
-		float friction = MathUtil.sqrt(_s1._friction * _s2._friction);
-		float restitution = MathUtil.sqrt(_s1._restitution * _s2._restitution);
+		double friction = MathUtil.sqrt(_s1._friction * _s2._friction);
+		double restitution = MathUtil.sqrt(_s1._restitution * _s2._restitution);
 
 		int num = _manifold._numPoints;
 		info.numRows = 0;
@@ -132,7 +132,7 @@ public class ContactConstraint {
 
 			// compute relative velocity
 			j = row.jacobianN;
-			float rvn =
+			double rvn =
 				(M.vec3_dot(j.lin1, _b1._vel) + M.vec3_dot(j.ang1, _b1._angVel)) -
 				(M.vec3_dot(j.lin2, _b2._vel) + M.vec3_dot(j.ang2, _b2._angVel))
 			;
@@ -147,7 +147,7 @@ public class ContactConstraint {
 			// set minimum RHS for baumgarte position correction
 			if (_positionCorrectionAlgorithm == PositionCorrectionAlgorithm.BAUMGARTE) {
 				if (p._depth > Setting.linearSlop) {
-					float minRhs = (p._depth - Setting.linearSlop) * Setting.velocityBaumgarte * timeStep.invDt;
+					double minRhs = (p._depth - Setting.linearSlop) * Setting.velocityBaumgarte * timeStep.invDt;
 					if (row.rhs < minRhs) row.rhs = minRhs;
 				}
 			}
@@ -164,8 +164,8 @@ public class ContactConstraint {
 	public void _getPositionSolverInfo(ContactSolverInfo info) {
 		info.b1 = _b1;
 		info.b2 = _b2;
-
-		Vec3 normal=_manifold._normal;
+		Vec3 normal=new Vec3();
+		M.vec3_assign(normal, _manifold._normal);
 
 		int num = _manifold._numPoints;
 		info.numRows = 0;

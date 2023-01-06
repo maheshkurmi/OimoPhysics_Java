@@ -45,13 +45,13 @@ public class RagdollJointConfig extends JointConfig {
 	 * The max angle of rotation along the first swing axis.
 	 * This value must be positive.
 	 */
-	public float maxSwingAngle1;
+	public double maxSwingAngle1;
 
 	/**
 	 * The max angle of rotation along the second swing axis.
 	 * This value must be positive.
 	 */
-	public float maxSwingAngle2;
+	public double maxSwingAngle2;
 
 	/**
 	 * Default constructor.

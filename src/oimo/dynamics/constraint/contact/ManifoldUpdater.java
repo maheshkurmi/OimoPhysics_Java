@@ -35,7 +35,7 @@ public class ManifoldUpdater {
 
 			Vec3 diff=new Vec3();
 			M.vec3_sub(diff, p._pos1, p._pos2);
-			float dotN = M.vec3_dot(_manifold._normal, diff);
+			double dotN = M.vec3_dot(_manifold._normal, diff);
 
 			if (dotN > Setting.contactPersistenceThreshold) {
 				removeManifoldPoint(index);
@@ -81,7 +81,7 @@ public class ManifoldUpdater {
 		ManifoldPoint p2 = _manifold._points[1];
 		ManifoldPoint p3 = _manifold._points[2];
 		ManifoldPoint p4 = _manifold._points[3];
-		float maxDepth = p1._depth;
+		double maxDepth = p1._depth;
 		int maxDepthIndex = 0;
 		if (p2._depth > maxDepth) {
 			maxDepth = p2._depth;
@@ -100,11 +100,11 @@ public class ManifoldUpdater {
 		M.vec3_fromVec3(rp1, newPoint.position1);
 		M.vec3_sub(rp1, rp1, tf1._position);
 
-		float a1 = quadAreaFast(p2._relPos1, p3._relPos1, p4._relPos1, rp1);
-		float a2 = quadAreaFast(p1._relPos1, p3._relPos1, p4._relPos1, rp1);
-		float a3 = quadAreaFast(p1._relPos1, p2._relPos1, p4._relPos1, rp1);
-		float a4 = quadAreaFast(p1._relPos1, p2._relPos1, p3._relPos1, rp1);
-		float max = a1;
+		double a1 = quadAreaFast(p2._relPos1, p3._relPos1, p4._relPos1, rp1);
+		double a2 = quadAreaFast(p1._relPos1, p3._relPos1, p4._relPos1, rp1);
+		double a3 = quadAreaFast(p1._relPos1, p2._relPos1, p4._relPos1, rp1);
+		double a4 = quadAreaFast(p1._relPos1, p2._relPos1, p3._relPos1, rp1);
+		double max = a1;
 		int target = 0;
 		if (a2 > max && maxDepthIndex != 1 || maxDepthIndex == 0) {
 			max = a2;
@@ -121,7 +121,7 @@ public class ManifoldUpdater {
 		return target;
 	}
 
-	private float quadAreaFast(Vec3 p1, Vec3 p2, Vec3 p3, Vec3 p4) {
+	private double quadAreaFast(Vec3 p1, Vec3 p2, Vec3 p3, Vec3 p4) {
 		// possible diagonals (12-34, 13-24, 14-23)
 		Vec3 v12=new Vec3();
 		Vec3 v34=new Vec3();
@@ -141,9 +141,9 @@ public class ManifoldUpdater {
 		M.vec3_cross(cross1, v12, v34);
 		M.vec3_cross(cross2, v13, v24);
 		M.vec3_cross(cross3, v14, v23);
-		float a1 = M.vec3_dot(cross1, cross1);
-		float a2 = M.vec3_dot(cross2, cross2);
-		float a3 = M.vec3_dot(cross3, cross3);
+		double a1 = M.vec3_dot(cross1, cross1);
+		double a2 = M.vec3_dot(cross2, cross2);
+		double a3 = M.vec3_dot(cross3, cross3);
 		if (a1 > a2) {
 			if (a1 > a3) {
 				return a1;
@@ -170,10 +170,10 @@ public class ManifoldUpdater {
 	}
 
 	protected int findNearestContactPointIndex(DetectorResultPoint target, Transform tf1, Transform tf2) {
-		float nearestSq = Setting.contactPersistenceThreshold * Setting.contactPersistenceThreshold;
+		double nearestSq = Setting.contactPersistenceThreshold * Setting.contactPersistenceThreshold;
 		int idx = -1;
 		for (int i=0;i< _manifold._numPoints;i++) {
-			float d = distSq(_manifold._points[i], target, tf1, tf2);
+			double d = distSq(_manifold._points[i], target, tf1, tf2);
 			//trace("d is " + d);
 			if (d < nearestSq) {
 				nearestSq = d;
@@ -185,7 +185,7 @@ public class ManifoldUpdater {
 
 	}
 
-	private float distSq(ManifoldPoint mp, DetectorResultPoint result, Transform tf1, Transform tf2) {
+	private double distSq(ManifoldPoint mp, DetectorResultPoint result, Transform tf1, Transform tf2) {
 		Vec3 rp1=new Vec3();
 		Vec3 rp2=new Vec3();
 		
@@ -194,14 +194,14 @@ public class ManifoldUpdater {
 		M.vec3_sub(rp1, rp1, tf1._position);
 		M.vec3_sub(rp2, rp2, tf2._position);
 
-		Vec3 diff1=rp1;//=new Vec3();
-		Vec3 diff2=rp2;//=new Vec3();
+		Vec3 diff1=new Vec3();
+		Vec3 diff2=new Vec3();
 		
 		M.vec3_sub(diff1, mp._relPos1, rp1);
 		M.vec3_sub(diff2, mp._relPos2, rp2);
 
-		float sq1 = M.vec3_dot(diff1, diff1);
-		float sq2 = M.vec3_dot(diff2, diff2);
+		double sq1 = M.vec3_dot(diff1, diff1);
+		double sq2 = M.vec3_dot(diff2, diff2);
 		//trace("sq1: " + sq1 + ", sq2: " + sq2);
 		return sq1 < sq2 ? sq1 : sq2;
 	}

@@ -20,10 +20,10 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 	JointSolverInfo info;
 	JointSolverMassDataRow[] massData;
 
-	float[] relVels;
-	float[] impulses;
-	float[] dImpulses;
-	float[] dTotalImpulses;
+	double[] relVels;
+	double[] impulses;
+	double[] dImpulses;
+	double[] dTotalImpulses;
 
 	Joint joint;
 
@@ -52,10 +52,10 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 		velBoundarySelector = new BoundarySelector(numMaxBoundaries);
 		posBoundarySelector = new BoundarySelector(numMaxBoundaries);
 
-		relVels = new float[maxRows];
-		impulses = new float[maxRows];
-		dImpulses = new float[maxRows];
-		dTotalImpulses = new float[maxRows];
+		relVels = new double[maxRows];
+		impulses = new double[maxRows];
+		dImpulses = new double[maxRows];
+		dTotalImpulses = new double[maxRows];
 
 		for (int i = 0; i < maxRows; i++) {
 			relVels[i] = 0;
@@ -65,7 +65,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 		}
 	}
 
-	public void applyImpulses(float[] impulses) {
+	public void applyImpulses(double[] impulses) {
 		boolean linearSet = false;
 		boolean angularSet = false;
 		Vec3 lv1 = new Vec3();
@@ -81,7 +81,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 			JointSolverInfoRow row = info.rows[i];
 			JacobianRow j = row.jacobian;
 			JointSolverMassDataRow md = massData[i];
-			float imp = impulses[i];
+			double imp = impulses[i];
 			if (j.isLinearSet()) {
 				M.vec3_addRhsScaled(lv1, lv1, md.invMLin1, imp);
 				M.vec3_addRhsScaled(lv2, lv2, md.invMLin2, -imp);
@@ -103,7 +103,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 		}
 	}
 
-	public void applySplitImpulses(float[] impulses) {
+	public void applySplitImpulses(double[] impulses) {
 		boolean linearSet = false;
 		boolean angularSet = false;
 		Vec3 lv1 = new Vec3();
@@ -119,7 +119,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 			JointSolverInfoRow row = info.rows[i];
 			JacobianRow j = row.jacobian;
 			JointSolverMassDataRow md = massData[i];
-			Float imp = impulses[i];
+			double imp = impulses[i];
 			if (j.isLinearSet()) {
 				M.vec3_addRhsScaled(lv1, lv1, md.invMLin1, imp);
 				M.vec3_addRhsScaled(lv2, lv2, md.invMLin2, -imp);
@@ -141,7 +141,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 		}
 	}
 
-	public void applyPositionImpulses(float[] impulses) {
+	public void applyPositionImpulses(double[] impulses) {
 		boolean linearSet = false;
 		boolean angularSet = false;
 		Vec3 lv1 = new Vec3();
@@ -153,7 +153,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 			JointSolverInfoRow row = info.rows[i];
 			JacobianRow j = row.jacobian;
 			JointSolverMassDataRow md = massData[i];
-			float imp = impulses[i];
+			double imp = impulses[i];
 			if (j.isLinearSet()) {
 				M.vec3_addRhsScaled(lv1, lv1, md.invMLin1, imp);
 				M.vec3_addRhsScaled(lv2, lv2, md.invMLin2, -imp);
@@ -193,7 +193,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 	}
 
 	public void warmStart(TimeStep timeStep) {
-		float factor = joint._getWarmStartingFactor();
+		double factor = joint._getWarmStartingFactor();
 
 		// adjust impulse for variable time step
 		factor *= timeStep.dtRatio;
@@ -212,7 +212,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 			JointImpulse imp = row.impulse;
 
 			// update limit impulse
-			float impulse = imp.impulse * factor;
+			double impulse = imp.impulse * factor;
 			if (impulse < row.minImpulse)
 				impulse = row.minImpulse;
 			else if (impulse > row.maxImpulse)
@@ -220,8 +220,8 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 			imp.impulse = impulse;
 
 			if (row.motorMaxImpulse > 0) {
-				float impulseM = imp.impulseM * factor;
-				float max = row.motorMaxImpulse;
+				double impulseM = imp.impulseM * factor;
+				double max = row.motorMaxImpulse;
 				if (impulseM < -max)
 					impulseM = -max;
 				else if (impulseM > max)
@@ -255,7 +255,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 			JacobianRow j = row.jacobian;
 
 			// compute relative velocity
-			float relVel = 0;
+			double relVel = 0;
 			relVel += M.vec3_dot(lv1, j.lin1);
 			relVel -= M.vec3_dot(lv2, j.lin2);
 			relVel += M.vec3_dot(av1, j.ang1);
@@ -270,7 +270,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 		}
 
 		// solve motors first
-		float[][] invMass = massMatrix._invMassWithoutCfm;
+		double[][] invMass = massMatrix._invMassWithoutCfm;
 		for (int i = 0; i < numRows; i++) {
 			JointSolverInfoRow row = info.rows[i];
 			JointImpulse imp = row.impulse;
@@ -280,11 +280,11 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 				// motor speed : body2 - body1
 				// =>
 				// target relative velocity : -[motor speed]
-				float oldImpulseM = imp.impulseM;
-				float impulseM = oldImpulseM + md.massWithoutCfm * (-row.motorSpeed - relVels[i]);
+				double oldImpulseM = imp.impulseM;
+				double impulseM = oldImpulseM + md.massWithoutCfm * (-row.motorSpeed - relVels[i]);
 
 				// clamp motor impulse
-				float maxImpulseM = row.motorMaxImpulse;
+				double maxImpulseM = row.motorMaxImpulse;
 				if (impulseM < -maxImpulseM)
 					impulseM = -maxImpulseM;
 				else if (impulseM > maxImpulseM)
@@ -292,7 +292,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 				imp.impulseM = impulseM;
 
 				// compute delta motor impulse
-				float dImpulseM = impulseM - oldImpulseM;
+				double dImpulseM = impulseM - oldImpulseM;
 				dTotalImpulses[i] = dImpulseM;
 
 				// update relative velocity (apply the delta impulse virtually)
@@ -315,7 +315,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 				for (int j = 0; j < numRows; j++) {
 					JointSolverInfoRow row = info.rows[j];
 					JointImpulse imp = row.impulse;
-					float dimp = dImpulses[j];
+					double dimp = dImpulses[j];
 
 					// accumulate the delta impulses
 					imp.impulse += dimp;
@@ -406,7 +406,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 			JacobianRow j = row.jacobian;
 
 			// compute relative velocity
-			float relVel = 0;
+			double relVel = 0;
 			relVel += M.vec3_dot(lv1, j.lin1);
 			relVel -= M.vec3_dot(lv2, j.lin2);
 			relVel += M.vec3_dot(av1, j.ang1);
@@ -433,7 +433,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 				for (int j = 0; j < numRows; j++) {
 					JointSolverInfoRow row = info.rows[j];
 					JointImpulse imp = row.impulse;
-					float dimp = dImpulses[j];
+					double dimp = dImpulses[j];
 
 					// accumulate the delta impulses
 					imp.impulseP += dimp;
@@ -487,7 +487,7 @@ public class DirectJointConstraintSolver extends ConstraintSolver {
 				for (int j = 0; j < numRows; j++) {
 					JointSolverInfoRow row = info.rows[j];
 					JointImpulse imp = row.impulse;
-					float dimp = dImpulses[j];
+					double dimp = dImpulses[j];
 
 					// accumulate the delta impulses
 					imp.impulseP += dimp;
