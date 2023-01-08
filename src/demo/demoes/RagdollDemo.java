@@ -31,7 +31,7 @@ public class RagdollDemo extends DemoBase {
 
 		OimoUtil.addBox(world, new Vec3(0, -0.2, 0), new Vec3(6, 0.2, 6), true);
 
-		var tmp = Setting.defaultFriction;
+		double tmp = Setting.defaultFriction;
 		Setting.defaultFriction = 0.5;
 
 		for (int i=0;i<10;i++) {

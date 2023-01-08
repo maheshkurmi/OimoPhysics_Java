@@ -155,7 +155,7 @@ public class Transform {
 	 * Returns a clone of the transformation.
 	 */
 	public Transform clone() {
-		var tf = new Transform();
+		Transform tf = new Transform();
 		tf._position.copyFrom(_position);
 		tf._rotation.copyFrom(_rotation);
 		return tf;

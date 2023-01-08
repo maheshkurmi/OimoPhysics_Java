@@ -431,18 +431,18 @@ public class Mat3 {
 	 * vector (`axisX`, `axisY`, `axisZ`).
 	 */
 	public Mat3 appendRotationEq(double rad, double axisX, double axisY, double axisZ) {
-		var s = MathUtil.sin(rad);
-		var c = MathUtil.cos(rad);
-		var c1 = 1 - c;
-		var r00 = axisX * axisX * c1 + c;
-		var r01 = axisX * axisY * c1 - axisZ * s;
-		var r02 = axisX * axisZ * c1 + axisY * s;
-		var r10 = axisY * axisX * c1 + axisZ * s;
-		var r11 = axisY * axisY * c1 + c;
-		var r12 = axisY * axisZ * c1 - axisX * s;
-		var r20 = axisZ * axisX * c1 - axisY * s;
-		var r21 = axisZ * axisY * c1 + axisX * s;
-		var r22 = axisZ * axisZ * c1 + c;
+		double s = MathUtil.sin(rad);
+		double c = MathUtil.cos(rad);
+		double c1 = 1 - c;
+		double r00 = axisX * axisX * c1 + c;
+		double r01 = axisX * axisY * c1 - axisZ * s;
+		double r02 = axisX * axisZ * c1 + axisY * s;
+		double r10 = axisY * axisX * c1 + axisZ * s;
+		double r11 = axisY * axisY * c1 + c;
+		double r12 = axisY * axisZ * c1 - axisX * s;
+		double r20 = axisZ * axisX * c1 - axisY * s;
+		double r21 = axisZ * axisY * c1 + axisX * s;
+		double r22 = axisZ * axisZ * c1 + c;
 		return set(
 			e00 * r00 + e01 * r10 + e02 * r20,
 			e00 * r01 + e01 * r11 + e02 * r21,
@@ -618,6 +618,7 @@ public class Mat3 {
 		e20 = xz - wy;
 		e21 = yz + wx;
 		e22 = 1 - xx - yy;
+	
 		return this;
 	}
 
@@ -700,7 +701,7 @@ public class Mat3 {
 			// | -sin(x - z)  cos(x - z)  0 |
 			// |  cos(x - z)  sin(x - z)  0 |
 
-			var xSubZ = MathUtil.atan2(e21, e11);
+			double xSubZ = MathUtil.atan2(e21, e11);
 
 			// not unique, minimize x^2 + z^2
 			//   x =  xSubZ/2
@@ -712,7 +713,7 @@ public class Mat3 {
 			// |  sin(x + z)  cos(x + z)  0 |
 			// | -cos(x + z)  sin(x + z)  0 |
 
-			var xAddZ = MathUtil.atan2(e21, e11);
+			double xAddZ = MathUtil.atan2(e21, e11);
 
 			// not unique, minimize x^2 + z^2
 			//   x = xAddZ/2

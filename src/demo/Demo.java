@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -24,7 +25,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 import demo.common.DemoMain;
 import demo.gl2renderer.GL2DebugDraw;
 
-public class Demo extends JFrame implements GLEventListener, MouseListener, MouseMotionListener, KeyListener {
+public class Demo extends JFrame implements GLEventListener, MouseListener, MouseMotionListener, KeyListener,WindowListener {
 	
 	 // Define constants for the top-level container
 	   private static String TITLE = "Rotating 3D Shapes (GLCanvas)";  // window's title
@@ -70,7 +71,7 @@ public class Demo extends JFrame implements GLEventListener, MouseListener, Mous
               }.start();
            }
         });
-        animator = new FPSAnimator(canvas, FPS, true);
+        animator = new FPSAnimator(canvas, FPS);
         canvas.addGLEventListener(this);
 		//initUserInput
         canvas.addMouseListener(this);
@@ -268,7 +269,7 @@ public class Demo extends JFrame implements GLEventListener, MouseListener, Mous
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		System.out.println(test.getDemoInfo());
+		//System.out.println(test.getDemoInfo());
 	}
 
 
@@ -312,5 +313,51 @@ public class Demo extends JFrame implements GLEventListener, MouseListener, Mous
 	         }
 	      });
 	   }
+
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		animator.pause();
+	}
+
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		animator.resume();
+	}
+
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		animator.resume();
+	}
+
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		animator.pause();
+	}
 	 
 }

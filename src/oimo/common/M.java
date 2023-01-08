@@ -5,7 +5,7 @@ public class M {
 	private static Mat3 _M3 =new Mat3();
 	private static Vec3 _V3 =new Vec3();
 	private static Quat _Q =new Quat();
-
+	private static double EPS=1e-9;
 	public static void vec3_zero(Vec3 dst) {
 		 dst.zero();
 	}
@@ -254,6 +254,29 @@ public class M {
 	public static void vec3_compWiseMul(Vec3 dst, Vec3 v1, Vec3 v2) {
 		dst.set(v1.x*v2.x, v1.y*v2.y, v1.z*v2.z);
 	}
+	
+	
+	/**
+	 * Normalizes rotation matrix setting each column matrix to be normalised vector
+	 * @param M
+	 * @return
+	 */
+	public static Mat3 mat3_normalize(Mat3 M) {
+		//Normalize Matrix, iMportant as it may avoid errors
+		double l=MathUtil.sqrt(M.e00*M.e00+M.e10*M.e10+M.e20*M.e20);
+		M.e00/=l;
+		M.e10/=l;
+		M.e20/=l;
+		 l=MathUtil.sqrt(M.e01*M.e01+M.e11*M.e11+M.e21*M.e21);
+		 M.e01/=l;
+		 M.e11/=l;
+		 M.e21/=l;
+		 l=Math.sqrt(M.e02*M.e02+M.e12*M.e12+M.e22*M.e22);
+		 M.e02/=l;
+		 M.e12/=l;
+		 M.e22/=l;
+		return M;
+	}
 
 	/**
 	 * Sets dst components as absolute values of components of src
@@ -411,8 +434,9 @@ public class M {
 		 dst.copyFrom(_Q);
 	}
 
+	
 	public static boolean vec3_isZero(Vec3 v) {
-		return v.x==0&&v.y==0&&v.z==0;
+		return Math.abs(v.x)<=EPS &&Math.abs(v.y)<EPS &&Math.abs(v.z)<=EPS;
 	}
 
 	public static void trace(String string) {

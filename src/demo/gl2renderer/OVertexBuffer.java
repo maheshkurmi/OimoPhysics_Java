@@ -51,7 +51,7 @@ public class OVertexBuffer {
 	public void setAttribs(OVertexAttribute[] attribs) {
 		this.attribs = attribs;
 		
-		var num = attribs.length;
+		int num = attribs.length;
 		offsets = new int[num];
 		stride = 0;
 		for (int i=0;i<num;i++) {

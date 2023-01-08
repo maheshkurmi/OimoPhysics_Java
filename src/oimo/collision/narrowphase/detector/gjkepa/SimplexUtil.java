@@ -11,28 +11,30 @@ public class SimplexUtil {
 	 * and returns the index of the voronoi region.
 	 */
 	public static int projectOrigin2(Vec3 vec1, Vec3 vec2, Vec3 out) {
-		Vec3 v1=vec1;
-		Vec3 v2=vec2;
+		Vec3 v1=new Vec3();
+		Vec3 v2=new Vec3();
+		M.vec3_fromVec3(v1, vec1);
+		M.vec3_fromVec3(v2, vec2);
 	
-		double v12x=v2.x-v1.x;
-		double v12y=v2.y-v1.y;
+		Vec3 v12=new Vec3();
+		M.vec3_sub(v12, v2, v1);
 		
-		double d=v12x*v12x+v12y*v12y; //M.vec3_dot(v12, v12);
-		double t=v12x*v1.x+v12y*v1.y; //M.vec3_dot(v12, v1);
+		double d = M.vec3_dot(v12, v12);
+		double t = M.vec3_dot(v12, v1);
 		t = -t / d;
 
 		if (t < 0) {
-			out.set(v1);
+			M.vec3_toVec3(out, v1);
 			return 1;
 		}
 		if (t > 1) {
-			out.set(v2);
+			M.vec3_toVec3(out, v2);
 			return 2;
 		}
 
-		out.x=v1.x+v12x*t;
-		out.y=v1.y+v12y*t;
-		
+		Vec3 p=new Vec3();
+		M.vec3_addRhsScaled(p, v1, v12, t);
+		M.vec3_toVec3(out, p);
 		return 3;
 	}
 
@@ -41,26 +43,25 @@ public class SimplexUtil {
 	 * and returns the index of the voronoi region.
 	 */
 	public static int projectOrigin3(Vec3 vec1, Vec3 vec2, Vec3 vec3, Vec3 out) {
-		Vec3 v1=vec1;
-		Vec3 v2=vec2;
-		Vec3 v3=vec3;
-		
+		Vec3 v1=new Vec3();
+		Vec3 v2=new Vec3();
+		Vec3 v3=new Vec3();
 		Vec3 v12=new Vec3();
 		Vec3 v23=new Vec3();
 		Vec3 v31=new Vec3();
-		
+		M.vec3_fromVec3(v1, vec1);
+		M.vec3_fromVec3(v2, vec2);
+		M.vec3_fromVec3(v3, vec3);
 		M.vec3_sub(v12, v2, v1);
 		M.vec3_sub(v23, v3, v2);
 		M.vec3_sub(v31, v1, v3);
 
 		Vec3 n=new Vec3();
-		
 		M.vec3_cross(n, v12, v23);
-		
+
 		Vec3 n12=new Vec3();
 		Vec3 n23=new Vec3();
 		Vec3 n31=new Vec3();
-	
 		M.vec3_cross(n12, v12, n);
 		M.vec3_cross(n23, v23, n);
 		M.vec3_cross(n31, v31, n);
@@ -71,6 +72,7 @@ public class SimplexUtil {
 		double mind = -1;
 		Vec3 minv=new Vec3();
 		int mini = 0; // index of voronoi region
+		M.vec3_zero(minv);
 
 		if (d12 < 0) {
 			int b = projectOrigin2(vec1, vec2, out);
@@ -78,7 +80,6 @@ public class SimplexUtil {
 			mini = b;
 			mind = d;
 			M.vec3_fromVec3(minv, out);
-			//M.vec3_fromVec3(minv, out);
 		}
 		if (d23 < 0) {
 			int b = projectOrigin2(vec2, vec3, out);
@@ -102,7 +103,8 @@ public class SimplexUtil {
 			M.vec3_toVec3(out, minv);
 			return mini;
 		}
-		n.normalize();
+
+		M.vec3_normalize(n, n);
 		double dn = M.vec3_dot(v1, n);
 		double l2 = M.vec3_dot(n, n);
 		l2 = dn / l2;
@@ -116,16 +118,27 @@ public class SimplexUtil {
 	 * and returns the index of the voronoi region.
 	 */
 	public static int projectOrigin4(Vec3 vec1, Vec3 vec2, Vec3 vec3, Vec3 vec4, Vec3 out) {
-		Vec3 v1=vec1;
-		Vec3 v2=vec2;
-		Vec3 v3=vec3;
-		Vec3 v4=vec4;
-		Vec3 v12=v2.sub(v1);
-		Vec3 v13=v3.sub(v1);
-		Vec3 v14=v4.sub(v1);
-		Vec3 v23=v3.sub(v2);
-		Vec3 v24=v4.sub(v2);
-		Vec3 v34=v4.sub(v3);
+		Vec3 v1=new Vec3();
+		Vec3 v2=new Vec3();
+		Vec3 v3=new Vec3();
+		Vec3 v4=new Vec3();
+		Vec3 v12=new Vec3();
+		Vec3 v13=new Vec3();
+		Vec3 v14=new Vec3();
+		Vec3 v23=new Vec3();
+		Vec3 v24=new Vec3();
+		Vec3 v34=new Vec3();
+		
+		M.vec3_fromVec3(v1, vec1);
+		M.vec3_fromVec3(v2, vec2);
+		M.vec3_fromVec3(v3, vec3);
+		M.vec3_fromVec3(v4, vec4);
+		M.vec3_sub(v12, v2, v1);
+		M.vec3_sub(v13, v3, v1);
+		M.vec3_sub(v14, v4, v1);
+		M.vec3_sub(v23, v3, v2);
+		M.vec3_sub(v24, v4, v2);
+		M.vec3_sub(v34, v4, v3);
 		
 
 		boolean rev;

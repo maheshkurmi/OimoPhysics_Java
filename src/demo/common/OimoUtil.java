@@ -114,7 +114,7 @@ public class OimoUtil {
 	}
 
 	public static SphericalJoint addSphericalJoint(World w, RigidBody rb1, RigidBody rb2, Vec3 anchor) {
-		var jc = new SphericalJointConfig();
+		SphericalJointConfig jc = new SphericalJointConfig();
 		jc.init(rb1, rb2, anchor);
 		SphericalJoint j = new SphericalJoint(jc);
 		w.addJoint(j);

@@ -61,7 +61,7 @@ public class World {
 	 * @param gravity
 	 */
 	public World(int broadPhaseType ,Vec3 gravity ) {
-		broadPhaseType=1;
+		
 		switch(broadPhaseType) {
 		case BroadPhaseType.BRUTE_FORCE:
 			_broadPhase = new BruteForceBroadPhase();

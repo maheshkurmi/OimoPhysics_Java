@@ -36,8 +36,8 @@ public class CylindricalJoint extends Joint {
 	public CylindricalJoint(CylindricalJointConfig config) {
 		super(config, JointType._CYLINDRICAL);
 
-		_localBasisX1=config.localAxis1.clone();
-		_localBasisX2=config.localAxis2.clone();
+		M.vec3_fromVec3(_localBasisX1, config.localAxis1);
+		M.vec3_fromVec3(_localBasisX2, config.localAxis2);
 
 		buildLocalBasesFromX();
 

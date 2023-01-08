@@ -44,7 +44,7 @@ public class VariableTimeStepDemo extends DemoBase {
 		}
 
 		{
-			var b = OimoUtil.addBox(world, new Vec3(-4, 4, -4), new Vec3(0.5, 0.5, 0.5), false);
+			RigidBody b = OimoUtil.addBox(world, new Vec3(-4, 4, -4), new Vec3(0.5, 0.5, 0.5), false);
 			b.setLinearVelocity(new Vec3(5, 0, 4));
 			b.setAngularVelocity(new Vec3(3, 6, 8));
 		}

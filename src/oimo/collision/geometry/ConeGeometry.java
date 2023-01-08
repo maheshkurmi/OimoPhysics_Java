@@ -63,6 +63,7 @@ public class ConeGeometry extends ConvexGeometry {
 		Vec3 eh=new Vec3();
 		Vec3 er=new Vec3();
 		M.mat3_getCol(axis, tf._rotation, 1);
+	//	axis.normalize();
 		M.vec3_compWiseMul(axis2, axis, axis);
 
 		double axis2x = axis2.x;

@@ -14,6 +14,7 @@ import oimo.common.MathUtil;
 import oimo.common.Vec3;
 import oimo.dynamics.World;
 import oimo.dynamics.constraint.joint.RotationalLimitMotor;
+import oimo.dynamics.constraint.joint.SpringDamper;
 import oimo.dynamics.rigidbody.RigidBody;
 import oimo.dynamics.rigidbody.RigidBodyConfig;
 import oimo.dynamics.rigidbody.Shape;
@@ -31,7 +32,7 @@ public class GearsDemo extends DemoBase {
 	public void init(World world, DemoRenderer renderer, UserInput input, ViewInfo viewInfo) {
 		super.init(world, renderer, input, viewInfo);
 			renderer.camera(new Vec3(0, 6, 8), new Vec3(0, 2, 0), new Vec3(0, 1, 0));
-
+		//	world.setGravity(new Vec3(0,0,0));
 		double thickness = 0.2;
 		OimoUtil.addBox(world, new Vec3(0, -2-thickness, 0), new Vec3(4, thickness, 4), true);
 
@@ -44,10 +45,10 @@ public class GearsDemo extends DemoBase {
 
 		//createGear(new Vec3(0, 0, 0), 1.0, 0.2,null);
 		for (int i=0;i<20;i++) {
-			//OimoUtil.addBox(world, MathUtil.randVec3In(-1, 1).scale3Eq(3, 1, 1).addEq(new Vec3(0, 6, 0)), new Vec3(0.2, 0.2, 0.2), false);
+			OimoUtil.addBox(world, MathUtil.randVec3In(-1, 1).scale3Eq(3, 1, 1).addEq(new Vec3(0, 6, 0)), new Vec3(0.2, 0.2, 0.2), false);
 		}
 		for (int i=0;i<20;i++) {
-			//OimoUtil.addSphere(world, MathUtil.randVec3In(-1, 1).scale3Eq(3, 1, 1).addEq(new Vec3(0, 6, 0)), 0.3, false);
+			OimoUtil.addSphere(world, MathUtil.randVec3In(-1, 1).scale3Eq(3, 1, 1).addEq(new Vec3(0, 6, 0)), 0.3, false);
 		}
 	}
 
@@ -82,11 +83,13 @@ public class GearsDemo extends DemoBase {
 
 		RigidBody fixture = OimoUtil.addCylinder(world, center, toothInterval / 4, thickness * 0.52, true);
 		fixture.rotate(new Mat3().appendRotationEq(90 * MathUtil.TO_RADIANS, 1, 0, 0));
-		OimoUtil.addRevoluteJoint(world, wheel, fixture, center, new Vec3(0, 0, 1), null, lm);
+		//SpringDamper sd= new SpringDamper();
+		//sd.setSpring(3, 0.5);
+		OimoUtil.addRevoluteJoint(world, wheel, fixture, center, new Vec3(0, 0, 1),null, lm);
 	}
 
 	Geometry createGearTooth(double hw, double hh, double hd) {
-		var scale = 0.3;
+		double scale = 0.3;
 		Vec3[] vertices = new Vec3[] {
 			new Vec3(-hw, -hh, -hd),
 			new Vec3(-hw, -hh, hd),
@@ -98,13 +101,13 @@ public class GearsDemo extends DemoBase {
 			new Vec3(hw, hh, hd * scale),
 		};
 		ConvexHullGeometry geom = new ConvexHullGeometry(vertices);
-		geom.setGjkMergin(0); // set external margin to 0 (not needed for other geoms)
+		geom.setGjkMergin(0.0); // set external margin to 0 (not needed for other geoms)
 		return geom;
 	}
 
 	@Override 
 	public void update() {
 		super.update();
-	//	teleportRigidBodies(-20, 10, 3, 1);
+		teleportRigidBodies(-20, 10, 3, 1);
 	}
 }

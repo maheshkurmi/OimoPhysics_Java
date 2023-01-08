@@ -67,7 +67,7 @@ public class RevoluteJoint extends Joint {
 		M.vec3_toCrossMatrix(crossR2, _relativeAnchor2);
 		crossR1.scaleEq(-1);
 		crossR2.scaleEq(-1);
-		
+			
 		JointSolverInfoRow row;
 		JacobianRow j;
 		double motorMass = this.computeEffectiveInertiaMoment(_basis.x);
@@ -133,8 +133,8 @@ public class RevoluteJoint extends Joint {
 		
 
 		// compute angular error along Y and Z
-		Vec3 angError =_basisX1.cross(_basisX2);
-		//M.vec3_cross(angError, _basisX1, _basisX2);
+		Vec3 angError =new Vec3();
+		M.vec3_cross(angError, _basisX1, _basisX2);
 		double cos = M.vec3_dot(_basisX1, _basisX2);
 		double theta = MathUtil.safeAcos(cos);
 		M.vec3_normalize(angError, angError);

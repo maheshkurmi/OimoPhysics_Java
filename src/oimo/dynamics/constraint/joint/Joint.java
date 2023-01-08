@@ -89,7 +89,6 @@ public class Joint {
 			_solver = new PgsJointConstraintSolver(this);
 			break;
 		}
-
 		_localAnchor1=config.localAnchor1.clone();
 		_localAnchor2=config.localAnchor2.clone();
 
@@ -131,14 +130,12 @@ public class Joint {
 		if (M.vec3_dot(_localBasisX1, _localBasisX1) == 0) {
 			M.vec3_set(_localBasisX1, 1, 0, 0);
 		} else {
-			_localBasisX1.normalize();
-			//M.vec3_normalize(_localBasisX1, _localBasisX1);
+			M.vec3_normalize(_localBasisX1, _localBasisX1);
 		}
 		if (M.vec3_dot(_localBasisX2, _localBasisX2) == 0) {
 			M.vec3_set(_localBasisX2, 1, 0, 0);
 		} else {
-			_localBasisX2.normalize();
-			//M.vec3_normalize(_localBasisX2, _localBasisX2);
+			M.vec3_normalize(_localBasisX2, _localBasisX2);
 		}
 
 		Quat slerpQ=new Quat();
@@ -202,15 +199,13 @@ public class Joint {
 		if (M.vec3_dot(_localBasisX1, _localBasisX1) == 0) {
 			M.vec3_set(_localBasisX1, 1, 0, 0);
 		} else {
-			_localBasisX1.normalize();
-			//M.vec3_normalize(_localBasisX1, _localBasisX1);
+			M.vec3_normalize(_localBasisX1, _localBasisX1);
 		}
 
 		if (M.vec3_dot(_localBasisZ2, _localBasisZ2) == 0) {
 			M.vec3_set(_localBasisZ2, 0, 0, 1);
 		} else {
-			_localBasisZ2.normalize();
-			//M.vec3_normalize(_localBasisZ2, _localBasisZ2);
+			M.vec3_normalize(_localBasisZ2, _localBasisZ2);
 		}
 
 		Transform tf1 = _b1._transform;
@@ -247,8 +242,7 @@ public class Joint {
 		if (M.vec3_dot(_localBasisX1, _localBasisX1) == 0) {
 			M.vec3_set(_localBasisX1, 1, 0, 0);
 		} else {
-			_localBasisX1.normalize();
-			//M.vec3_normalize(_localBasisX1, _localBasisX1);
+			M.vec3_normalize(_localBasisX1, _localBasisX1);
 		}
 
 		// build Z1 and recompute Y1
@@ -261,8 +255,7 @@ public class Joint {
 			M.vec3_cross(_localBasisZ1, _localBasisX1, _localBasisY1);
 		} else {
 			// normalize Z1
-			_localBasisZ1.normalize();
-			//M.vec3_normalize(_localBasisZ1, _localBasisZ1);
+			M.vec3_normalize(_localBasisZ1, _localBasisZ1);
 			// Y1 = cross(Z1, X1)
 			M.vec3_cross(_localBasisY1, _localBasisZ1, _localBasisX1);
 		}
@@ -905,7 +898,7 @@ public class Joint {
 		switch (positionCorrectionAlgorithm) {
 		case PositionCorrectionAlgorithm._BAUMGARTE:
 		case PositionCorrectionAlgorithm._SPLIT_IMPULSE:
-		case 	PositionCorrectionAlgorithm._NGS:
+		case PositionCorrectionAlgorithm._NGS:
 			break;
 		default:
 			 M.error("invalid position correction algorithm id: " + positionCorrectionAlgorithm);

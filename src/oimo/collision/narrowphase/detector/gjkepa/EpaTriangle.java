@@ -61,14 +61,18 @@ public class EpaTriangle {
      * @return
      */
 	public boolean init(EpaVertex vertex1, EpaVertex vertex2, EpaVertex vertex3, Vec3 center, boolean autoCheck) {
-		Vec3 v1=vertex1.v;
-		Vec3 v2=vertex2.v;
-		Vec3 v3=vertex3.v;
-		Vec3 vc=center;
+		Vec3 v1=new Vec3();
+		Vec3 v2=new Vec3();
+		Vec3 v3=new Vec3();
+		Vec3 vc=new Vec3();
+		M.vec3_fromVec3(v1, vertex1.v);
+		M.vec3_fromVec3(v2, vertex2.v);
+		M.vec3_fromVec3(v3, vertex3.v);
+		M.vec3_fromVec3(vc, center);
 	
-		var v12=new Vec3(); // 1 to 2
-		var v13=new Vec3(); // 1 to 3
-		var vc1=new Vec3(); // c to 1
+		Vec3 v12=new Vec3(); // 1 to 2
+		Vec3 v13=new Vec3(); // 1 to 3
+		Vec3 vc1=new Vec3(); // c to 1
 		M.vec3_sub(v12, v2, v1);
 		M.vec3_sub(v13, v3, v1);
 		M.vec3_sub(vc1, v1, vc);
@@ -80,7 +84,7 @@ public class EpaTriangle {
 			if (autoCheck) {
 				GjkEpaLog.log("found the triangle inverted, but it does not matter.");
 				// vertices must be CCW
-				var tmp = vertex2;
+				EpaVertex tmp = vertex2;
 				vertex2 = vertex3;
 				vertex3 = tmp;
 				M.vec3_scale(inor, inor, -1);
@@ -124,6 +128,7 @@ public class EpaTriangle {
 		if (count != 1) {
 			GjkEpaLog.log(_vertices[0].randId + " " + _vertices[1].randId + " " + _vertices[2].randId);
 			GjkEpaLog.log(triangle._vertices[0].randId + " " + triangle._vertices[1].randId + " " + triangle._vertices[2].randId);
+			System.out.println("EPTriangle.java : invalid Polyhedron");
 			return false; // invalid polyhedron
 		}
 		return true;

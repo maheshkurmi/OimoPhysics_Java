@@ -51,7 +51,7 @@ public class FallingRagdollDemo extends DemoBase {
 			}
 		}
 
-		var ragdollPos = stairCenter.add(new Vec3(0, (n - 0.5) * height + 1.46, -(n - 0.5) * length));
+		Vec3 ragdollPos = stairCenter.add(new Vec3(0, (n - 0.5) * height + 1.46, -(n - 0.5) * length));
 		ragdoll = OimoUtil.addRagdoll(world, ragdollPos);
 		OimoUtil.addBox(world, ragdollPos.add(new Vec3(0, 0, -2)), new Vec3(0.2, 0.2, 0.2), false).setLinearVelocity(new Vec3(0, 3.5, 4));
 

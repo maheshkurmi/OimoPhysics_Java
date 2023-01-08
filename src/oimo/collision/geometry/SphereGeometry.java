@@ -40,7 +40,7 @@ public class SphereGeometry extends ConvexGeometry {
 
 	@Override 
 	public void _computeAabb(Aabb result,Transform tf) {
-		var radVec =new Vec3(_radius, _radius, _radius);
+		Vec3 radVec =new Vec3(_radius, _radius, _radius);
 		M.vec3_sub(result._min, tf._position, radVec);
 		M.vec3_add(result._max, tf._position, radVec);
 	}

@@ -74,9 +74,9 @@ public class Shape {
 
 	// --- internal ---
 
-	 protected void _sync(Transform tf1, Transform tf2) {
-		M.transform_mul(_ptransform, _localTransform, tf1);
-		M.transform_mul(_transform, _localTransform, tf2);
+	 protected void _sync(Transform prevTransform, Transform currentTransform) {
+		M.transform_mul(_ptransform, _localTransform, prevTransform);
+		M.transform_mul(_transform, _localTransform, currentTransform);
 
 		
 		_geom._computeAabb(_aabb, _ptransform);
@@ -91,7 +91,7 @@ public class Shape {
 			Vec3 d=new Vec3();
 			M.vec3_sub(d, _transform._position, _ptransform._position);
 			M.vec3_toVec3(displacement, d);
-			_rigidBody._world._broadPhase.moveProxy(_proxy, _aabb, displacement);
+			_rigidBody._world._broadPhase.moveProxy(_proxy, this._aabb, displacement);
 		}
 	}
 

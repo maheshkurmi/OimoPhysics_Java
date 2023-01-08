@@ -38,7 +38,7 @@ public class BridgeDemo extends DemoBase {
 
 		RigidBody[] bodies =new RigidBody[num];
 		for (int i=0;i<num;i++) {
-			var x = (i - (num - 1) * 0.5) * (length + gap);
+			double x = (i - (num - 1) * 0.5) * (length + gap);
 			bodies[i]=OimoUtil.addBox(world, new Vec3(x, 0, 0), new Vec3(length * 0.5, height * 0.5, width * 0.5), i == 0 || i == num - 1);
 		}
 
@@ -47,7 +47,7 @@ public class BridgeDemo extends DemoBase {
 		}
 
 		for (int i=0;i<num;i++) {
-			var newPos = bodies[i].getPosition();
+			Vec3 newPos = bodies[i].getPosition();
 			newPos.x *= 0.95;
 			bodies[i].setPosition(newPos);
 		}

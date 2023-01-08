@@ -48,8 +48,8 @@ public class PgsContactConstraintSolver extends ConstraintSolver {
 		double invM1 = _b1._invMass;
 		double invM2 = _b2._invMass;
 
-		var invI1= _b1._invInertia;
-		var invI2= _b2._invInertia;
+		Mat3 invI1= _b1._invInertia;
+		Mat3 invI2= _b2._invInertia;
 		//M.mat3_assign(invI1, _b1._invInertia);
 		//M.mat3_assign(invI2, _b2._invInertia);
 

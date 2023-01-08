@@ -53,7 +53,7 @@ public class MassMatrix {
 			t = (t & 0x55) + (t >> 1 & 0x55);
 			t = (t & 0x33) + (t >> 2 & 0x33);
 			t = (t & 0xf) + (t >> 4 & 0xf);
-			var matrixSize = t;
+			int matrixSize = t;
 
 			double[][] subMatrix = new double[matrixSize][];
 			for (int j = 0; j < matrixSize; j++) {
@@ -820,7 +820,7 @@ public class MassMatrix {
 				}
 			}
 			System.out.println("(indices: " + indices + ")");
-			var mat = getSubmatrix(indices, indices.length);
+			double[][] mat = getSubmatrix(indices, indices.length);
 			dumpMatrix(mat);
 		}
 	}

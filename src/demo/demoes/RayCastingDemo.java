@@ -91,13 +91,13 @@ public class RayCastingDemo extends DemoBase {
 
 			length = 0.4;
 
-			var rc = new RigidBodyConfig();
+			RigidBodyConfig rc = new RigidBodyConfig();
 			rc.autoSleep = false;
 			rc.angularDamping = 4.0;
 
 			rc.position.copyFrom(pos);
 			rb = new RigidBody(rc);
-			var sc = new ShapeConfig();
+			ShapeConfig sc = new ShapeConfig();
 			sc.geometry = new CylinderGeometry(0.2, length);
 			rb.addShape(new Shape(sc));
 			w.addRigidBody(rb);

@@ -44,8 +44,8 @@ public class BasisTracker {
 		Vec3 newY=new Vec3();
 		Vec3 newZ=new Vec3();
 
-		Vec3 prevX;
-		Vec3 prevY;
+		Vec3 prevX=new Vec3();
+		Vec3 prevY=new Vec3();
 
 		if (axis == 0) {
 			// compute X'
@@ -57,10 +57,8 @@ public class BasisTracker {
 			M.vec3_mulMat3(newX, joint._basisX1, slerpM);
 
 			// set X, Y
-			prevX=x;
-			prevY=y;
-			//M.vec3_assign(prevX, x);
-			//M.vec3_assign(prevY, y);
+			M.vec3_assign(prevX, x);
+			M.vec3_assign(prevY, y);
 		} else if (axis == 1) {
 			// compute X'
 			M.quat_arc(q, joint._basisY1, joint._basisY2);
@@ -70,10 +68,8 @@ public class BasisTracker {
 			M.vec3_mulMat3(newX, joint._basisY1, slerpM);
 
 			// set X, Y
-			prevX=y;
-			prevY=z;
-			//M.vec3_assign(prevX, y);
-			//M.vec3_assign(prevY, z);
+			M.vec3_assign(prevX, y);
+			M.vec3_assign(prevY, z);
 		} else {
 			// compute X'
 			M.quat_arc(q, joint._basisZ1, joint._basisZ2);
@@ -83,10 +79,8 @@ public class BasisTracker {
 			M.vec3_mulMat3(newX, joint._basisZ1, slerpM);
 
 			// set X, Y
-			prevX=z;
-			prevY=x;
-			//M.vec3_assign(prevX, z);
-			//M.vec3_assign(prevY, x);
+			M.vec3_assign(prevX, z);
+			M.vec3_assign(prevY, x);
 		}
 
 		// we compute Y' and Z' from X, Y, and X' (new basis: <X', Y', Z'>, previous basis: <X, Y, Z>)
@@ -112,8 +106,7 @@ public class BasisTracker {
 
 		if (M.vec3_dot(newZ, newZ) > 1e-6) {
 			// Z' = normalize(Z'')
-			//M.vec3_normalize(newZ, newZ);
-			newZ.normalize();
+			M.vec3_normalize(newZ, newZ);
 		} else {
 			// failed to rotate previous basis, build a new right-handed orthonormal system
 			M.vec3_perp(newZ, newX);

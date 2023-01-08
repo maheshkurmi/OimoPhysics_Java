@@ -106,7 +106,7 @@ public class CapsuleGeometry extends ConvexGeometry {
 		double D = b * b - a * c;
 		if (D < 0) return false;
 		if (a > 0) {
-			var sqrtD = MathUtil.sqrt(D);
+			double sqrtD = MathUtil.sqrt(D);
 			tminxz = (-b - sqrtD) / a;
 			tmaxxz = (-b + sqrtD) / a;
 			if (tminxz >= 1 || tmaxxz <= 0) return false;

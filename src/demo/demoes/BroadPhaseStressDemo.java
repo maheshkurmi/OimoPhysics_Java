@@ -161,7 +161,7 @@ public class BroadPhaseStressDemo extends DemoBase {
 			rigidc.position.x *= FIELD_W;
 			rigidc.position.y *= FIELD_H;
 			rigidc.position.z *= FIELD_D;
-			var body = new RigidBody(rigidc);
+			RigidBody body = new RigidBody(rigidc);
 			body.addShape(new Shape(compc));
 			moveRigidBody(body);
 			world.addRigidBody(body);
@@ -181,12 +181,12 @@ public class BroadPhaseStressDemo extends DemoBase {
 		if (num > world.getNumRigidBodies()) {
 			return;
 		}
-		var rb = world.getRigidBodyList();
+		RigidBody rb = world.getRigidBodyList();
 		while (rb._next != null) {
 			rb = rb._next;
 		}
 		for (int i=0;i<num;i++) {
-			var prev = rb._prev;
+			RigidBody prev = rb._prev;
 			world.removeRigidBody(rb);
 			rb = prev;
 		}
@@ -197,7 +197,7 @@ public class BroadPhaseStressDemo extends DemoBase {
 		Vec3 pos = new Vec3();
 		while (rb != null) {
 			rb.getPositionTo(pos);
-			var lv = rb.getLinearVelocity();
+			Vec3 lv = rb.getLinearVelocity();
 			if (pos.x < -FIELD_W || pos.x > FIELD_W) lv.x *= -1;
 			if (pos.y < -FIELD_H || pos.y > FIELD_H) lv.y *= -1;
 			if (pos.z < -FIELD_D || pos.z > FIELD_D) lv.z *= -1;

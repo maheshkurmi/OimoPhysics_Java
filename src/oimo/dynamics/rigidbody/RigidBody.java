@@ -260,7 +260,7 @@ public class RigidBody {
 
 		// update rotation
 		_transform._rotation.fromQuat(q);
-		
+		M.mat3_normalize(_transform._rotation);
 		//M.mat3_fromQuat(_transform._rotation, q);
 
 		// update inertia tensor
@@ -374,6 +374,7 @@ public class RigidBody {
 	// call when the transform is externally updated
 	public void updateTransformExt() {
 		M.transform_assign(_ptransform, _transform);
+		M.mat3_normalize(_transform._rotation);
 		_syncShapes();
 		wakeUp();
 	}
@@ -471,7 +472,7 @@ public class RigidBody {
 	 * Rotates the rigid body by Euler angles `eulerAngles` in radians.
 	 */
 	public void rotateXyz(Vec3 eulerAngles) {
-		var rot =new Mat3();
+		Mat3 rot =new Mat3();
 		M.mat3_fromEulerXyz(rot, eulerAngles);
 		M.mat3_mul(_transform._rotation, rot, _transform._rotation);
 
@@ -908,7 +909,7 @@ public class RigidBody {
 	 * This does not create a new instance of `Vec3`.
 	 */
 	public void getLocalVectorTo(Vec3 worldVector, Vec3 localVector) {
-		var v=localVector;
+		Vec3 v=localVector;
 		M.vec3_fromVec3(v, worldVector);
 		M.vec3_mulMat3Transposed(v, v, _transform._rotation);
 		//M.vec3_toVec3(localVector, v);
@@ -918,7 +919,7 @@ public class RigidBody {
 	 * Returns the world coordinates of the point `localPoint` in local coodinates.
 	 */
 	public Vec3 getWorldPoint(Vec3 localPoint) {
-		var v=new Vec3();
+		Vec3 v=new Vec3();
 		M.vec3_fromVec3(v, localPoint);
 		M.vec3_mulMat3(v, v, _transform._rotation);
 		M.vec3_add(v, v, _transform._position);

@@ -1,8 +1,10 @@
 package demo.common;
 import oimo.collision.geometry.*;
 import oimo.common.DebugDraw;
+import oimo.common.Mat3;
 import oimo.common.Mat4;
 import oimo.common.MathUtil;
+import oimo.common.Quat;
 import oimo.common.Vec3;
 import oimo.dynamics.*;
 import oimo.dynamics.callback.RayCastClosest;
@@ -66,6 +68,30 @@ public class DemoBase {
 	public void update() {
 		count++;
 		updateMouseJoint();
+		double dx=input.mouseX-input.pmouseX;
+		double dy=input.mouseY-input.pmouseY;
+		if(mouseJoint==null && (dx!=0 || dy!=0) && input.mouseL) {
+			Vec3 p=renderer.getCameraPosition();
+			Quat q=new Quat();
+			Mat3 m=new Mat3();
+			Vec3 v= p.cross(new Vec3(0,1,0));
+			v.normalize();
+			m.identity();
+			m.appendRotationEq(-dy/50, v.x,v.y,v.z);
+			p.add3Eq(0,dy/50,0);
+			//p.mulMat3Eq(m);
+			
+			v= v.cross(p);
+			v.normalize();
+			m.identity();
+			m.appendRotationEq(-dx/200, v.x,v.y,v.z);
+			p.mulMat3Eq(m);
+			
+			
+			//p.mulMat3Eq(m);
+			
+			renderer.camera(p, new Vec3(), new Vec3(0,1,0));
+		}
 	}
 
 	public void drawAdditionalObjects(DebugDraw debugDraw) {
