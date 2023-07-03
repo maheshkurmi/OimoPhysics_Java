@@ -1,5 +1,5 @@
 # OimoPhysics_Java
-Pure java port (jdk 9+) of [OimoPhysics 1.2.4 3d Engine](https://saharan.github.io/OimoPhysics/), using jogl to render demoes.
+Pure java port (jdk 9+) of [OimoPhysics 1.2.4 3d Engine](https://saharan.github.io/OimoPhysics/), using [jogl](https://jogamp.org/) to render demoes.
 Since engine is ported manually, it includes several java specific optimisations and some bug fixes, but the the code structure almost remains same, therefore original API documentation is till applicable. 
 This engine will serve as the base of 3D physics engine for [SimPHY](https://www.simphy.com/).
 
