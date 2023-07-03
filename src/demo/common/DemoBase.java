@@ -37,7 +37,7 @@ public class DemoBase {
 		this.renderer = renderer;
 		this.input = input;
 		this.viewInfo = viewInfo;
-		renderer.camera(new Vec3(0, 0, 10), new Vec3(), new Vec3(0, 1, 0));
+		renderer.camera(new Vec3(0, 6, 18), new Vec3(), new Vec3(0, 1, 0));
 		RigidBodyConfig rigidBodyConfig = new RigidBodyConfig();
 		rigidBodyConfig.type = RigidBodyType.STATIC;
 		mouseJointDummyBody = new RigidBody(rigidBodyConfig);
@@ -77,9 +77,9 @@ public class DemoBase {
 			Vec3 v= p.cross(new Vec3(0,1,0));
 			v.normalize();
 			m.identity();
-			m.appendRotationEq(-dy/50, v.x,v.y,v.z);
-			p.add3Eq(0,dy/50,0);
-			//p.mulMat3Eq(m);
+			m.appendRotationEq(dy/200, v.x,v.y,v.z);
+			//p.add3Eq(0,dy/50,0);
+			p.mulMat3Eq(m);
 			
 			v= v.cross(p);
 			v.normalize();
@@ -91,6 +91,22 @@ public class DemoBase {
 			//p.mulMat3Eq(m);
 			
 			renderer.camera(p, new Vec3(), new Vec3(0,1,0));
+		}
+		if(input.mouseScroll!=0 && false) {
+			double fov=renderer.getFov();
+			if(input.mouseScroll>0) {
+				input.mouseScroll--;
+				fov=renderer.getFov()/0.98;
+				if(input.mouseScroll<0)input.mouseScroll=0;
+			}else if(input.mouseScroll<0) {
+				input.mouseScroll++;
+				fov=renderer.getFov()*0.98;
+				if(input.mouseScroll>0)input.mouseScroll=0;
+			}
+			if(fov<0.1)fov=0.1;
+			if(fov>3.0)fov=3.0;
+			renderer.perspective(fov,viewInfo.screenWidth/viewInfo.screenHeight);
+			input.mouseScroll=0;
 		}
 	}
 

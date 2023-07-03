@@ -18,7 +18,7 @@ public class DemoRenderer {
 
 	Mat4 viewMat;
 	Mat4 projMat;
-
+	double fov=Math.PI/3;
 	public DemoRenderer(World world, IDemoGraphics graphics) {
 		w = world;
 		g = graphics;
@@ -72,10 +72,26 @@ public class DemoRenderer {
 		);
 	}
 
+	/**
+	 * 
+	 * @param fovY in radians
+	 * @param aspect
+	 */
 	public void perspective(double fovY, double aspect) {
+		this.fov=fovY;
 		projMat.perspective(fovY, aspect, 0.1, 1000);
 	}
 
+	/**
+	 * returns fov in radians
+	 * @return
+	 */
+	public double getFov() {
+		return this.fov;
+	}
+	
+
+	
 	public Mat4 getProjectionMatrix() {
 		return projMat.clone();
 	}

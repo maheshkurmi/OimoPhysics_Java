@@ -1,16 +1,22 @@
 package demo;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
 import com.jogamp.opengl.GL2;
@@ -25,14 +31,15 @@ import com.jogamp.opengl.util.FPSAnimator;
 import demo.common.DemoMain;
 import demo.gl2renderer.GL2DebugDraw;
 
-public class Demo extends JFrame implements GLEventListener, MouseListener, MouseMotionListener, KeyListener,WindowListener {
+public class Demo extends JFrame implements GLEventListener, MouseListener, MouseMotionListener, KeyListener,WindowListener, MouseWheelListener {
 	
 	 // Define constants for the top-level container
-	   private static String TITLE = "Rotating 3D Shapes (GLCanvas)";  // window's title
+	   private static String TITLE = "Java Oimo Physics Engine Demo";  // window's title
 	private static final int CANVAS_WIDTH = 640; // width of the drawable
 	private static final int CANVAS_HEIGHT = 480; // height of the drawable
 	private static final int FPS = 60; // animator's target frames per second
 	GLCanvas canvas;
+	JLabel lblInfo;
 	// Create a animator that drives canvas' display() at the specified FPS.
     final FPSAnimator animator ;
 
@@ -53,10 +60,19 @@ public class Demo extends JFrame implements GLEventListener, MouseListener, Mous
 			// setup the stencil buffer to outline shapes
 	        glcapabilities.setStencilBits(1);
 	    //    this.canvas = SystemUtilities.isWindows()?new WindowsGLcanvas(glcapabilities):new GLCanvas( glcapabilities );// new NewtCanvasAWT(window);
-
-		 canvas = new GLCanvas(glcapabilities);
-        canvas.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
-        this.getContentPane().add(canvas);
+	        canvas = new GLCanvas(glcapabilities);
+	        canvas.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
+	      
+	        lblInfo=new JLabel();
+	        lblInfo.setOpaque(false);
+	        JScrollPane sp=new JScrollPane(lblInfo);
+//	        JLayeredPane pane = new JLayeredPane();
+//	        pane.setLayer(lblInfo,2,0);
+//	        pane.setLayer(canvas,1,0);
+//	        pane.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
+//      
+	        this.add(canvas,BorderLayout.CENTER);
+	        this.add(sp,BorderLayout.EAST);
         this.addWindowListener(new WindowAdapter() {
            @Override
            public void windowClosing(WindowEvent e) {
@@ -76,13 +92,14 @@ public class Demo extends JFrame implements GLEventListener, MouseListener, Mous
 		//initUserInput
         canvas.addMouseListener(this);
         canvas.addMouseMotionListener(this);
+        canvas.addMouseWheelListener(this);
         canvas.addKeyListener(this);
 		test = new DemoMain(CANVAS_WIDTH, CANVAS_HEIGHT);
 		
         this.setTitle(TITLE);
         this.pack();
         this.setVisible(true);
-        animator.start(); // start the animation loop
+         animator.start(); // start the animation loop
 		
 	}
 
@@ -105,7 +122,10 @@ public class Demo extends JFrame implements GLEventListener, MouseListener, Mous
 		gl.glGetIntegerv( GL2.GL_DEPTH_BITS, arr,0);
 		System.out.println("depth bit ="+arr[0]);
 		test.init(new GL2DebugDraw(gl));
-		
+		String s =test.getDemoInfo();
+		s=s.replaceAll("\n", "<br>");
+		lblInfo.setText("<html>"+s+"</html>");
+		this.pack();
 	}
 
 	/**
@@ -128,103 +148,7 @@ public class Demo extends JFrame implements GLEventListener, MouseListener, Mous
 	
 		test.loop();
 		
-		/*
-		// ----- Render the Pyramid -----
-		gl.glLoadIdentity(); // reset the model-view matrix
-		gl.glTranslatef(-1.6f, 0.0f, -6.0f); // translate left and into the screen
-		gl.glRotatef(anglePyramid, -0.2f, 1.0f, 0.0f); // rotate about the y-axis
-
-		gl.glBegin(GL2.GL_TRIANGLES); // of the pyramid
-
-		// Font-face triangle
-		gl.glColor3f(1.0f, 0.0f, 0.0f); // Red
-		gl.glVertex3f(0.0f, 1.0f, 0.0f);
-		gl.glColor3f(0.0f, 1.0f, 0.0f); // Green
-		gl.glVertex3f(-1.0f, -1.0f, 1.0f);
-		gl.glColor3f(0.0f, 0.0f, 1.0f); // Blue
-		gl.glVertex3f(1.0f, -1.0f, 1.0f);
-
-		// Right-face triangle
-		gl.glColor3f(1.0f, 0.0f, 0.0f); // Red
-		gl.glVertex3f(0.0f, 1.0f, 0.0f);
-		gl.glColor3f(0.0f, 0.0f, 1.0f); // Blue
-		gl.glVertex3f(1.0f, -1.0f, 1.0f);
-		gl.glColor3f(0.0f, 1.0f, 0.0f); // Green
-		gl.glVertex3f(1.0f, -1.0f, -1.0f);
-
-		// Back-face triangle
-		gl.glColor3f(1.0f, 0.0f, 0.0f); // Red
-		gl.glVertex3f(0.0f, 1.0f, 0.0f);
-		gl.glColor3f(0.0f, 1.0f, 0.0f); // Green
-		gl.glVertex3f(1.0f, -1.0f, -1.0f);
-		gl.glColor3f(0.0f, 0.0f, 1.0f); // Blue
-		gl.glVertex3f(-1.0f, -1.0f, -1.0f);
-
-		// Left-face triangle
-		gl.glColor3f(1.0f, 0.0f, 0.0f); // Red
-		gl.glVertex3f(0.0f, 1.0f, 0.0f);
-		gl.glColor3f(0.0f, 0.0f, 1.0f); // Blue
-		gl.glVertex3f(-1.0f, -1.0f, -1.0f);
-		gl.glColor3f(0.0f, 1.0f, 0.0f); // Green
-		gl.glVertex3f(-1.0f, -1.0f, 1.0f);
-
-		gl.glEnd(); // of the pyramid
-
-		// ----- Render the Color Cube -----
-		gl.glLoadIdentity(); // reset the current model-view matrix
-		gl.glTranslatef(1.6f, 0.0f, -7.0f); // translate right and into the screen
-		gl.glRotatef(angleCube, 1.0f, 1.0f, 1.0f); // rotate about the x, y and z-axes
-
-		gl.glBegin(GL2.GL_QUADS); // of the color cube
-
-		// Top-face
-		gl.glColor3f(0.0f, 1.0f, 0.0f); // green
-		gl.glVertex3f(1.0f, 1.0f, -1.0f);
-		gl.glVertex3f(-1.0f, 1.0f, -1.0f);
-		gl.glVertex3f(-1.0f, 1.0f, 1.0f);
-		gl.glVertex3f(1.0f, 1.0f, 1.0f);
-
-		// Bottom-face
-		gl.glColor3f(1.0f, 0.5f, 0.0f); // orange
-		gl.glVertex3f(1.0f, -1.0f, 1.0f);
-		gl.glVertex3f(-1.0f, -1.0f, 1.0f);
-		gl.glVertex3f(-1.0f, -1.0f, -1.0f);
-		gl.glVertex3f(1.0f, -1.0f, -1.0f);
-
-		// Front-face
-		gl.glColor3f(1.0f, 0.0f, 0.0f); // red
-		gl.glVertex3f(1.0f, 1.0f, 1.0f);
-		gl.glVertex3f(-1.0f, 1.0f, 1.0f);
-		gl.glVertex3f(-1.0f, -1.0f, 1.0f);
-		gl.glVertex3f(1.0f, -1.0f, 1.0f);
-
-		// Back-face
-		gl.glColor3f(1.0f, 1.0f, 0.0f); // yellow
-		gl.glVertex3f(1.0f, -1.0f, -1.0f);
-		gl.glVertex3f(-1.0f, -1.0f, -1.0f);
-		gl.glVertex3f(-1.0f, 1.0f, -1.0f);
-		gl.glVertex3f(1.0f, 1.0f, -1.0f);
-
-		// Left-face
-		gl.glColor3f(0.0f, 0.0f, 1.0f); // blue
-		gl.glVertex3f(-1.0f, 1.0f, 1.0f);
-		gl.glVertex3f(-1.0f, 1.0f, -1.0f);
-		gl.glVertex3f(-1.0f, -1.0f, -1.0f);
-		gl.glVertex3f(-1.0f, -1.0f, 1.0f);
-
-		// Right-face
-		gl.glColor3f(1.0f, 0.0f, 1.0f); // magenta
-		gl.glVertex3f(1.0f, 1.0f, -1.0f);
-		gl.glVertex3f(1.0f, 1.0f, 1.0f);
-		gl.glVertex3f(1.0f, -1.0f, 1.0f);
-		gl.glVertex3f(1.0f, -1.0f, -1.0f);
-
-		gl.glEnd(); // of the color cube
-
-		// Update the rotational angle after each refresh.
-		anglePyramid += speedPyramid;
-		angleCube += speedCube;
-		*/
+	
 	}
 
 	/**
@@ -252,6 +176,12 @@ public class Demo extends JFrame implements GLEventListener, MouseListener, Mous
 	@Override
 	public void keyReleased(KeyEvent e) {
 		test.keyReleased(e.getKeyCode());
+		if("Q".equalsIgnoreCase(e.getKeyChar()+"")||"E".equalsIgnoreCase(e.getKeyChar()+"")) {
+			String s =test.getDemoInfo();
+			s=s.replaceAll("\n", "<br>");
+			lblInfo.setText("<html>"+s+"</html>");
+			this.pack();
+		}
 	}
 
 
@@ -358,6 +288,12 @@ public class Demo extends JFrame implements GLEventListener, MouseListener, Mous
 	@Override
 	public void windowDeactivated(WindowEvent e) {
 		animator.pause();
+	}
+
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		test.mouseScrolled(e.getWheelRotation());
 	}
 	 
 }

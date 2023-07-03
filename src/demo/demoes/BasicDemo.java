@@ -21,7 +21,7 @@ public class BasicDemo extends DemoBase {
 	@Override 
 	public void init(World world, DemoRenderer renderer, UserInput input, ViewInfo viewInfo) {
 		super.init(world, renderer, input, viewInfo);
-		renderer.camera(new Vec3(0, 7, 9), new Vec3(0, 2, 0), new Vec3(0, 1, 0));
+		renderer.camera(new Vec3(0, 6, 15), new Vec3(0, 3, 0), new Vec3(0, 1, 0));
 
 		double thickness = 0.5;
 		OimoUtil.addBox(world, new Vec3(0, -thickness, 0), new Vec3(7, thickness, 7), true);

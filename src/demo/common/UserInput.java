@@ -15,6 +15,7 @@ public class UserInput {
 
 	public boolean[] keyboard;
 	public  boolean[] pkeyboard;
+	public int mouseScroll;
 	public static int KEYBOARD_LENGTH	=256;//(default, never):Int = 256;
 	public static int KEYCODE_LEFT		=37;//(default, never):Int = 37;
 	public static int KEYCODE_UP		=38;//(default, never):Int = 38;

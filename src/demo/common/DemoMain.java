@@ -42,6 +42,7 @@ public class DemoMain {
 	double nmouseY;
 	boolean nmouseL;
 	boolean nmouseR;
+	int nmouseScroll;
 
 	boolean[] nkeyboard;
 
@@ -154,6 +155,7 @@ public class DemoMain {
 		initControls();
 		currentDemo.init(world, renderer, input, viewInfo);
 		count = 0;
+
 	}
 
 	void initControls() {
@@ -433,6 +435,9 @@ public class DemoMain {
 				}
 			)
 		};
+		input.mouseL = false;
+		input.mouseR = false;
+		input.mouseScroll = 0;
 		currentDemo.initControls(controls);
 	}
 
@@ -449,6 +454,7 @@ public class DemoMain {
 		input.mouseY = nmouseY;
 		input.mouseL = nmouseL;
 		input.mouseR = nmouseR;
+		input.mouseScroll = nmouseScroll;
 		for (int i=0;i<UserInput.KEYBOARD_LENGTH;i++) {
 			input.pkeyboard[i] = input.keyboard[i];
 			input.keyboard[i] = nkeyboard[i];
@@ -477,25 +483,25 @@ public class DemoMain {
 	}
 	
 	public String getDemoInfo() {
-		text =currentDemo.demoName+ (pause ? "Paused" : "Running")+"\n"+
-				"Profile\n"+
+		text ="<h2>"+currentDemo.demoName+ (pause ? " [Paused]" : " [Running]")+"</h2>"+
+				"<h3>Profile</h3>"+
 				"  FPS			 : "+fps+
 				"  Rigid Bodies  : "+world.getNumRigidBodies()+"\n" +
 				"  Joints        : "+world.getNumJoints()+"\n" +
 				"  Shapes        : "+world.getNumShapes()+"\n" +
-				"  Pairs         : "+world.getContactManager().getNumContacts()+"\n" +
-				"Performance\n" +
+				"  Pairs         : "+world.getContactManager().getNumContacts()+"" +
+				"<h3>Performance</h3>" +
 				"  Broad Phase  : "+Math.round(performance.broadPhaseCollisionTime)+"\n" +
 				"  Narrow Phase : "+Math.round(performance.narrowPhaseCollisionTime)+"\n" +
 				"  Dynamics     : "+Math.round(performance.dynamicsTime)+"\n" +
-				"  Physics Total: "+Math.round(performance.totalTime)+"\n" +
+				"  Physics Total: "+Math.round(performance.totalTime)+"" +
 				//"  Rendering    : "+Math.round(drawTime)+"\n" +
-				"  Actual FPS   : "+fps+"\n" +
-				"Control\n" ;
+				//"  Actual FPS   : "+fps+"\n" +
+				"<h3>Control</h3>" ;
 			text+=createKeyDescriptions(" ");
 			
 			text+=	"------------\n" +
-				"Misc. Info\n" +
+				"<h3>Misc. Info</h3>" +
 				additionalInfo() +
 				'\n'
 			;
@@ -530,6 +536,10 @@ public class DemoMain {
 		currentDemoIndex = ((currentDemoIndex + offset) % num + num) % num;
 		currentDemo = demos[currentDemoIndex];
 		initDemo();
+	}
+
+	public void mouseScrolled(int delta) {
+		nmouseScroll = delta;
 	}
 
 	public void mouseMoved(double x, double  y) {
