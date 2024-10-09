@@ -3,9 +3,10 @@ package demo.gl2renderer;
 import java.nio.FloatBuffer;
 
 import com.jogamp.opengl.GL2;
-import com.jogamp.common.nio.Buffers;
 
 import oimo.common.M;
+
+import com.jogamp.common.nio.Buffers;
 
 public class OVertexBuffer {
 	public int numVertices;//(default, null):Int;

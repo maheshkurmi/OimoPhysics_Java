@@ -1,8 +1,8 @@
 package oimo.dynamics.constraint.contact;
 import oimo.collision.narrowphase.DetectorResultPoint;
 import oimo.common.M;
-import oimo.common.Vec3;
 import oimo.common.Transform;
+import oimo.common.Vec3;
 
 /**
  * A manifold point is a contact point in a contact manifold. This holds detailed collision

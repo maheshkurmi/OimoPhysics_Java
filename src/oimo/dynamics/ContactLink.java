@@ -1,5 +1,4 @@
 package oimo.dynamics;
-import oimo.dynamics.rigidbody.RigidBody;
 import oimo.dynamics.rigidbody.*;
 
 /**

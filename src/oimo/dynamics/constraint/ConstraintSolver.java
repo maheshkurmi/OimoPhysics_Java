@@ -1,6 +1,4 @@
 package oimo.dynamics.constraint;
-import oimo.dynamics.TimeStep;
-import oimo.dynamics.rigidbody.RigidBody;
 import oimo.dynamics.*;
 import oimo.dynamics.rigidbody.*;
 

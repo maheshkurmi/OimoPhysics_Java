@@ -1,8 +1,7 @@
 package demo.common;
+import oimo.collision.broadphase.bvh.*;
 import oimo.common.Mat4;
 import oimo.common.Vec3;
-import oimo.dynamics.World;
-import oimo.collision.broadphase.bvh.*;
 import oimo.dynamics.*;
 import oimo.dynamics.constraint.contact.*;
 import oimo.dynamics.constraint.joint.*;

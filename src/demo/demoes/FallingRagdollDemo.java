@@ -29,7 +29,7 @@ public class FallingRagdollDemo extends DemoBase {
 		Setting.defaultFriction = 0.2;
 
 		double thickness = 0.5;
-		OimoUtil.addBox(world, new Vec3(0, -thickness, 0), new Vec3(7, thickness, 7), true);
+		Utils.addBox(world, new Vec3(0, -thickness, 0), new Vec3(7, thickness, 7), true);
 
 		int n; // number of steps
 		double height; // height of a step
@@ -43,17 +43,17 @@ public class FallingRagdollDemo extends DemoBase {
 
 		for (int i=0;i<n;i++) {
 			if (i == n - 1) {
-				OimoUtil.addBox(world, stairCenter.add(new Vec3(0, (i + 0.5) * height, -(i + 4 * 0.5) * length)), new Vec3(width * 0.5, height * 0.5, length * 4 * 0.5), true);
+				Utils.addBox(world, stairCenter.add(new Vec3(0, (i + 0.5) * height, -(i + 4 * 0.5) * length)), new Vec3(width * 0.5, height * 0.5, length * 4 * 0.5), true);
 			} else {
-				OimoUtil.addBox(world, stairCenter.add(new Vec3(0, (i + 0.5) * height, -(i + 0.5) * length)), new Vec3(width * 0.5, height * 0.5, length * 0.5), true);
-				OimoUtil.addBox(world, stairCenter.add(new Vec3(-width * 0.5, (i + 2 * 0.5) * height, -(i + 0.5) * length)), new Vec3(0.1, height * 2 * 0.5, length * 0.5), true);
-				OimoUtil.addBox(world, stairCenter.add(new Vec3(width * 0.5, (i + 2 * 0.5) * height, -(i + 0.5) * length)), new Vec3(0.1, height * 2 * 0.5, length * 0.5), true);
+				Utils.addBox(world, stairCenter.add(new Vec3(0, (i + 0.5) * height, -(i + 0.5) * length)), new Vec3(width * 0.5, height * 0.5, length * 0.5), true);
+				Utils.addBox(world, stairCenter.add(new Vec3(-width * 0.5, (i + 2 * 0.5) * height, -(i + 0.5) * length)), new Vec3(0.1, height * 2 * 0.5, length * 0.5), true);
+				Utils.addBox(world, stairCenter.add(new Vec3(width * 0.5, (i + 2 * 0.5) * height, -(i + 0.5) * length)), new Vec3(0.1, height * 2 * 0.5, length * 0.5), true);
 			}
 		}
 
 		Vec3 ragdollPos = stairCenter.add(new Vec3(0, (n - 0.5) * height + 1.46, -(n - 0.5) * length));
-		ragdoll = OimoUtil.addRagdoll(world, ragdollPos);
-		OimoUtil.addBox(world, ragdollPos.add(new Vec3(0, 0, -2)), new Vec3(0.2, 0.2, 0.2), false).setLinearVelocity(new Vec3(0, 3.5, 4));
+		ragdoll = Utils.addRagdoll(world, ragdollPos);
+		Utils.addBox(world, ragdollPos.add(new Vec3(0, 0, -2)), new Vec3(0.2, 0.2, 0.2), false).setLinearVelocity(new Vec3(0, 3.5, 4));
 
 		Setting.defaultRestitution = tmp1;
 		Setting.defaultFriction = tmp2;

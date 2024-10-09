@@ -19,7 +19,7 @@ public class ConvexHullDemo extends DemoBase {
 		renderer.camera(new Vec3(0, 7, 9), new Vec3(0, 2, 0), new Vec3(0, 1, 0));
 
 		double thickness = 0.5;
-		OimoUtil.addBox(world, new Vec3(0, -thickness, 0), new Vec3(7, thickness, 7), true);
+		Utils.addBox(world, new Vec3(0, -thickness, 0), new Vec3(7, thickness, 7), true);
 
 		int w = 1;
 		int h = 1;

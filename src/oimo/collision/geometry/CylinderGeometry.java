@@ -1,8 +1,8 @@
 package oimo.collision.geometry;
+import oimo.common.M;
 import oimo.common.MathUtil;
 import oimo.common.Transform;
 import oimo.common.Vec3;
-import oimo.common.M;
 
 /**
  * A cylinder collision geometry aligned with the y-axis.

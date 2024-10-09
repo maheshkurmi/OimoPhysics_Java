@@ -1,12 +1,10 @@
 package oimo.collision.broadphase.bruteforce;
-import oimo.common.Transform;
-import oimo.collision.broadphase.BroadPhase;
-import oimo.collision.broadphase.Proxy;
+import oimo.collision.broadphase.*;
 import oimo.collision.geometry.Aabb;
 import oimo.collision.geometry.ConvexGeometry;
 import oimo.common.M;
+import oimo.common.Transform;
 import oimo.common.Vec3;
-import oimo.collision.broadphase.*;
 
 /**
  * Brute force implementation of broad-phase collision detection. Time complexity is O(n^2).

@@ -1,7 +1,7 @@
 package demo.demoes;
 import demo.common.DemoBase;
 import demo.common.DemoRenderer;
-import demo.common.OimoUtil;
+import demo.common.Utils;
 import demo.common.UserInput;
 import demo.common.ViewInfo;
 import oimo.common.Mat3;
@@ -25,10 +25,10 @@ public class FrictionsAndRestitutions extends DemoBase {
 		renderer.camera(new Vec3(0, 7, 9), new Vec3(0, 2, 0), new Vec3(0, 1, 0));
 
 		double thickness = 0.5;
-		OimoUtil.addBox(world, new Vec3(0, -thickness, 0), new Vec3(7, thickness, 7), true);
+		Utils.addBox(world, new Vec3(0, -thickness, 0), new Vec3(7, thickness, 7), true);
 
 		Mat3 rotMat = new Mat3().appendRotationEq(20 * MathUtil.TO_RADIANS, 0, 0, 1);
-		RigidBody tiltedFloor = OimoUtil.addBox(world, new Vec3(0, 2, 0), new Vec3(3, 0.1, 1), true);
+		RigidBody tiltedFloor = Utils.addBox(world, new Vec3(0, 2, 0), new Vec3(3, 0.1, 1), true);
 		tiltedFloor.rotate(rotMat);
 		tiltedFloor.getShapeList().setFriction(0.5);
 
@@ -36,17 +36,17 @@ public class FrictionsAndRestitutions extends DemoBase {
 			Vec3 pos = new Vec3((i - 3) * 0.8, 0, 0);
 			pos.mulMat3Eq(rotMat);
 			pos.y += 2.3;
-			RigidBody box = OimoUtil.addBox(world, pos, new Vec3(0.2, 0.2, 0.2), false);
+			RigidBody box = Utils.addBox(world, pos, new Vec3(0.2, 0.2, 0.2), false);
 			box.getShapeList().setFriction(i / 16.0);
 			box.rotate(rotMat);
 		}
 
-		RigidBody bouncyFloor = OimoUtil.addBox(world, new Vec3(0, 0.1, 2), new Vec3(3, 0.1, 1), true);
+		RigidBody bouncyFloor = Utils.addBox(world, new Vec3(0, 0.1, 2), new Vec3(3, 0.1, 1), true);
 		bouncyFloor.getShapeList().setRestitution(1.0);
 
 		for (int i=0;i<7;i++) {
 			Vec3 pos = new Vec3((i - 3) * 0.8, 3, 2);
-			OimoUtil.addSphere(world, pos, 0.25, false).getShapeList().setRestitution(i / 6.0);
+			Utils.addSphere(world, pos, 0.25, false).getShapeList().setRestitution(i / 6.0);
 		}
 	}
 

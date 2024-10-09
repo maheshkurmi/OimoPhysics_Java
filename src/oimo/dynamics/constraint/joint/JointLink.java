@@ -1,6 +1,5 @@
 package oimo.dynamics.constraint.joint;
 
-import oimo.dynamics.rigidbody.RigidBody;
 import oimo.dynamics.rigidbody.*;
 
 /**

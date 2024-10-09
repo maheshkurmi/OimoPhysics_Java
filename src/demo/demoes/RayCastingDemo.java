@@ -24,7 +24,7 @@ public class RayCastingDemo extends DemoBase {
 		renderer.camera(new Vec3(0, 7, 7), new Vec3(0, 0, 0), new Vec3(0, 1, 0));
 
 		double thickness = 0.5;
-		OimoUtil.addBox(world, new Vec3(0, -thickness, 0), new Vec3(5, thickness, 5), true);
+		Utils.addBox(world, new Vec3(0, -thickness, 0), new Vec3(5, thickness, 5), true);
 
 		int w = 2;
 		int h = 1;
@@ -42,15 +42,15 @@ public class RayCastingDemo extends DemoBase {
 					int shapeType=(int) (5 * Math.random());
 					switch (shapeType) {
 					case 0:
-						OimoUtil.addCone(world, new Vec3(j * sp + MathUtil.randIn(-0.01, 0.01), spH + i * spH * 2 * 1.002, k * sp + MathUtil.randIn(-0.01, 0.01)), wid, hei, false);
+						Utils.addCone(world, new Vec3(j * sp + MathUtil.randIn(-0.01, 0.01), spH + i * spH * 2 * 1.002, k * sp + MathUtil.randIn(-0.01, 0.01)), wid, hei, false);
 					case 1:
-						OimoUtil.addBox(world, new Vec3(j * sp + MathUtil.randIn(-0.01, 0.01), spH + i * spH * 2 * 0.9998, k * sp + MathUtil.randIn(-0.01, 0.01)), new Vec3(wid, hei, wid), false);
+						Utils.addBox(world, new Vec3(j * sp + MathUtil.randIn(-0.01, 0.01), spH + i * spH * 2 * 0.9998, k * sp + MathUtil.randIn(-0.01, 0.01)), new Vec3(wid, hei, wid), false);
 					case 2:
-						OimoUtil.addCylinder(world, new Vec3(j * sp + MathUtil.randIn(-0.01, 0.01), spH + i * spH * 2 * 1.002, k * sp + MathUtil.randIn(-0.01, 0.01)), wid, hei, false);
+						Utils.addCylinder(world, new Vec3(j * sp + MathUtil.randIn(-0.01, 0.01), spH + i * spH * 2 * 1.002, k * sp + MathUtil.randIn(-0.01, 0.01)), wid, hei, false);
 					case 3:
-						OimoUtil.addCapsule(world, new Vec3(j * sp + MathUtil.randIn(-0.01, 0.01), spH + i * spH * 2 * 1.002, k * sp + MathUtil.randIn(-0.01, 0.01)), wid, hei, false);
+						Utils.addCapsule(world, new Vec3(j * sp + MathUtil.randIn(-0.01, 0.01), spH + i * spH * 2 * 1.002, k * sp + MathUtil.randIn(-0.01, 0.01)), wid, hei, false);
 					case 4:
-						OimoUtil.addSphere(world, new Vec3(j * sp + MathUtil.randIn(-0.01, 0.01), spH + i * spH * 2 * 0.9998, k * sp + MathUtil.randIn(-0.01, 0.01)), wid, false);
+						Utils.addSphere(world, new Vec3(j * sp + MathUtil.randIn(-0.01, 0.01), spH + i * spH * 2 * 0.9998, k * sp + MathUtil.randIn(-0.01, 0.01)), wid, false);
 					}
 				}
 			}

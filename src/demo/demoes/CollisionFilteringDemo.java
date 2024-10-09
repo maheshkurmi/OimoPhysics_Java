@@ -24,11 +24,11 @@ public class CollisionFilteringDemo extends DemoBase {
 		renderer.camera(new Vec3(0, 7, 9), new Vec3(0, 2, 0), new Vec3(0, 1, 0));
 
 		double thickness = 0.5;
-		Shape floorShape = OimoUtil.addBox(world, new Vec3(0, -thickness, 0), new Vec3(7, thickness, 7), true).getShapeList();
+		Shape floorShape = Utils.addBox(world, new Vec3(0, -thickness, 0), new Vec3(7, thickness, 7), true).getShapeList();
 		floorShape.setCollisionGroup(G_FLOOR); // belongs to group FLOOR
 		floorShape.setCollisionMask(G_BOX);    // collides to group BOX
 
-		Shape wallShape = OimoUtil.addBox(world, new Vec3(0, 2, 0), new Vec3(3, 0.2, 3), true).getShapeList();
+		Shape wallShape = Utils.addBox(world, new Vec3(0, 2, 0), new Vec3(3, 0.2, 3), true).getShapeList();
 		wallShape.setCollisionGroup(G_WALL); // belongs to group WALL
 		wallShape.setCollisionMask(G_BALL);  // collides to group BALL
 
@@ -43,11 +43,11 @@ public class CollisionFilteringDemo extends DemoBase {
 					pos.addEq(MathUtil.randVec3In(-0.01, 0.01));
 					Shape shape;
 					if (i == 0) {
-						shape = OimoUtil.addSphere(world, pos, size, false).getShapeList();
+						shape = Utils.addSphere(world, pos, size, false).getShapeList();
 						shape.setCollisionGroup(G_BALL);                 // belongs to group BALL
 						shape.setCollisionMask(G_WALL | G_BALL | G_BOX); // collides to group WALL, BALL and BOX
 					} else {
-						shape = OimoUtil.addBox(world, pos, new Vec3(size, size, size), false).getShapeList();
+						shape = Utils.addBox(world, pos, new Vec3(size, size, size), false).getShapeList();
 						shape.setCollisionGroup(G_BOX);                   // belongs to group BOX
 						shape.setCollisionMask(G_FLOOR | G_BALL | G_BOX); // collides to group FLOOR, BALL and BOX
 					}

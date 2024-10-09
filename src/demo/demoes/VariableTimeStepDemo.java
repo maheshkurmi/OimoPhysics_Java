@@ -1,14 +1,14 @@
 package demo.demoes;
-import demo.common.OimoUtil;
-import oimo.collision.geometry.*;
-import oimo.common.*;
-import oimo.dynamics.*;
-import oimo.dynamics.rigidbody.*;
+import demo.common.Utils;
 import demo.common.Control;
 import demo.common.DemoRenderer;
 import demo.common.DemoBase;
 import demo.common.UserInput;
 import demo.common.ViewInfo;
+import oimo.collision.geometry.*;
+import oimo.common.*;
+import oimo.dynamics.*;
+import oimo.dynamics.rigidbody.*;
 
 /**
  * Variable time step demo
@@ -26,7 +26,7 @@ public class VariableTimeStepDemo extends DemoBase {
 		renderer.camera(new Vec3(-5, 7, 9), new Vec3(0, 2, 0), new Vec3(0, 1, 0));
 
 		double thickness = 0.5;
-		OimoUtil.addBox(world, new Vec3(0, -thickness, 0), new Vec3(5, thickness, 5), true);
+		Utils.addBox(world, new Vec3(0, -thickness, 0), new Vec3(5, thickness, 5), true);
 
 		int w = 5;
 		int h = 1;
@@ -37,20 +37,20 @@ public class VariableTimeStepDemo extends DemoBase {
 		for (int i=0;i<n;i++) {
 			for (int k=-h;k<h+1;k++) {
 				for (int j=0;j<w;j++) {
-					if ((j + k & 1) == 0) OimoUtil.addBox(world, new Vec3(j * wid * 2 + MathUtil.randIn(-0.01, 0.01), hei + i * hei * 2.2, k * dep * 2 + MathUtil.randIn(-0.01, 0.01)), new Vec3(wid, hei, dep), false);
-					else OimoUtil.addCylinder(world, new Vec3(j * wid * 2 + MathUtil.randIn(-0.01, 0.01), hei + i * hei * 2.2, k * dep * 2 + MathUtil.randIn(-0.01, 0.01)), wid, hei, false);
+					if ((j + k & 1) == 0) Utils.addBox(world, new Vec3(j * wid * 2 + MathUtil.randIn(-0.01, 0.01), hei + i * hei * 2.2, k * dep * 2 + MathUtil.randIn(-0.01, 0.01)), new Vec3(wid, hei, dep), false);
+					else Utils.addCylinder(world, new Vec3(j * wid * 2 + MathUtil.randIn(-0.01, 0.01), hei + i * hei * 2.2, k * dep * 2 + MathUtil.randIn(-0.01, 0.01)), wid, hei, false);
 				}
 			}
 		}
 
 		{
-			RigidBody b = OimoUtil.addBox(world, new Vec3(-4, 4, -4), new Vec3(0.5, 0.5, 0.5), false);
+			RigidBody b = Utils.addBox(world, new Vec3(-4, 4, -4), new Vec3(0.5, 0.5, 0.5), false);
 			b.setLinearVelocity(new Vec3(5, 0, 4));
 			b.setAngularVelocity(new Vec3(3, 6, 8));
 		}
 
 		double bulletSize = hei;
-		bullet = OimoUtil.addCone(world, new Vec3(-150, 3, 0), bulletSize * 1.4, bulletSize * 1.5, false);
+		bullet = Utils.addCone(world, new Vec3(-150, 3, 0), bulletSize * 1.4, bulletSize * 1.5, false);
 		ShapeConfig sc = new ShapeConfig();
 		sc.geometry = new BoxGeometry(new Vec3(0.4, 1, 0.4).scale(bulletSize));
 		sc.position.y -= bulletSize * 1.5 + bulletSize;

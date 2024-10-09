@@ -1,10 +1,10 @@
 package oimo.dynamics;
+import oimo.common.M;
 import oimo.common.Setting;
 import oimo.common.Vec3;
 import oimo.dynamics.constraint.ConstraintSolver;
 import oimo.dynamics.constraint.PositionCorrectionAlgorithm;
 import oimo.dynamics.rigidbody.*;
-import oimo.common.M;
 
 /**
  * Simulation island.

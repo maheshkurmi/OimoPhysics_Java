@@ -1,7 +1,7 @@
 package demo.demoes;
 import demo.common.DemoBase;
 import demo.common.DemoRenderer;
-import demo.common.OimoUtil;
+import demo.common.Utils;
 import demo.common.UserInput;
 import demo.common.ViewInfo;
 import oimo.collision.geometry.BoxGeometry;
@@ -37,7 +37,7 @@ public class JointsDemo extends DemoBase {
 
 		renderer.camera(new Vec3(0, 7, 9), new Vec3(0, 2, 0), new Vec3(0, 1, 0));
 
-		OimoUtil.addBox(world, new Vec3(0, -0.2, 0), new Vec3(6, 0.2, 6), true);
+		Utils.addBox(world, new Vec3(0, -0.2, 0), new Vec3(6, 0.2, 6), true);
 
 		renderer.getGraphics().getDebugDraw().drawJointLimits = true;
 
@@ -51,18 +51,18 @@ public class JointsDemo extends DemoBase {
 			double x = 2;
 			double y = 5;
 			double z = 1;
-			RigidBody b1 = OimoUtil.addSphere(world, new Vec3(x, y, z), 0.1, true);
-			RigidBody b2 = OimoUtil.addBox(world, new Vec3(x, y, z), new Vec3(0.3, 0.5, 0.5), false);
-			OimoUtil.addPrismaticJoint(world, b1, b2, new Vec3(x, y, z), new Vec3(1, 1, 0), new SpringDamper(), new TranslationalLimitMotor().setLimits(-1, 1));
+			RigidBody b1 = Utils.addSphere(world, new Vec3(x, y, z), 0.1, true);
+			RigidBody b2 = Utils.addBox(world, new Vec3(x, y, z), new Vec3(0.3, 0.5, 0.5), false);
+			Utils.addPrismaticJoint(world, b1, b2, new Vec3(x, y, z), new Vec3(1, 1, 0), new SpringDamper(), new TranslationalLimitMotor().setLimits(-1, 1));
 		}
 
 		{
 			double x = -2;
 			double y = 5;
 			double z = 1;
-			RigidBody b1 = OimoUtil.addSphere(world, new Vec3(x, y, z), 0.1, true);
-			RigidBody b2 = OimoUtil.addBox(world, new Vec3(x - 0.31, y, z), new Vec3(0.3, 0.5, 0.5), false);
-			OimoUtil.addCylindricalJoint(world, b1, b2, new Vec3(x, y, z), new Vec3(1, 0, 0), new SpringDamper(), new RotationalLimitMotor().setLimits(-2, 2), new SpringDamper().setSpring(4, 0.7), new TranslationalLimitMotor().setLimits(-1, 1));
+			RigidBody b1 = Utils.addSphere(world, new Vec3(x, y, z), 0.1, true);
+			RigidBody b2 = Utils.addBox(world, new Vec3(x - 0.31, y, z), new Vec3(0.3, 0.5, 0.5), false);
+			Utils.addCylindricalJoint(world, b1, b2, new Vec3(x, y, z), new Vec3(1, 0, 0), new SpringDamper(), new RotationalLimitMotor().setLimits(-2, 2), new SpringDamper().setSpring(4, 0.7), new TranslationalLimitMotor().setLimits(-1, 1));
 		}
 
 		{
@@ -71,11 +71,11 @@ public class JointsDemo extends DemoBase {
 			double z = 3;
 			double length = 1.0;
 
-			RigidBody b1 = OimoUtil.addBox(world, new Vec3(x, y + length, z), new Vec3(0.2, 0.2, 0.2), true);
+			RigidBody b1 = Utils.addBox(world, new Vec3(x, y + length, z), new Vec3(0.2, 0.2, 0.2), true);
 			b1.setType(RigidBodyType.KINEMATIC);
 			b1.setAngularVelocity(new Vec3(0, 1.5, 0));
-			RigidBody b2 = OimoUtil.addBox(world, new Vec3(x, y - length, z), new Vec3(0.2, 0.5, 0.2), false);
-			OimoUtil.addRagdollJoint(world, b1, b2, new Vec3(x, y, z), new Vec3(0, 1, 0), new Vec3(0, 0, 1), new SpringDamper(), 40, 80, new SpringDamper(), new RotationalLimitMotor().setLimits(-MathUtil.HALF_PI, MathUtil.HALF_PI));
+			RigidBody b2 = Utils.addBox(world, new Vec3(x, y - length, z), new Vec3(0.2, 0.5, 0.2), false);
+			Utils.addRagdollJoint(world, b1, b2, new Vec3(x, y, z), new Vec3(0, 1, 0), new Vec3(0, 0, 1), new SpringDamper(), 40, 80, new SpringDamper(), new RotationalLimitMotor().setLimits(-MathUtil.HALF_PI, MathUtil.HALF_PI));
 		}
 
 		{
@@ -86,11 +86,11 @@ public class JointsDemo extends DemoBase {
 			RotationalLimitMotor hingeLimit1 = new RotationalLimitMotor().setLimits(-MathUtil.HALF_PI * 0.5, MathUtil.HALF_PI * 0.5);
 			RotationalLimitMotor hingeLimit2 = new RotationalLimitMotor().setLimits(-MathUtil.HALF_PI * 0.8, MathUtil.HALF_PI * 0.8);
 
-			RigidBody b1 = OimoUtil.addBox(world, new Vec3(x, y + length, z), new Vec3(0.2, 0.2, 0.2), true);
+			RigidBody b1 = Utils.addBox(world, new Vec3(x, y + length, z), new Vec3(0.2, 0.2, 0.2), true);
 			b1.setType(RigidBodyType.KINEMATIC);
 			b1.setAngularVelocity(new Vec3(0, 1.5, 0));
-			RigidBody b2 = OimoUtil.addBox(world, new Vec3(x, y - length, z), new Vec3(0.2, 0.5, 0.2), false);
-			OimoUtil.addUniversalJoint(world, b1, b2, new Vec3(x, y, z), new Vec3(1, 0, 0), new Vec3(0, 0, 1), new SpringDamper(), hingeLimit1, new SpringDamper(), hingeLimit2);
+			RigidBody b2 = Utils.addBox(world, new Vec3(x, y - length, z), new Vec3(0.2, 0.5, 0.2), false);
+			Utils.addUniversalJoint(world, b1, b2, new Vec3(x, y, z), new Vec3(1, 0, 0), new Vec3(0, 0, 1), new SpringDamper(), hingeLimit1, new SpringDamper(), hingeLimit2);
 		}
 
 		{
@@ -105,18 +105,18 @@ public class JointsDemo extends DemoBase {
 			TranslationalLimitMotor translYLimit = new TranslationalLimitMotor().setLimits(-0.3, 0);
 			TranslationalLimitMotor translZLimit = new TranslationalLimitMotor().setLimits(-0.2, 0.8);
 
-			RigidBody b1 = OimoUtil.addBox(world, new Vec3(x, y + length, z), new Vec3(0.2, 0.2, 0.2), true);
+			RigidBody b1 = Utils.addBox(world, new Vec3(x, y + length, z), new Vec3(0.2, 0.2, 0.2), true);
 			b1.setType(RigidBodyType.KINEMATIC);
 			b1.setAngularVelocity(new Vec3(0, 1.5, 0));
-			RigidBody b2 = OimoUtil.addBox(world, new Vec3(x, y - length, z), new Vec3(0.2, 0.5, 0.2), false);
-			OimoUtil.addGenericJoint(world, b1, b2, new Vec3(x, y, z), new Mat3(), new Mat3(), null, new TranslationalLimitMotor [] {translXLimit, translYLimit, translZLimit}, null,  new RotationalLimitMotor [] {rotXLimit, rotYLimit, rotZLimit});
+			RigidBody b2 = Utils.addBox(world, new Vec3(x, y - length, z), new Vec3(0.2, 0.5, 0.2), false);
+			Utils.addGenericJoint(world, b1, b2, new Vec3(x, y, z), new Mat3(), new Mat3(), null, new TranslationalLimitMotor [] {translXLimit, translYLimit, translZLimit}, null,  new RotationalLimitMotor [] {rotXLimit, rotYLimit, rotZLimit});
 		}
 	}
 
 	void createBoard(double x, double y, double z, RotationalLimitMotor lm, SpringDamper sd) {
-		RigidBody b1 = OimoUtil.addBox(world, new Vec3(x, y, z), new Vec3(0.1, 0.1, 0.1), true);
-		RigidBody b2 = OimoUtil.addBox(world, new Vec3(x + 0.5, y, z), new Vec3(0.5, 0.2, 0.4), false);
-		OimoUtil.addRevoluteJoint(world, b1, b2, new Vec3(x, y, z), new Vec3(0, 0, 1), sd, lm);
+		RigidBody b1 = Utils.addBox(world, new Vec3(x, y, z), new Vec3(0.1, 0.1, 0.1), true);
+		RigidBody b2 = Utils.addBox(world, new Vec3(x + 0.5, y, z), new Vec3(0.5, 0.2, 0.4), false);
+		Utils.addRevoluteJoint(world, b1, b2, new Vec3(x, y, z), new Vec3(0, 0, 1), sd, lm);
 	}
 
 	void createBallChain(Vec3 from, double radius,int num) {

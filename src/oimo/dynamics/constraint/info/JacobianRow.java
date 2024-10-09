@@ -1,7 +1,7 @@
 package oimo.dynamics.constraint.info;
 
-import oimo.common.Vec3;
 import oimo.common.M;
+import oimo.common.Vec3;
 
 /**
  * The row of a Jacobian matrix.

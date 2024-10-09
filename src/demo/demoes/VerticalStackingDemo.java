@@ -1,7 +1,7 @@
 package demo.demoes;
 import demo.common.DemoBase;
 import demo.common.DemoRenderer;
-import demo.common.OimoUtil;
+import demo.common.Utils;
 import demo.common.UserInput;
 import demo.common.ViewInfo;
 import oimo.collision.geometry.*;
@@ -23,7 +23,7 @@ public class VerticalStackingDemo extends DemoBase {
 		renderer.camera(new Vec3(0, 16, 16), new Vec3(0, 2, 0), new Vec3(0, 1, 0));
 
 		double thickness = 0.5;
-		OimoUtil.addBox(world, new Vec3(0, -thickness, 0), new Vec3(10, thickness, 6), true);
+		Utils.addBox(world, new Vec3(0, -thickness, 0), new Vec3(10, thickness, 6), true);
 
 		int w = 2;
 		double sp = 3;
@@ -36,7 +36,7 @@ public class VerticalStackingDemo extends DemoBase {
 
 		for (int i=-w;i<w+1;i++) {
 			for (int j=0;j<n + dn * (i + w);j++) {
-				OimoUtil.addBox(world, new Vec3(i * sp + MathUtil.randIn(-0.01, 0.01), size + j * size * 2.2, MathUtil.randIn(-0.01, 0.01)), new Vec3(size, size, size), false);
+				Utils.addBox(world, new Vec3(i * sp + MathUtil.randIn(-0.01, 0.01), size + j * size * 2.2, MathUtil.randIn(-0.01, 0.01)), new Vec3(size, size, size), false);
 			}
 		}
 

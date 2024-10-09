@@ -1,9 +1,9 @@
 package oimo.dynamics.constraint.contact;
+import oimo.common.M;
 import oimo.common.MathUtil;
 import oimo.common.Setting;
 import oimo.common.Transform;
 import oimo.common.Vec3;
-import oimo.common.M;
 
 /**
  * A contact manifold holds collision data of a pair of shapes.

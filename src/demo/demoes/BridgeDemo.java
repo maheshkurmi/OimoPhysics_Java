@@ -1,7 +1,7 @@
 package demo.demoes;
 import demo.common.DemoBase;
 import demo.common.DemoRenderer;
-import demo.common.OimoUtil;
+import demo.common.Utils;
 import demo.common.UserInput;
 import demo.common.ViewInfo;
 import oimo.common.MathUtil;
@@ -24,9 +24,9 @@ public class BridgeDemo extends DemoBase {
 		renderer.camera(new Vec3(0, 8, 12), new Vec3(0, 2, 0), new Vec3(0, 1, 0));
 
 		for (int i=0;i<5;i++) {
-			OimoUtil.addSphere(world, new Vec3(MathUtil.randIn(-4, 4), MathUtil.randIn(2, 3), MathUtil.randIn(-1, 1)), 0.8, false).getShapeList().setDensity(0.3);
-			OimoUtil.addBox(world, new Vec3(MathUtil.randIn(-4, 4), MathUtil.randIn(2, 3), MathUtil.randIn(-1, 1)), new Vec3(0.5, 0.5, 0.5), false).getShapeList().setDensity(0.3);
-			OimoUtil.addCone(world, new Vec3(MathUtil.randIn(-4, 4), MathUtil.randIn(2, 3), MathUtil.randIn(-1, 1)), 0.6, 0.6, false).getShapeList().setDensity(0.3);
+			Utils.addSphere(world, new Vec3(MathUtil.randIn(-4, 4), MathUtil.randIn(2, 3), MathUtil.randIn(-1, 1)), 0.8, false).getShapeList().setDensity(0.3);
+			Utils.addBox(world, new Vec3(MathUtil.randIn(-4, 4), MathUtil.randIn(2, 3), MathUtil.randIn(-1, 1)), new Vec3(0.5, 0.5, 0.5), false).getShapeList().setDensity(0.3);
+			Utils.addCone(world, new Vec3(MathUtil.randIn(-4, 4), MathUtil.randIn(2, 3), MathUtil.randIn(-1, 1)), 0.6, 0.6, false).getShapeList().setDensity(0.3);
 		}
 
 		int num = 20;
@@ -39,11 +39,11 @@ public class BridgeDemo extends DemoBase {
 		RigidBody[] bodies =new RigidBody[num];
 		for (int i=0;i<num;i++) {
 			double x = (i - (num - 1) * 0.5) * (length + gap);
-			bodies[i]=OimoUtil.addBox(world, new Vec3(x, 0, 0), new Vec3(length * 0.5, height * 0.5, width * 0.5), i == 0 || i == num - 1);
+			bodies[i]=Utils.addBox(world, new Vec3(x, 0, 0), new Vec3(length * 0.5, height * 0.5, width * 0.5), i == 0 || i == num - 1);
 		}
 
 		for (int i=0;i<num - 1;i++) {
-			OimoUtil.addRevoluteJoint(world, bodies[i], bodies[i + 1], bodies[i].getPosition().add(bodies[i + 1].getPosition()).scale(0.5), new Vec3(0, 0, 1),null,null);
+			Utils.addRevoluteJoint(world, bodies[i], bodies[i + 1], bodies[i].getPosition().add(bodies[i + 1].getPosition()).scale(0.5), new Vec3(0, 0, 1),null,null);
 		}
 
 		for (int i=0;i<num;i++) {

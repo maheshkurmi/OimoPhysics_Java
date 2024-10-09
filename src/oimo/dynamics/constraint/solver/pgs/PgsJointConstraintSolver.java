@@ -1,4 +1,6 @@
 package oimo.dynamics.constraint.solver.pgs;
+import oimo.common.M;
+import oimo.common.Mat3;
 import oimo.common.Setting;
 import oimo.common.Vec3;
 import oimo.dynamics.TimeStep;
@@ -7,8 +9,6 @@ import oimo.dynamics.constraint.info.JacobianRow;
 import oimo.dynamics.constraint.info.joint.*;
 import oimo.dynamics.constraint.joint.*;
 import oimo.dynamics.constraint.solver.common.JointSolverMassDataRow;
-import oimo.common.Mat3;
-import oimo.common.M;
 
 /**
  * A joint constraint solver using projected Gauss-Seidel (sequential impulse).

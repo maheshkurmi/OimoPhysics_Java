@@ -1,7 +1,7 @@
 package demo.demoes;
 import demo.common.DemoBase;
 import demo.common.DemoRenderer;
-import demo.common.OimoUtil;
+import demo.common.Utils;
 import demo.common.UserInput;
 import demo.common.ViewInfo;
 import oimo.collision.geometry.BoxGeometry;
@@ -30,7 +30,7 @@ public class CompoundShapesDemo extends DemoBase {
 		renderer.camera(new Vec3(0, 7, 9), new Vec3(0, 2, 0), new Vec3(0, 1, 0));
 
 		double thickness = 0.5;	
-		OimoUtil.addBox(world, new Vec3(0, -thickness, 0), new Vec3(7, thickness, 7), true);
+		Utils.addBox(world, new Vec3(0, -thickness, 0), new Vec3(7, thickness, 7), true);
 
 		int n = 32;
 		RigidBodyConfig rc = new RigidBodyConfig();

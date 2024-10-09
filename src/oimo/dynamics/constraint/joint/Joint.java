@@ -7,10 +7,6 @@ import oimo.dynamics.constraint.solver.*;
 import oimo.dynamics.constraint.solver.direct.*;
 import oimo.dynamics.constraint.solver.pgs.*;
 import oimo.dynamics.rigidbody.*;
-import oimo.common.Mat3;
-import oimo.common.Quat;
-import oimo.common.Vec3;
-import oimo.common.M;
 
 /**
  * The base class of joints. Joints are used to connect two rigid bodies

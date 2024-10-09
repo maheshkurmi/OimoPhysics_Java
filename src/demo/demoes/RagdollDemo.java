@@ -1,7 +1,7 @@
 package demo.demoes;
 import demo.common.DemoRenderer;
 import demo.common.DemoBase;
-import demo.common.OimoUtil;
+import demo.common.Utils;
 import demo.common.UserInput;
 import demo.common.ViewInfo;
 import oimo.collision.geometry.*;
@@ -29,13 +29,13 @@ public class RagdollDemo extends DemoBase {
 
 		renderer.getGraphics().getDebugDraw().drawJointLimits = false;
 
-		OimoUtil.addBox(world, new Vec3(0, -0.2, 0), new Vec3(6, 0.2, 6), true);
+		Utils.addBox(world, new Vec3(0, -0.2, 0), new Vec3(6, 0.2, 6), true);
 
 		double tmp = Setting.defaultFriction;
 		Setting.defaultFriction = 0.5;
 
 		for (int i=0;i<10;i++) {
-			OimoUtil.addRagdoll(world, new Vec3(0, 2 + i * 2, 0));
+			Utils.addRagdoll(world, new Vec3(0, 2 + i * 2, 0));
 		}
 
 		Setting.defaultFriction = tmp;

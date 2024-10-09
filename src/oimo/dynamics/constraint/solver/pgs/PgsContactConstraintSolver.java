@@ -1,8 +1,4 @@
 package oimo.dynamics.constraint.solver.pgs;
-import oimo.dynamics.constraint.contact.ContactConstraint;
-import oimo.dynamics.constraint.contact.ContactImpulse;
-import oimo.dynamics.constraint.info.contact.ContactSolverInfo;
-import oimo.dynamics.constraint.info.contact.ContactSolverInfoRow;
 import oimo.common.M;
 import oimo.common.Mat3;
 import oimo.common.MathUtil;

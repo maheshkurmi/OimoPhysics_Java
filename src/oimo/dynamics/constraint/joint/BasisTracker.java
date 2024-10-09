@@ -1,8 +1,8 @@
 package oimo.dynamics.constraint.joint;
 import oimo.common.M;
-import oimo.common.Vec3;
-import oimo.common.Quat;
 import oimo.common.Mat3;
+import oimo.common.Quat;
+import oimo.common.Vec3;
 /**
  * Internal class
  */

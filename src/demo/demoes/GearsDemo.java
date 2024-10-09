@@ -1,7 +1,7 @@
 package demo.demoes;
 import demo.common.DemoBase;
 import demo.common.DemoRenderer;
-import demo.common.OimoUtil;
+import demo.common.Utils;
 import demo.common.UserInput;
 import demo.common.ViewInfo;
 import oimo.collision.geometry.BoxGeometry;
@@ -34,7 +34,7 @@ public class GearsDemo extends DemoBase {
 			renderer.camera(new Vec3(0, 6, 8), new Vec3(0, 2, 0), new Vec3(0, 1, 0));
 		//	world.setGravity(new Vec3(0,0,0));
 		double thickness = 0.2;
-		OimoUtil.addBox(world, new Vec3(0, -2-thickness, 0), new Vec3(4, thickness, 4), true);
+		Utils.addBox(world, new Vec3(0, -2-thickness, 0), new Vec3(4, thickness, 4), true);
 
 		createGear(new Vec3(1, 3, 0.5), 1.0, 0.3,null);
 		createGear(new Vec3(3, 3, 0.5), 1.0, 0.3,null);
@@ -45,10 +45,10 @@ public class GearsDemo extends DemoBase {
 
 		//createGear(new Vec3(0, 0, 0), 1.0, 0.2,null);
 		for (int i=0;i<20;i++) {
-			OimoUtil.addBox(world, MathUtil.randVec3In(-1, 1).scale3Eq(3, 1, 1).addEq(new Vec3(0, 6, 0)), new Vec3(0.2, 0.2, 0.2), false);
+			Utils.addBox(world, MathUtil.randVec3In(-1, 1).scale3Eq(3, 1, 1).addEq(new Vec3(0, 6, 0)), new Vec3(0.2, 0.2, 0.2), false);
 		}
 		for (int i=0;i<20;i++) {
-			OimoUtil.addSphere(world, MathUtil.randVec3In(-1, 1).scale3Eq(3, 1, 1).addEq(new Vec3(0, 6, 0)), 0.3, false);
+			Utils.addSphere(world, MathUtil.randVec3In(-1, 1).scale3Eq(3, 1, 1).addEq(new Vec3(0, 6, 0)), 0.3, false);
 		}
 	}
 
@@ -69,7 +69,7 @@ public class GearsDemo extends DemoBase {
 		toothSc.restitution = 0;
 		toothSc.geometry = toothGeom;
 
-		RigidBody wheel = OimoUtil.addCylinder(world, center, radius - toothLength / 2, thickness * 0.48, false);
+		RigidBody wheel = Utils.addCylinder(world, center, radius - toothLength / 2, thickness * 0.48, false);
 		for (int i=0;i<numTeeth;i++) {
 			toothSc.position = toothPos;
 			toothSc.rotation = toothRot;
@@ -81,11 +81,11 @@ public class GearsDemo extends DemoBase {
 
 		wheel.rotate(new Mat3().appendRotationEq(90 * MathUtil.TO_RADIANS, 1, 0, 0));
 
-		RigidBody fixture = OimoUtil.addCylinder(world, center, toothInterval / 4, thickness * 0.52, true);
+		RigidBody fixture = Utils.addCylinder(world, center, toothInterval / 4, thickness * 0.52, true);
 		fixture.rotate(new Mat3().appendRotationEq(90 * MathUtil.TO_RADIANS, 1, 0, 0));
 		//SpringDamper sd= new SpringDamper();
 		//sd.setSpring(3, 0.5);
-		OimoUtil.addRevoluteJoint(world, wheel, fixture, center, new Vec3(0, 0, 1),null, lm);
+		Utils.addRevoluteJoint(world, wheel, fixture, center, new Vec3(0, 0, 1),null, lm);
 	}
 
 	Geometry createGearTooth(double hw, double hh, double hd) {

@@ -1,5 +1,6 @@
 package oimo.dynamics.constraint.solver.direct;
 
+import oimo.common.M;
 import oimo.common.Setting;
 import oimo.common.Vec3;
 import oimo.dynamics.TimeStep;
@@ -10,7 +11,6 @@ import oimo.dynamics.constraint.info.joint.JointSolverInfoRow;
 import oimo.dynamics.constraint.joint.Joint;
 import oimo.dynamics.constraint.joint.JointImpulse;
 import oimo.dynamics.constraint.solver.common.JointSolverMassDataRow;
-import oimo.common.M;
 
 /**
  * The direct solver of a mixed linear complementality problem (MLCP) for joint

@@ -1,15 +1,10 @@
 package oimo.dynamics.rigidbody;
 
-//import org.shikhar.simphy.gfx.canvas.scene3d.ModelNode;
-//import org.shikhar.simphy.gfx.canvas.scene3d.SceneNode3D;
-//import org.shikhar.simphy.gfx.math.Quaternion;
-
 import oimo.collision.geometry.*;
 import oimo.common.*;
 import oimo.dynamics.*;
 import oimo.dynamics.constraint.contact.*;
 import oimo.dynamics.constraint.joint.*;
-import oimo.common.M;
 
 /**
  * A rigid body. To add a rigid body to a physics world, create a `RigidBody`
